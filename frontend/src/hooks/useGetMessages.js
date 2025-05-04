@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 const useGetMessages = () => {
     const getMessages = async (groupName) => {
         try {
-            const res = await fetch(`http://localhost:3030/api/messages/get/${groupName}` , {
+            const res = await fetch(`https://zodomix.onrender.com/api/messages/get/${groupName}` , {
                 method: "GET",
                 headers: {"Content-Type" : "application/json"},
                 credentials: "include"
