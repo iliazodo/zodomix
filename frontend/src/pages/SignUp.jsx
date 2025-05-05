@@ -29,11 +29,11 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center gap-5 ">
+    <div className="flex flex-col items-center justify-center gap-5 h-full w-full bg-black">
       <img
         src="zodomixLogo.png"
         alt="zodomix logo"
-        className="lg:w-2/3 md:w-3/4 top-20 absolute"
+        className="lg:w-2/3 md:w-3/4 mt-10"
       />
       <form
         onSubmit={handleSubmit}
@@ -79,7 +79,7 @@ const Login = () => {
         </div>
         <button
           type="submit"
-          className={`bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out absolute left-1/2 bottom-5 -translate-x-1/2 -translate-y-1/2 ${
+          className={`bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto mt-14  ${
             (!loading && !error ) &&
             "hover:bg-white hover:text-black active:bg-black active:text-white"
           } ${error && "cursor-not-allowed"}  xl:w-1/4 cursor-pointer`}

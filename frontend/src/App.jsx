@@ -13,7 +13,7 @@ function App() {
   const {authUser} = useAuthContext();
 
   return (
-    <div className="bg-black text-white font-thin">
+    <div className=" font-thin">
       <Routes>
         <Route path="/" element={authUser ? <Home/> : <Navigate to="/login" />} />
         <Route path="/chatZone" element={authUser ? <ChatZone/> : <Navigate to="/login" />} />

@@ -3,5 +3,8 @@
 @tailwind utilities;
 
 body{
+    background-color: black;
+    color: white;
+    
     scrollbar-color:#ff00ee black;
 }
