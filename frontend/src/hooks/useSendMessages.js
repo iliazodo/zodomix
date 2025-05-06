@@ -19,16 +19,15 @@ const useSendMessages = () => {
         credentials: "include"
       })
 
-      const data = await res.json();
 
     } catch (error) {
-        toast.error(error.message);
+        console.log(error.message);
     } finally{
         setLoading(false);
     }
   };
 
-  return {sendMessage};
+  return {loading , sendMessage};
 };
 
 export default useSendMessages;

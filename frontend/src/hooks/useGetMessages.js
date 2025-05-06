@@ -15,7 +15,7 @@ const useGetMessages = () => {
             return data;
             
         } catch (error) {
-            toast.error(error.message);
+            console.log(error.message);
             return [];
         }
     }

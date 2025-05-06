@@ -25,7 +25,7 @@ const Login = () => {
       />
       <form
         onSubmit={handleSubmit}
-        className="w-full grid grid-cols-1 md:grid-cols-2 md:mt-40 xl:w-2/3 items-center justify-center gap-3 mt-44 z-10"
+        className="w-full grid grid-cols-1 md:grid-cols-2 md:mt-40 xl:w-2/3 items-center justify-center gap-3 mt-28 z-10"
       >
         <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
           <label className="text-3xl">USERNAME</label>

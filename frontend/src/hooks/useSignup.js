@@ -15,7 +15,7 @@ const useSignup = () => {
 
         setLoading(true);
         try {
-            const res = await fetch("https://zodomix.onrender.com/api/auth/signup" , {
+            const res = await fetch("https://zodomix.onrender.com/auth/signup" , {
                 method:"POST",
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({username , email , password , confirmPassword}),
@@ -33,7 +33,7 @@ const useSignup = () => {
             setAuthUser(data);
 
         } catch (error) {
-            toast.error(error.message);
+            console.log(error.message);
         } finally{
             setLoading(false);
         }
@@ -51,8 +51,13 @@ function handleErrors({username , email , password ,confirmPassword}){
         return false;
     }
 
-    if(password.length < 6){
+    if(password.length <= 6){
         toast.error("PASSWORD MUST BE AT LEAST 6 CHARACTERS");
+        return false;
+    }
+
+    if(username.length >= 25){
+        toast.error("USERNAME MUST BE LESS THAN 25 CHARACTERS");
         return false;
     }
 
