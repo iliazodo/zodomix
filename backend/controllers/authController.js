@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
       username,
       email,
       password: hashedPass,
-      profilePic: Math.ceil(Math.random() * 6)
+      profilePic: Math.ceil(Math.random() * 12)
     });
 
     if (newUser) {
