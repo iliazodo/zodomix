@@ -10,7 +10,7 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         if(authUser){
-            const socket = io("localhost:5173");
+            const socket = io("https://zodomix.onrender.com");
 
             setSocket(socket);
             return () => socket.close();
