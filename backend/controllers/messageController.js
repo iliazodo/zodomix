@@ -1,4 +1,5 @@
 import Message from "../models/messageModel.js";
+import {io} from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -25,6 +26,10 @@ export const sendMessage = async (req, res) => {
     });
 
     newMessage.save();
+
+    // Emit new message to all users
+    io.emit("newMessage" , newMessage);
+    
 
     res.status(201).json({message: "MESSAGE CREATED SUCCESSFULLY"});
 

@@ -35,7 +35,7 @@ const Nav = () => {
       </div>
       {/*profile image*/}
       <div className="md:p-3 md:w-28 w-full">
-      <Link to="#" className="w-2">
+      <Link to="/profile" className="w-2">
         <img src={`profiles/${authUser.profilePic}.png`} alt="profile" className="scale-150 md:scale-100 border-none rounded-full" />
       </Link>
       </div>

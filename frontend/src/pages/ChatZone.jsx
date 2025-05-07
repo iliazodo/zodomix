@@ -10,7 +10,7 @@ import Message from "../components/Message.jsx";
 
 const ChatZone = () => {
   const { getUser } = useGetUser();
-  const socket = io();
+  const [chatLoading , setChatLoading] = useState(false);
 
   const [myMessage, setMyMessage] = useState({ message: "" });
   const [conversation, setConversation] = useState([]);
@@ -21,8 +21,6 @@ const ChatZone = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     await sendMessage(myMessage, "all");
-
-    socket.emit("NEW MESSAGE", myMessage);
 
     setMyMessage({ message: "" });
   };
@@ -46,6 +44,8 @@ const ChatZone = () => {
   }, [conversation]);
 
   useEffect(() => {
+    setChatLoading(true);
+
     const gettingMessages = async () => {
       const data = await getMessages("all");
 
@@ -62,15 +62,47 @@ const ChatZone = () => {
       );
 
       setConversation(conversationWithUsers);
+      setChatLoading(false)
     };
 
     gettingMessages();
-  }, [socket.on("NEW MESSAGE")]);
+    
+  }, []);
+
+  {
+    /*socket stuff */
+  }
+  useEffect(() => {
+    const socket = io("http://localhost:3030");
+
+    socket.on("newMessage", async (newMessage) => {
+      const user = await getUser(newMessage.senderId);
+      setConversation((prev) => [
+        ...prev,
+        {
+          id: newMessage._id,
+          message: newMessage.message,
+          username: user.username,
+          profilePic: user.profilePic,
+        },
+      ]);
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <>
       <Nav />
       <div className="h-screen overflow-auto flex flex-col">
+        {/* chat loading */}
+        {chatLoading && (
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className=" w-48 h-48 border-4 border-white border-t-transparent rounded-full animate-spin m-auto" />
+          </div>
+        )}
+
         {/* chat container */}
         <div
           ref={chatContainerRef}
