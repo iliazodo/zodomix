@@ -73,7 +73,7 @@ const ChatZone = () => {
     /*socket stuff */
   }
   useEffect(() => {
-    const socket = io("http://localhost:3030");
+    const socket = io("https://zodomix.onrender.com");
 
     socket.on("newMessage", async (newMessage) => {
       const user = await getUser(newMessage.senderId);
