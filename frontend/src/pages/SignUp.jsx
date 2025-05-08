@@ -37,8 +37,9 @@ const Login = () => {
       />
       <form
         onSubmit={handleSubmit}
-        className="w-full grid grid-cols-1 md:grid-cols-2 md:mt-32 xl:w-2/3 items-center justify-center gap-3 mt-2 z-10"
+        className="w-full flex flex-col md:grid-cols-2 xl:w-2/3 items-center justify-center gap-3 z-10"
       >
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 md:mt-[calc(10%)] items-center justify-center gap-3 z-10">
         <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
           <label className="text-3xl">USERNAME</label>
           <input
@@ -77,9 +78,10 @@ const Login = () => {
             }
           />
         </div>
+        </div>
         <button
           type="submit"
-          className={` md:absolute md:bottom-32 md:left-1/2 md:-translate-x-1/2 bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto mt-14  ${
+          className={`  bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto mt-14  ${
             (!loading && !error ) &&
             "hover:bg-white hover:text-black active:bg-black active:text-white"
           } ${error && "cursor-not-allowed"}  xl:w-1/4 cursor-pointer`}
