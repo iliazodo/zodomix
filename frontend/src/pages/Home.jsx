@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className=" overflow-auto h-screen">
+      <div className=" overflow-auto mb-40">
         <Text title={`Hey ${authUser.username},`}>
           ZODOMIX is a ANONYMOUS chatroom where you can use goups for chat.
           <br />

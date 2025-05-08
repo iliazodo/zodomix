@@ -15,7 +15,7 @@ const Profile = () => {
   return (
     <>
       <Nav />
-      <div className="flex flex-col gap-5 justify-center items-center w-full pt-52">
+      <div className="py-40 flex flex-col gap-5 justify-center items-center w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="w-full flex flex-col justify-center items-center gap-10">
           <img
             className="border-4 rounded-full w-1/3 max-w-80 m-auto -z-50"
