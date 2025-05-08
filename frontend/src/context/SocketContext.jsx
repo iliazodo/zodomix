@@ -10,7 +10,7 @@ export const SocketContextProvider = ({ children }) => {
 
     useEffect(() => {
         if(authUser){
-            const socket = io("http://localhost:3030");
+            const socket = io("https://zodomix.com");
 
             setSocket(socket);
             return () => socket.close();
