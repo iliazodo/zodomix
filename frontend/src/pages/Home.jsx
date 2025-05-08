@@ -1,29 +1,31 @@
 import React from "react";
 
 import Header from "../components/Nav.jsx";
+import { useAuthContext } from "../context/AuthContext.jsx";
+import Text from "../components/homeComponents.jsx/Text.jsx";
 
 const Home = () => {
+  const { authUser } = useAuthContext();
+
   return (
-  <>
-    <Header/>
-    <div className=" overflow-auto h-screen">
-      <div className=" mt-40 border-white border-2 w-5/6 mx-auto p-3 break-words">
-        <span className="">Hello zodo,</span>
-        <br/>
-        website explaination
+    <>
+      <Header />
+      <div className=" overflow-auto h-screen">
+        <Text title={`Hey ${authUser.username},`}>
+          ZODOMIX is a ANONYMOUS chatroom where you can use goups for chat.
+          <br />
+          say WHATEVER you want.
+        </Text>
+
+        <Text title={"News"}>
+        
+        </Text>
+
+        <Text title={"Updates"}>
+          Now realtime chat is working.
+        </Text>
       </div>
-
-      <div className=" m-28 border-white border-2 w-5/6 mx-auto p-3 break-words">
-        <span className="">Latest news</span>
-
-      </div>
-
-      <div className=" m-28 border-white border-2 w-5/6 mx-auto p-3 break-words">
-
-      </div>
-
-    </div>
-  </>
+    </>
   );
 };
 
