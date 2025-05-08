@@ -12,7 +12,7 @@ const useSendMessages = () => {
         return;
       }
 
-      const res = await fetch(`https://zodomix.onrender.com/api/messages/send/${groupName}` , {
+      const res = await fetch(`https://zodomix.com/api/messages/send/${groupName}` , {
         method: "POST",
         headers: {"Content-Type" : "application/json"},
         body: JSON.stringify({message}),

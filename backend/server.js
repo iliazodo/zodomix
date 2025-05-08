@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://zodomix.onrender.com",
+    origin: "https://zodomix.com",
     credentials: true,
   })
 );
