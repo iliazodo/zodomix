@@ -17,7 +17,7 @@ const useLogin = () => {
 
         try {
 
-            const res = await fetch("https://zodomix.com/api/auth/login" , {
+            const res = await fetch("/api/auth/login" , {
                 method: "POST",
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({username , password}),
@@ -35,7 +35,7 @@ const useLogin = () => {
             setAuthUser(data);
             
         } catch (error) {
-            console.log(error.message);
+            toast.error(error.message);
         } finally{
             setLoading(false);
         }

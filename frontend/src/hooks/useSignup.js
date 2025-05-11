@@ -15,7 +15,7 @@ const useSignup = () => {
 
         setLoading(true);
         try {
-            const res = await fetch("https://zodomix.com/api/auth/signup" , {
+            const res = await fetch("/api/auth/signup" , {
                 method:"POST",
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({username , email , password , confirmPassword}),
@@ -33,7 +33,7 @@ const useSignup = () => {
             setAuthUser(data);
 
         } catch (error) {
-            console.log(error.message);
+            toast.error(error.message);
         } finally{
             setLoading(false);
         }
@@ -51,7 +51,7 @@ function handleErrors({username , email , password ,confirmPassword}){
         return false;
     }
 
-    if(password.length <= 6){
+    if(password.length < 6){
         toast.error("PASSWORD MUST BE AT LEAST 6 CHARACTERS");
         return false;
     }

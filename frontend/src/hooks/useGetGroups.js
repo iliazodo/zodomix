@@ -5,7 +5,7 @@ const useGetGroups = () => {
   const getGroups = async () => {
 
     try {
-        const res = await fetch("https://zodomix.com/api/group/get" , {
+        const res = await fetch("/api/group/get" , {
             method: "GET",
             headers: {"Content-Type" : "application/json"}
         })

@@ -6,7 +6,7 @@ const useGetUser = () => {
     const getUser = async (userId) => {
         setGetUserLoading(true);
         try {
-            const res = await fetch("https://zodomix.com/api/user/getInfo" , {
+            const res = await fetch("/api/user/getInfo" , {
                 method: "POST",
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({userId: userId})

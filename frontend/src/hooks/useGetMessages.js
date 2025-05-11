@@ -6,7 +6,7 @@ const useGetMessages = () => {
     const getMessages = async (groupName) => {
         setGetChatLoading(true);
         try {
-            const res = await fetch(`https://zodomix.com/api/messages/get/${groupName}` , {
+            const res = await fetch(`/api/messages/get/${groupName}` , {
                 method: "GET",
                 headers: {"Content-Type" : "application/json"},
                 credentials: "include"

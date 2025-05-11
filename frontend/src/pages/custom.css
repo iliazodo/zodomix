@@ -30,3 +30,15 @@ left: -8px;
 background: white;
 box-shadow: -4px -4px #fff, -4px 0 #fff, -8px 0 #fff, 0 -8px #fff, -4px 4px #000, -8px 4px #000, -12px 4px #000, -16px 4px #000, -12px 0 #000, -8px -4px #000, -4px -8px #000, 0 -4px #fff;
 }
+
+.opAnimate{
+    font-family: 'Public Pixel', sans-serif;
+    animation: disappear 1.5s ease-in;
+    color: #FF00EE
+}
+
+@keyframes disappear {
+    to{
+        opacity: 0%;
+    }
+}

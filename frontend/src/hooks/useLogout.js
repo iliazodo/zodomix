@@ -9,7 +9,7 @@ const useLogout = () => {
         setLoading(true);
 
         try {
-                await fetch("https://zodomix.com/api/auth/logout" , {
+                await fetch("/api/auth/logout" , {
                 method:"POST",
                 credentials: "include"
             })

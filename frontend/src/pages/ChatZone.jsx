@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import Nav from "../components/Nav.jsx";
-import "./chatBubble.css";
+import "./custom.css";
 import useSendMessages from "../hooks/useSendMessages.js";
 import useGetMessages from "../hooks/useGetMessages.js";
 import useGetUser from "../hooks/useGetUser.js";
 import io from "socket.io-client";
 import Message from "../components/Message.jsx";
+import AlertMessage from "../components/AlertMessage.jsx";
 
 const ChatZone = () => {
   const { getUser } = useGetUser();
@@ -17,9 +18,10 @@ const ChatZone = () => {
   const { loading, sendMessage } = useSendMessages();
   const { getMessages } = useGetMessages();
 
+  const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
     await sendMessage(myMessage, currGroup);
 
     setMyMessage({ message: "" });
@@ -49,7 +51,6 @@ const ChatZone = () => {
     setChatLoading(true);
 
     const gettingMessages = async () => {
-      const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
       const data = await getMessages(currGroup);
 
       const conversationWithUsers = await Promise.all(
@@ -76,7 +77,6 @@ const ChatZone = () => {
     /*socket stuff */
   }
   useEffect(() => {
-    const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
     const socket = io("https://zodomix.com");
 
     socket.on(`newMessage-${currGroup}`, async (newMessage) => {
@@ -100,6 +100,9 @@ const ChatZone = () => {
     <>
       <Nav />
       <div className="h-screen overflow-auto flex flex-col">
+        {/* chat name */}
+        <AlertMessage message={currGroup} />
+
         {/* chat loading */}
         {chatLoading && (
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
