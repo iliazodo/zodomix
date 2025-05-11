@@ -14,7 +14,7 @@ const Group = (props) => {
         <div className="p-5 flex flex-col border-2 border-white w-[calc(100%-50px)] m-auto">
           <div className="flex flex-row justify-center items-center gap-7 xl:gap-40">
             <img
-              src={`/public/groups/${props.picture}.png`}
+              src={`/groups/${props.picture}.png`}
               alt="profle"
               className="rounded-full w-24 h-24"
             />
