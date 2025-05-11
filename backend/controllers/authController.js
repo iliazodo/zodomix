@@ -6,6 +6,10 @@ export const signup = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
 
+    if(username >= 25){
+      return res.status(400).json({error: "USERNAME MUST LESS THAN 25 CHARACTERS"})
+    }
+
     if (password !== confirmPassword) {
       return res.status(400).json({ error: "PASSWORDS DON'T MATCH" });
     }

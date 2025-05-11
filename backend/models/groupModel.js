@@ -9,8 +9,12 @@ const groupSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  description: {
+    type: String,
+    default: ""
+  }
 });
 
-const group = mongoose.model("Group", groupSchema);
+const Group = mongoose.model("Group", groupSchema);
 
-export default group;
+export default Group;

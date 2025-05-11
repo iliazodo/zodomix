@@ -11,7 +11,6 @@ import Message from "../components/Message.jsx";
 const ChatZone = () => {
   const { getUser } = useGetUser();
   const [chatLoading , setChatLoading] = useState(false);
-
   const [myMessage, setMyMessage] = useState({ message: "" });
   const [conversation, setConversation] = useState([]);
 
@@ -20,7 +19,8 @@ const ChatZone = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    await sendMessage(myMessage, "all");
+    const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
+    await sendMessage(myMessage, currGroup);
 
     setMyMessage({ message: "" });
   };
@@ -28,6 +28,8 @@ const ChatZone = () => {
   const lastMessageRef = useRef(null);
   const chatContainerRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
+
+  {/*Scroll Handling*/}
 
   const handleScroll = () => {
     const el = chatContainerRef.current;
@@ -47,7 +49,8 @@ const ChatZone = () => {
     setChatLoading(true);
 
     const gettingMessages = async () => {
-      const data = await getMessages("all");
+      const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
+      const data = await getMessages(currGroup);
 
       const conversationWithUsers = await Promise.all(
         data.map(async (element) => {
@@ -73,9 +76,10 @@ const ChatZone = () => {
     /*socket stuff */
   }
   useEffect(() => {
+    const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
     const socket = io("https://zodomix.com");
 
-    socket.on("newMessage", async (newMessage) => {
+    socket.on(`newMessage-${currGroup}`, async (newMessage) => {
       const user = await getUser(newMessage.senderId);
       setConversation((prev) => [
         ...prev,
@@ -107,13 +111,13 @@ const ChatZone = () => {
         <div
           ref={chatContainerRef}
           onScroll={handleScroll}
-          className="flex flex-col w-full overflow-auto mt-20 md:mt-40 mb-40 p-3 text-xl"
+          className="flex flex-col w-full overflow-auto mt-28 md:mt-40 mb-40 p-3 text-xl"
         >
           {conversation.map((msg) => {
             return (
               <Message
                 key={msg.id}
-                img={`profiles/${msg.profilePic}.png`}
+                img={`/public/profiles/${msg.profilePic}.png`}
                 username={msg.username}
                 message={msg.message}
               />

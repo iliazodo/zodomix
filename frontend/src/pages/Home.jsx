@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className=" overflow-auto mb-40">
+      <div className="overflow-auto h-screen grid grid-cols-1 md:grid-cols-2 py-32 gap-20">
         <Text title={`Hey ${authUser.username},`}>
           ZODOMIX is a ANONYMOUS chatroom where you can use goups for chat.
           <br />
@@ -18,11 +18,11 @@ const Home = () => {
         </Text>
 
         <Text title={"News"}>
-        
+          You can do advertise in ADS group for FREE.
         </Text>
 
         <Text title={"Updates"}>
-          Now realtime chat is working.
+          All main groups added.
         </Text>
       </div>
     </>

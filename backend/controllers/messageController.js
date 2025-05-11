@@ -25,10 +25,10 @@ export const sendMessage = async (req, res) => {
       message,
     });
 
-    newMessage.save();
+    await newMessage.save();
 
     // Emit new message to all users
-    io.emit("newMessage" , newMessage);
+    io.emit(`newMessage-${groupName}` , newMessage);
     
 
     res.status(201).json({message: "MESSAGE CREATED SUCCESSFULLY"});
