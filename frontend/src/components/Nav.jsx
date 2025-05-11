@@ -19,7 +19,7 @@ const Nav = () => {
     <nav className="flex flex-row items-center md:justify-between gap-5 w-full fixed bg-black z-50">
       {/*logo*/}
       <Link to="/" className="md:w-1/4">
-        <img src="/../../public/zodomixLogo.png" alt="Zodomix Logo" className="w-[calc(100%-1rem)]" />
+        <img src="zodomixLogo.png" alt="Zodomix Logo" className="w-[calc(100%-1rem)]" />
       </Link>
       {/*header navbar*/}
       <div className="hidden md:block md:w-60 xl:w-80 fixed top-14 left-1/2 -translate-x-1/2 -translate-y-1/2">
