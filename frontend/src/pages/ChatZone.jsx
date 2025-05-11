@@ -117,7 +117,7 @@ const ChatZone = () => {
             return (
               <Message
                 key={msg.id}
-                img={`/public/profiles/${msg.profilePic}.png`}
+                img={`/profiles/${msg.profilePic}.png`}
                 username={msg.username}
                 message={msg.message}
               />
