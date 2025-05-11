@@ -24,7 +24,7 @@ const Explore = () => {
       <Nav />
       <div className="overflow-auto h-screen grid grid-cols-1 md:grid-cols-2 py-32 gap-16">
         
-        {groups.map(group => (
+        {Array.isArray(groups) && groups.map(group => (
           <Group key={group._id} name={group.name} description={group.description} picture={group.picture} />
         ))}
 
