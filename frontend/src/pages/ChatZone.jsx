@@ -18,7 +18,7 @@ const ChatZone = () => {
   const { loading, sendMessage } = useSendMessages();
   const { getMessages } = useGetMessages();
 
-  const currGroup = JSON.parse(localStorage.getItem("zdm-group"));
+  const currGroup = JSON.parse(localStorage.getItem("zdm-group")) || "ALL";
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
