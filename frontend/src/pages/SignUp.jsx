@@ -4,6 +4,7 @@ import useSignup from "../hooks/useSignup.js";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
+    website: "",
     username: "",
     email: "",
     password: "",
@@ -21,7 +22,7 @@ const Login = () => {
     } else {
       setError(null);
     }
-  }, [inputs.confirmPassword , inputs.password]);
+  }, [inputs.confirmPassword, inputs.password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,49 +41,70 @@ const Login = () => {
         className="w-full flex flex-col md:grid-cols-2 xl:w-2/3 items-center justify-center gap-3 z-10"
       >
         <div className="w-full grid grid-cols-1 md:grid-cols-2 md:mt-[calc(10%)] items-center justify-center gap-3 z-10">
-        <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-          <label className="text-3xl">USERNAME</label>
-          <input
-            type="text"
-            className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
-            value={inputs.username}
-            onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
-          />
-        </div>
-        <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-          <label className="text-3xl">EMAIL</label>
-          <input
-            type="email"
-            className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
-            value={inputs.email}
-            onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
-          />
-        </div>
-        <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-          <label className="text-3xl">PASSWORD</label>
-          <input
-            type="password"
-            className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
-            value={inputs.password}
-            onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
-          />
-        </div>
-        <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-          <label className="text-3xl">CONFIRM PASSWORD</label>
-          <input
-            type="password"
-            className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
-            value={inputs.confirmPassword}
-            onChange={(e) =>
-              setInputs({ ...inputs, confirmPassword: e.target.value })
-            }
-          />
-        </div>
+
+          {/* HoneyPot */}
+          <div className="absolute top-0 w-1 h-1 hidden">
+            <label htmlFor="website">Leave this field empty</label>
+            <input
+              type="text"
+              name="website"
+              autoComplete="off"
+              tabIndex="-1"
+              value={inputs.website}
+              onChange={(e) =>
+                setInputs({ ...inputs, website: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
+            <label className="text-3xl">USERNAME</label>
+            <input
+              type="text"
+              className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
+              value={inputs.username}
+              onChange={(e) =>
+                setInputs({ ...inputs, username: e.target.value })
+              }
+            />
+          </div>
+          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
+            <label className="text-3xl">EMAIL</label>
+            <input
+              type="email"
+              className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
+              value={inputs.email}
+              onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
+            />
+          </div>
+          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
+            <label className="text-3xl">PASSWORD</label>
+            <input
+              type="password"
+              className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
+              value={inputs.password}
+              onChange={(e) =>
+                setInputs({ ...inputs, password: e.target.value })
+              }
+            />
+          </div>
+          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
+            <label className="text-3xl">CONFIRM PASSWORD</label>
+            <input
+              type="password"
+              className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
+              value={inputs.confirmPassword}
+              onChange={(e) =>
+                setInputs({ ...inputs, confirmPassword: e.target.value })
+              }
+            />
+          </div>
         </div>
         <button
           type="submit"
           className={`  bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto mt-14  ${
-            (!loading && !error ) &&
+            !loading &&
+            !error &&
             "hover:bg-white hover:text-black active:bg-black active:text-white"
           } ${error && "cursor-not-allowed"}  xl:w-1/4 cursor-pointer`}
           disabled={loading || error}

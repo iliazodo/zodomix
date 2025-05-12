@@ -8,8 +8,8 @@ const useSignup = () => {
 
     const {setAuthUser} = useAuthContext();
 
-    const signUp = async ({username , email , password , confirmPassword}) => {
-        const checkFields = handleErrors({username , email , password , confirmPassword});
+    const signUp = async ({website , username , email , password , confirmPassword}) => {
+        const checkFields = handleErrors({website , username , email , password , confirmPassword});
 
         if(!checkFields) return;
 
@@ -45,7 +45,7 @@ const useSignup = () => {
 
 export default useSignup
 
-function handleErrors({username , email , password ,confirmPassword}){
+function handleErrors({website ,username , email , password ,confirmPassword}){
     if(!username || !email || !password || !confirmPassword){
         toast.error("PLEASE FILL IN ALL FIELDS")
         return false;
@@ -58,6 +58,11 @@ function handleErrors({username , email , password ,confirmPassword}){
 
     if(username.length >= 25){
         toast.error("USERNAME MUST BE LESS THAN 25 CHARACTERS");
+        return false;
+    }
+
+    if(website){
+        toast.error("DON'T FILL WEBSITE FIELD");
         return false;
     }
 

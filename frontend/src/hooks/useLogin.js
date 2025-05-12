@@ -7,9 +7,9 @@ const useLogin = () => {
 
     const {setAuthUser} = useAuthContext();
 
-    const login = async ({username , password}) => {
+    const login = async ({website , username , password}) => {
 
-        const checkFields = handleErrors({username , password});
+        const checkFields = handleErrors({website , username , password});
 
         if(!checkFields) return;
 
@@ -46,9 +46,14 @@ const useLogin = () => {
 
 export default useLogin
 
-function handleErrors({username , email , password ,confirmPassword}){
+function handleErrors({website , username , password }){
     if(!username || !password){
         toast.error("PLEASE FILL IN ALL FIELDS")
+        return false;
+    }
+
+    if(website){
+        toast.error("DON'T FILL WEBSITE FIELD");
         return false;
     }
 
