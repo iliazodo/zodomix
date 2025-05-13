@@ -140,7 +140,7 @@ const ChatZone = () => {
             <button
               className={`w-1/4 bg-transparent border-2 rounded-full text-2xl transition duration-300 ease-out ${
                 !loading &&
-                " hover:bg-white hover:text-black active:bg-black active:text-white"
+                " hover:bg-white hover:text-black lg:active:bg-black lg:active:text-white"
               } xl:w-1/4 cursor-pointer`}
               disabled={loading}
             >
