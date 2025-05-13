@@ -24,6 +24,12 @@ const Home = () => {
         <Text title={"Updates"}>
           All main groups added.
         </Text>
+
+        <Text title={"About"}>
+        Creator: Zodo
+        <br/>
+        Email: sendtozodo@gmail.com
+        </Text>
       </div>
     </>
   );
