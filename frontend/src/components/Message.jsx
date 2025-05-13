@@ -31,8 +31,8 @@ const Message = (props) => {
         alt="avatar"
       />
       <div className="flex flex-col">
-        <p className="-ml-12 pixel-font">{props.username}</p>
-        <div className="bubble grow left break-words text-xs xl:text-xl md:text-base max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
+        <p className="-ml-12 mt-2 text-xs pixel-font">{props.username}</p>
+        <div className="bubble grow left break-words  text-base font-semibold xl:text-xl md:text-base max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
           {renderMessageWithLinks(props.message)}
         </div>
       </div>
