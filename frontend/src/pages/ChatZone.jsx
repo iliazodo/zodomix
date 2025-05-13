@@ -114,7 +114,7 @@ const ChatZone = () => {
         <div
           ref={chatContainerRef}
           onScroll={handleScroll}
-          className="flex flex-col w-full overflow-auto mt-28 md:mt-40 mb-40 p-3 text-xl"
+          className="flex flex-col w-full overflow-auto xl:px-64 mt-28 md:mt-40 mb-40 p-3 text-xl"
         >
           {conversation.map((msg) => {
             return (
