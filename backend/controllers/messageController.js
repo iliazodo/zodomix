@@ -1,5 +1,5 @@
 import Message from "../models/messageModel.js";
-import {io} from "../socket/socket.js";
+import { io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -25,31 +25,31 @@ export const sendMessage = async (req, res) => {
       message,
     });
 
-    await newMessage.save();
+    const savedMessage = await newMessage.save();
 
     // Emit new message to all users
-    io.emit(`newMessage-${groupName}` , newMessage);
-    
+    const populatedMessage = await savedMessage.populate("senderId");
 
-    res.status(201).json({message: "MESSAGE CREATED SUCCESSFULLY"});
+    io.emit(`newMessage-${groupName}`, populatedMessage);
 
+    res.status(201).json({ message: "MESSAGE CREATED SUCCESSFULLY" });
   } catch (error) {
-    console.log("ERROR IN MESSAGECONTROLLER: " , error.message);
-    res.status(500).json({error:"INTERVAL SERVER ERROR"});
+    console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
   }
 };
 
-export const getMessage = async (req ,res) => {
+export const getMessage = async (req, res) => {
   try {
-
     const group = req.params.group;
 
-    const messages = await Message.find({groupName: group});
+    const messages = await Message.find({ groupName: group }).populate(
+      "senderId"
+    );
 
     res.status(200).json(messages);
-
   } catch (error) {
-    console.log("ERROR IN MESSAGECONTROLLER: " , error.message);
-    res.status(500).json({error:"INTERVAL SERVER ERROR"});
+    console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
   }
-}
+};

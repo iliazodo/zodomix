@@ -8,7 +8,6 @@ const messageSchema = new mongoose.Schema({
   },
   groupName:{
     type: String,
-    ref: "Group",
     required: true,
   },
   message: {

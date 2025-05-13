@@ -53,19 +53,7 @@ const ChatZone = () => {
     const gettingMessages = async () => {
       const data = await getMessages(currGroup);
 
-      const conversationWithUsers = await Promise.all(
-        data.map(async (element) => {
-          const user = await getUser(element.senderId);
-          return {
-            id: element._id,
-            message: element.message,
-            username: user.username,
-            profilePic: user.profilePic,
-          };
-        })
-      );
-
-      setConversation(conversationWithUsers);
+      setConversation(data);
       setChatLoading(false)
     };
 
@@ -79,18 +67,14 @@ const ChatZone = () => {
   useEffect(() => {
     const socket = io("https://zodomix.com");
 
-    socket.on(`newMessage-${currGroup}`, async (newMessage) => {
-      const user = await getUser(newMessage.senderId);
+      socket.on(`newMessage-${currGroup}`, async (newMessage) => {
+
       setConversation((prev) => [
         ...prev,
-        {
-          id: newMessage._id,
-          message: newMessage.message,
-          username: user.username,
-          profilePic: user.profilePic,
-        },
+        newMessage
       ]);
     });
+
     return () => {
       socket.disconnect();
     };
@@ -119,9 +103,9 @@ const ChatZone = () => {
           {conversation.map((msg) => {
             return (
               <Message
-                key={msg.id}
-                img={`/profiles/${msg.profilePic}.png`}
-                username={msg.username}
+                key={msg._id}
+                img={`/profiles/${msg.senderId.profilePic}.png`}
+                username={msg.senderId.username}
                 message={msg.message}
               />
             );
