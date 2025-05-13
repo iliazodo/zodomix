@@ -24,15 +24,15 @@ const renderMessageWithLinks = (message) => {
 
 const Message = (props) => {
   return (
-    <div className="flex flex-row z-0">
+    <div className="flex flex-row z-0 md:mb-3">
       <img
         src={props.img}
-        className="rounded-full w-16 h-16 mt-8"
+        className="rounded-full w-16 h-16 md:w-20 md:h-20 mt-8"
         alt="avatar"
       />
       <div className="flex flex-col">
-        <p className="-ml-12 mt-2 text-xs pixel-font">{props.username}</p>
-        <div className="bubble grow left break-words  text-base font-semibold xl:text-xl md:text-base max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
+        <p className="-ml-12 md:-ml-16 mt-2 text-xs md:text-base pixel-font">{props.username}</p>
+        <div className="bubble grow left break-words  text-base font-semibold xl:text-2xl md:text-xl max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
           {renderMessageWithLinks(props.message)}
         </div>
       </div>
