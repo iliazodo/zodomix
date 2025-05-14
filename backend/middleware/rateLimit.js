@@ -7,6 +7,7 @@ export const authLimit = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => req.ip,
   handler: (req, res) => {
+    console.log("Rate limit triggered from IP:", req.ip);
     res.status(429).json({
       error: "TOO MANY REQUESTS , PLEASE TRY AGIAN LATER",
     });

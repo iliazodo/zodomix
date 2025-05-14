@@ -10,7 +10,6 @@ import userRoutes from "./routes/userRouter.js";
 import groupRoutes from "./routes/groupRouter.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
-import {authLimit} from "./middleware/rateLimit.js";
 
 dotenv.config();
 
@@ -29,6 +28,13 @@ app.use(
 
 // Rate limit
 app.set("trust proxy", 1);
+app.get("/ip", (req, res) => {
+  res.json({
+    ip: req.ip,
+    forwarded: req.headers["x-forwarded-for"],
+  });
+});
+
 
 
 app.use("/api/auth", authRoutes);
