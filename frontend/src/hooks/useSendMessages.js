@@ -19,6 +19,10 @@ const useSendMessages = () => {
         credentials: "include"
       })
 
+      if(res.status == 429){
+        toast.error("TOO MANY MESSAGES SENT, PLEASE TRY 1MIN LATER");
+      }
+
 
     } catch (error) {
         console.log(error.message);

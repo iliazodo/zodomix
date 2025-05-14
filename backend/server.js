@@ -10,7 +10,7 @@ import userRoutes from "./routes/userRouter.js";
 import groupRoutes from "./routes/groupRouter.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
-import authLimit from "./middleware/rateLimit.js";
+import {authLimit} from "./middleware/rateLimit.js";
 
 dotenv.config();
 

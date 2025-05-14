@@ -1,6 +1,6 @@
 import expres from "express";
 import { signup , login , logout } from "../controllers/authController.js";
-import authLimit from "../middleware/rateLimit.js";
+import {authLimit} from "../middleware/rateLimit.js";
 
 const router = expres.Router();
 

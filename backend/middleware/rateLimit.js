@@ -1,12 +1,11 @@
 import rateLimit from "express-rate-limit";
 
-const authLimit = rateLimit({
-  windowMs:  15 * 60 * 1000,
+export const authLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
   max: 10,
-  keyGenerator: (req) => {
-    const ip = req.headers["x-forwarded-for"] || req.ip;
-    return ip;
-  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
   handler: (req, res) => {
     res.status(429).json({
       error: "TOO MANY REQUESTS , PLEASE TRY AGIAN LATER",
@@ -14,4 +13,15 @@ const authLimit = rateLimit({
   },
 });
 
-export default authLimit;
+export const messageLimit = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 8,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.ip,
+  handler: (req, res) => {
+    res.status(429).json({
+      error: "TOO MANY MESSAGES SENT, PLEASE TRY 1MIN LATER",
+    });
+  },
+});
