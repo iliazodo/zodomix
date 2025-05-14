@@ -14,13 +14,13 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "PASSWORDS DON'T MATCH" });
     }
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: username.toLowerCase() });
 
     if (user) {
       return res.status(400).json({ error: "USER ALREADY EXIST" });
     }
 
-    const otherEmail = await User.findOne({email});
+    const otherEmail = await User.findOne({email: email.toLowerCase()});
 
     if(otherEmail){
       return res.status(400).json({error: "EMAIL ALREADY EXIST"});
@@ -70,7 +70,7 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: username.toLowerCase() });
     const passwordCheck = await bcrypt.compare(password, user?.password || "");
 
     if (!user || !passwordCheck) {
