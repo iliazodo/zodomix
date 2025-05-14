@@ -24,7 +24,7 @@ const Home = () => {
         </Text>
 
         <Text title={"Updates"}>
-          All main groups added.
+          If there was any error or bug try Logout and Login again.
         </Text>
 
         <Text title={"About"}>
