@@ -6,16 +6,14 @@ export const authLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => {
-    // Get the real IP address from the x-forwarded-for header
     const forwarded = req.headers['x-forwarded-for'];
     if (forwarded) {
-      // The first IP in the chain is the real client IP
       return forwarded.split(',')[0]; 
     }
-    return req.ip;  // Fallback to req.ip if no forwarded header is present
+    return req.ip;
   },
   handler: (req, res) => {
-    console.log("Rate limit triggered from IP:", req.ip);  // You can still log the original IP from req.ip
+    console.log("Rate limit triggered from IP:", req.ip);
     res.status(429).json({
       error: "TOO MANY REQUESTS, PLEASE TRY AGAIN LATER",
     });
@@ -27,7 +25,13 @@ export const messageLimit = rateLimit({
   max: 8,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.ip,
+  keyGenerator: (req) => {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (forwarded) {
+      return forwarded.split(',')[0]; 
+    }
+    return req.ip;
+  },
   handler: (req, res) => {
     res.status(429).json({
       error: "TOO MANY MESSAGES SENT, PLEASE TRY 1MIN LATER",
