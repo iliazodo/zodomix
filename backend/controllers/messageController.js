@@ -28,7 +28,10 @@ export const sendMessage = async (req, res) => {
     const savedMessage = await newMessage.save();
 
     // Emit new message to all users
-    const populatedMessage = await savedMessage.populate("senderId");
+    const populatedMessage = await savedMessage.populate(
+      "senderId",
+      "-password"
+    );
 
     io.emit(`newMessage-${groupName}`, populatedMessage);
 
@@ -44,7 +47,8 @@ export const getMessage = async (req, res) => {
     const group = req.params.group;
 
     const messages = await Message.find({ groupName: group }).populate(
-      "senderId"
+      "senderId",
+      "-password"
     );
 
     res.status(200).json(messages);
