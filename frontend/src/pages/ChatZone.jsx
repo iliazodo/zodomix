@@ -9,7 +9,7 @@ import Message from "../components/Message.jsx";
 import AlertMessage from "../components/AlertMessage.jsx";
 
 const ChatZone = () => {
-
+  
   const [chatLoading , setChatLoading] = useState(false);
   const [myMessage, setMyMessage] = useState({ message: "" });
   const [conversation, setConversation] = useState([]);
@@ -52,7 +52,7 @@ const ChatZone = () => {
     const gettingMessages = async () => {
       const data = await getMessages(currGroup);
 
-      setConversation(data || []);
+      setConversation(data);
       setChatLoading(false)
     };
 
@@ -71,7 +71,7 @@ const ChatZone = () => {
       setConversation((prev) => [
         ...prev,
         newMessage
-      ] || []);
+      ]);
     });
 
     return () => {
@@ -104,11 +104,11 @@ const ChatZone = () => {
               <Message
                 key={msg._id}
                 img={`/profiles/${msg.senderId.profilePic}.png`}
-                username={msg.senderId.username}
+                username={`HUMAN-${msg.senderId.humanNum}`}
                 message={msg.message}
               />
             );
-          }) || []}
+          })}
           <div ref={lastMessageRef} />
         </div>
         {/* chat inputs */}

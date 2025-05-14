@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     profilePic:{
         type:String,
         required:true
+    },
+    humanNum:{
+        type:Number,
+        required:true
     }
 } , {timestamps:true})
 

@@ -23,11 +23,20 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(password, salt);
 
+    const humanNum = Math.floor(Math.random() * 100000000);
+    const othersNum = await User.findOne({humanNum});
+
+    while (othersNum) {
+      humanNum = Math.floor(Math.random() * 100000000);
+      othersNum = await User.findOne({humanNum});
+    }
+
     const newUser = new User({
       username,
       email,
       password: hashedPass,
-      profilePic: Math.ceil(Math.random() * 12)
+      profilePic: Math.ceil(Math.random() * 12),
+      humanNum
     });
 
     if (newUser) {
@@ -39,7 +48,8 @@ export const signup = async (req, res) => {
         id: newUser._id,
         username: newUser.username,
         email: newUser.email,
-        profilePic: newUser.profilePic
+        profilePic: newUser.profilePic,
+        humanNum: newUser.humanNum
       });
     } else {
       res.status(400).json({ error: "INVALID USER DATA" });
@@ -67,7 +77,8 @@ export const login = async (req, res) => {
       id: user._id,
       username: user.username,
       email: user.email,
-      profilePic: user.profilePic
+      profilePic: user.profilePic,
+      humanNum: user.humanNum
     });
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER" , error.message);
