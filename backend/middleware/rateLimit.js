@@ -5,11 +5,19 @@ export const authLimit = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.ip,
+  keyGenerator: (req) => {
+    // Get the real IP address from the x-forwarded-for header
+    const forwarded = req.headers['x-forwarded-for'];
+    if (forwarded) {
+      // The first IP in the chain is the real client IP
+      return forwarded.split(',')[0]; 
+    }
+    return req.ip;  // Fallback to req.ip if no forwarded header is present
+  },
   handler: (req, res) => {
-    console.log("Rate limit triggered from IP:", req.ip);
+    console.log("Rate limit triggered from IP:", req.ip);  // You can still log the original IP from req.ip
     res.status(429).json({
-      error: "TOO MANY REQUESTS , PLEASE TRY AGIAN LATER",
+      error: "TOO MANY REQUESTS, PLEASE TRY AGAIN LATER",
     });
   },
 });
