@@ -4,13 +4,12 @@ import Nav from "../components/Nav.jsx";
 import "./custom.css";
 import useSendMessages from "../hooks/useSendMessages.js";
 import useGetMessages from "../hooks/useGetMessages.js";
-import useGetUser from "../hooks/useGetUser.js";
 import io from "socket.io-client";
 import Message from "../components/Message.jsx";
 import AlertMessage from "../components/AlertMessage.jsx";
 
 const ChatZone = () => {
-  const { getUser } = useGetUser();
+
   const [chatLoading , setChatLoading] = useState(false);
   const [myMessage, setMyMessage] = useState({ message: "" });
   const [conversation, setConversation] = useState([]);
@@ -53,7 +52,7 @@ const ChatZone = () => {
     const gettingMessages = async () => {
       const data = await getMessages(currGroup);
 
-      setConversation(data);
+      setConversation(data || []);
       setChatLoading(false)
     };
 
@@ -72,7 +71,7 @@ const ChatZone = () => {
       setConversation((prev) => [
         ...prev,
         newMessage
-      ]);
+      ] || []);
     });
 
     return () => {
@@ -109,7 +108,7 @@ const ChatZone = () => {
                 message={msg.message}
               />
             );
-          })}
+          }) || []}
           <div ref={lastMessageRef} />
         </div>
         {/* chat inputs */}
