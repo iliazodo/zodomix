@@ -115,7 +115,7 @@ const ChatZone = () => {
         <form onSubmit={handleSendMessage} className="">
           <div className="fixed flex flex-row justify-between bg-black py-3 gap-1 w-full bottom-20 md:bottom-0">
             <input
-              className="resize-none overflow-auto scrollbar-hide w-3/4 h-20 bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
+              className="resize-none overflow-auto scrollbar-hide w-3/4 md:h-20 h-14 bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
               type="text"
               value={myMessage.message}
               onChange={(e) => setMyMessage({ message: e.target.value })}
