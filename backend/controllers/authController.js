@@ -20,6 +20,12 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "USER ALREADY EXIST" });
     }
 
+    const otherEmail = await User.findOne({email});
+
+    if(otherEmail){
+      return res.status(400).json({error: "EMAIL ALREADY EXIST"});
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(password, salt);
 
