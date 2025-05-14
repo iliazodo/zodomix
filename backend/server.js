@@ -36,6 +36,13 @@ app.get("/ip", (req, res) => {
 });
 
 
+// Redirecting users to zodomix.com
+app.use((req, res, next) => {
+  if (req.hostname === 'zodomix.onrender.com') {
+    return res.redirect(301, `https://zodomix.com${req.originalUrl}`);
+  }
+  next();
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
