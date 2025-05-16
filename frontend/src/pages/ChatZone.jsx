@@ -7,13 +7,15 @@ import useGetMessages from "../hooks/useGetMessages.js";
 import io from "socket.io-client";
 import Message from "../components/Message.jsx";
 import AlertMessage from "../components/AlertMessage.jsx";
+import { useContext } from "react";
+import { SocketContext } from "../context/SocketContext";
 
 const ChatZone = () => {
-  
-  const [chatLoading , setChatLoading] = useState(false);
-  const [myMessage, setMyMessage] = useState({ message: "" });
+  const { socket } = useContext(SocketContext);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [myMessage, setMyMessage] = useState({ message: "", id: "", pic: "" });
   const [conversation, setConversation] = useState([]);
-
+  const [tempInfo, setTempInfo] = useState({ id: "", pic: "" });
   const { loading, sendMessage } = useSendMessages();
   const { getMessages } = useGetMessages();
 
@@ -30,7 +32,9 @@ const ChatZone = () => {
   const chatContainerRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
-  {/*Scroll Handling*/}
+  {
+    /*Scroll Handling*/
+  }
 
   const handleScroll = () => {
     const el = chatContainerRef.current;
@@ -53,31 +57,36 @@ const ChatZone = () => {
       const data = await getMessages(currGroup);
 
       setConversation(data);
-      setChatLoading(false)
+      setChatLoading(false);
     };
 
     gettingMessages();
-    
   }, []);
 
   {
     /*socket stuff */
   }
   useEffect(() => {
-    const socket = io("https://zodomix.com");
+    // const socket = io("http://localhost:3030");
+    if (!socket) return; // <-- wait for socket to be initialized
 
-      socket.on(`newMessage-${currGroup}`, async (newMessage) => {
+    const handleUserSocketId = (data) => {
+      setTempInfo({ id: data.id, pic: data.pic });
+      console.log("Received:", data);
+    };
 
-      setConversation((prev) => [
-        ...prev,
-        newMessage
-      ]);
+    socket.on("userSocketId", handleUserSocketId);
+    socket.emit("requestUserInfo");
+
+    socket.on(`newMessage-${currGroup}`, async (newMessage) => {
+      setConversation((prev) => [...prev, newMessage]);
     });
 
     return () => {
-      socket.disconnect();
+      socket.off("userSocketId");
+      socket.off(`newMessage-${currGroup}`);
     };
-  }, []);
+  }, [socket]);
 
   return (
     <>
@@ -103,8 +112,14 @@ const ChatZone = () => {
             return (
               <Message
                 key={msg._id}
-                img={`/profiles/${msg.senderId.profilePic}.png`}
-                username={`HUMAN-${msg.senderId.humanNum}`}
+                img={`/profiles/${
+                  msg.senderId ? msg.senderId.profilePic : msg.tempPic
+                }.png`}
+                username={`${
+                  msg.senderId
+                    ? "HUMAN-" + msg.senderId.humanNum
+                    : "GUEST-" + msg.tempUser
+                }`}
                 message={msg.message}
               />
             );
@@ -118,7 +133,13 @@ const ChatZone = () => {
               className="resize-none overflow-auto scrollbar-hide w-3/4 md:h-20 h-14 bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
               type="text"
               value={myMessage.message}
-              onChange={(e) => setMyMessage({ message: e.target.value })}
+              onChange={(e) =>
+                setMyMessage({
+                  message: e.target.value,
+                  id: tempInfo.id,
+                  pic: tempInfo.pic,
+                })
+              }
             />
             <button
               className={`w-1/4 bg-transparent border-2 rounded-full text-2xl transition duration-300 ease-out ${

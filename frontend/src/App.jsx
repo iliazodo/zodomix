@@ -19,9 +19,9 @@ function App() {
   return (
     <div className=" font-thin">
       <Routes>
-        <Route path="/" element={authUser ? <Home/> : <Navigate to="/login" />} />
-        <Route path={`/chatZone/*`} element={authUser ? <ChatZone/> : <Navigate to="/login" />} />
-        <Route path="/explore" element={authUser ? <Explore/> : <Navigate to="/login" />} />
+        <Route path="/" element={<Home/>} />
+        <Route path={`/chatZone/*`} element={<ChatZone/>} />
+        <Route path="/explore" element={<Explore/>} />
         <Route path="/profile" element={authUser ? <Profile/> : <Navigate to="/login" />} />
         <Route path="/signUp" element={authUser ? <Navigate to="/" /> : <SignUp />} />
         <Route path="/login" element={authUser ? <Navigate to="/" /> : <Login />} />

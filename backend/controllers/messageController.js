@@ -1,26 +1,31 @@
+import jwt from "jsonwebtoken";
+
 import Message from "../models/messageModel.js";
+import User from "../models/userModel.js";
 import { io } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { message } = req.body;
-    const senderId = req.user._id;
+    const { message, tempUser, tempPic } = req.body;
     const groupName = req.params.group;
 
     if (!message) {
       return res.status(400).json({ error: "MESSAGE REQUIRE" });
     }
 
-    if (!senderId) {
-      return res.status(400).json({ error: "INVALID USER" });
-    }
+    let senderId = null;
 
-    if (!groupName) {
-      return res.status(404).json({ error: "NO GROUP FOUNDED" });
+    const token = req.cookies.jwt;
+    if (token) {
+      const decode = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decode.userId).select("-password");
+      senderId = user._id;
     }
 
     const newMessage = new Message({
       senderId,
+      tempUser,
+      tempPic,
       groupName,
       message,
     });
@@ -35,7 +40,7 @@ export const sendMessage = async (req, res) => {
 
     io.emit(`newMessage-${groupName}`, populatedMessage);
 
-    res.status(201).json({ message: "MESSAGE CREATED SUCCESSFULLY" });
+    res.status(201).json(populatedMessage);
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
     res.status(500).json({ error: "INTERVAL SERVER ERROR" });

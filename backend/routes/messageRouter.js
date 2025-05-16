@@ -6,7 +6,7 @@ import { messageLimit } from "../middleware/rateLimit.js";
 
 const router = express.Router();
 
-router.post("/send/:group", protectRoute, messageLimit, sendMessage);
-router.get("/get/:group", protectRoute, getMessage);
+router.post("/send/:group", messageLimit, sendMessage);
+router.get("/get/:group", getMessage);
 
 export default router;

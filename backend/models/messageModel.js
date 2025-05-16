@@ -4,7 +4,15 @@ const messageSchema = new mongoose.Schema({
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    default: ""
+  },
+  tempUser: {
+    type: String,
+    default: ""
+  },
+  tempPic: {
+    type: String,
+    default: ""
   },
   groupName:{
     type: String,

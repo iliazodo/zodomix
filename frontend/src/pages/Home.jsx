@@ -11,12 +11,12 @@ const Home = () => {
     <>
       <Header />
       <div className="overflow-auto h-screen grid grid-cols-1 md:grid-cols-2 py-32 gap-20">
-        <Text title={`Hey ${authUser.username},`}>
+        <Text title={`Hey ${authUser ? authUser.username : "Guest"},`}>
           ZODOMIX is a ANONYMOUS chatroom.
           <br />
           Say WHATEVER you want.
           <br/>
-          Your Human Number is {authUser.humanNum}
+          Your Human Number is {authUser ? authUser.humanNum : "00000000"}
         </Text>
 
         <Text title={"News"}>

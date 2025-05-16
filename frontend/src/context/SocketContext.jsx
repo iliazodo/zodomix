@@ -5,22 +5,21 @@ import io from "socket.io-client";
 export const SocketContext = createContext();
 
 export const SocketContextProvider = ({ children }) => {
-    const [socket , setSocket] = useState(null);
-    const {authUser} = useAuthContext();
+  const [socket, setSocket] = useState(null);
 
-    useEffect(() => {
-        if(authUser){
-            const socket = io("https://zodomix.com");
+  useEffect(() => {
+    const socket = io("https://zodomix.com");
+    
+    setSocket(socket);
 
-            setSocket(socket);
-            return () => socket.close();
-        } else {
-            if(socket){
-                socket.close();
-                setSocket(null);
-            }
-        }
-    } , [])
+    return () => {
+    socket.disconnect();
+  };
+  }, []);
 
-  return <SocketContext.Provider value={{socket}}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };

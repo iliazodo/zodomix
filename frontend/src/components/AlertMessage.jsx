@@ -1,11 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 const AlertMessage = (props) => {
 
+
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       document.getElementById(`message-${props.message}`).classList.add("hidden");
+
     }, 1400);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
