@@ -31,17 +31,18 @@ const Login = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 h-full w-full bg-black">
-      <img
-        src="zodomixLogo.png"
-        alt="zodomix logo"
-        className="lg:w-2/3 md:w-3/4 mt-10"
-      />
+      <Link to="/" className="w-full">
+        <img
+          src="zodomixLogo.png"
+          alt="zodomix logo"
+          className="lg:w-2/3 md:w-3/4 m-auto mt-10"
+        />
+      </Link>
       <form
         onSubmit={handleSubmit}
         className="w-full flex flex-col md:grid-cols-2 xl:w-2/3 items-center justify-center gap-3 z-10"
       >
         <div className="w-full grid grid-cols-1 md:grid-cols-2 md:mt-[calc(10%)] items-center justify-center gap-3 z-10">
-
           {/* HoneyPot */}
           <div className="absolute top-0 w-1 h-1 hidden">
             <label htmlFor="website">Leave this field empty</label>
@@ -58,7 +59,7 @@ const Login = () => {
           </div>
 
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-3xl">USERNAME</label>
+            <label className="text-2xl">USERNAME</label>
             <input
               type="text"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -69,7 +70,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-3xl">EMAIL</label>
+            <label className="text-2xl">EMAIL</label>
             <input
               type="email"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -78,7 +79,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-3xl">PASSWORD</label>
+            <label className="text-2xl">PASSWORD</label>
             <input
               type="password"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -89,7 +90,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-3xl">CONFIRM PASSWORD</label>
+            <label className="text-2xl">CONFIRM PASSWORD</label>
             <input
               type="password"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -118,13 +119,21 @@ const Login = () => {
           )}
         </button>
       </form>
-
-      <Link
-        to="/login"
-        className=" md:absolute m-auto bottom-5 right-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
-      >
-        LOGIN ⇨
-      </Link>
+      <div className="flex flex-row gap-5">
+        <Link
+          to="/"
+          className="md:absolute md:mb-0 mb-10 bottom-5 left-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
+        >
+          ⇦ HOME
+        </Link>
+        <p className="text-2xl md:hidden">|</p>
+        <Link
+          to="/login"
+          className=" md:absolute md:mb-0 mb-10 bottom-5 right-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
+        >
+          LOGIN ⇨
+        </Link>
+      </div>
     </div>
   );
 };

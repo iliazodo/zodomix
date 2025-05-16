@@ -23,7 +23,7 @@ const Login = () => {
       <img
         src="zodomixLogo.png"
         alt="zodomix logo"
-        className="lg:w-2/3 md:w-3/4  mt-10"
+        className="lg:w-2/3 md:w-3/4 m-auto mt-10"
       />
       </Link>
       <form
@@ -84,18 +84,21 @@ const Login = () => {
           )}
         </button>
       </form>
-      <Link
-        to="/signUp"
-        className="md:absolute  bottom-5 right-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
-      >
-        SIGIN UP ⇨
-      </Link>
-      <Link
-        to="/signUp"
-        className="md:absolute bottom-5 left-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
-      >
-        ⇦ HOME
-      </Link>
+      <div className="flex flex-row gap-5">
+        <Link
+          to="/"
+          className="md:absolute md:mb-0 mb-10 bottom-5 left-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
+        >
+           ⇦ HOME
+        </Link>
+        <p className="text-2xl md:hidden">|</p>
+        <Link
+          to="/signup"
+          className=" md:absolute md:mb-0 mb-10 bottom-5 right-5 text-3xl cursor-pointer transform duration-100 ease-in hover:font-bold xl:text-5xl sm:text-4xl"
+        >
+          SIGN UP ⇨
+        </Link>
+      </div>
     </div>
   );
 };
