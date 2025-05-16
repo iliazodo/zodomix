@@ -42,9 +42,9 @@ const Nav = () => {
         </ul>
       </div>
       {/*profile image*/}
-      <div className="md:p-3 md:w-28 w-full mr-3">
-      <Link to="/profile" className="w-2">
-        <img src={`/profiles/${authUser ? authUser.profilePic : "defaultPic"}.png`} alt="profile" className="scale-125 md:scale-100 border-2 rounded-full" />
+      <div className="md:p-3 md:w-24 w-96 mr-4">
+      <Link to="/profile">
+        <img src={`/profiles/${authUser ? authUser.profilePic : "defaultPic"}.png`} alt="profile" className="md:scale-100 scale-150 border-2 rounded-full" />
       </Link>
       </div>
       {/*footer navbar*/}

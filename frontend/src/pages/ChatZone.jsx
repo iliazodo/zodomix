@@ -106,8 +106,9 @@ const ChatZone = () => {
         <div
           ref={chatContainerRef}
           onScroll={handleScroll}
-          className="flex flex-col w-full overflow-auto xl:px-64 mt-28 md:mt-40 mb-40 p-3 text-xl"
+          className="flex flex-col w-full overflow-auto xl:px-64 p-3 text-xl"
         >
+          <div className="mt-28 md:mt-40"></div>
           {conversation.map((msg) => {
             return (
               <Message
@@ -125,6 +126,7 @@ const ChatZone = () => {
             );
           })}
           <div ref={lastMessageRef} />
+          <div className="mb-40"></div>
         </div>
         {/* chat inputs */}
         <form onSubmit={handleSendMessage} className="">
