@@ -119,7 +119,7 @@ const ChatZone = () => {
                 username={`${
                   msg.senderId
                     ? "HUMAN-" + msg.senderId.humanNum
-                    : "GUEST-" + msg.tempUser
+                    : "GUEST-" + msg.tempUser.slice(0 , 10)
                 }`}
                 message={msg.message}
               />
