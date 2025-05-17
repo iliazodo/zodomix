@@ -1,13 +1,18 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../myCookie/generateToken.js";
+import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
+import sendVerificationEmail from "../utils/sendEmail.js";
 
 export const signup = async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
 
-    if(username >= 25){
-      return res.status(400).json({error: "USERNAME MUST LESS THAN 25 CHARACTERS"})
+    if (username.length >= 25) {
+      return res
+        .status(400)
+        .json({ error: "USERNAME MUST LESS THAN 25 CHARACTERS" });
     }
 
     if (password !== confirmPassword) {
@@ -20,43 +25,42 @@ export const signup = async (req, res) => {
       return res.status(400).json({ error: "USER ALREADY EXIST" });
     }
 
-    const otherEmail = await User.findOne({email: email.toLowerCase()});
+    const otherEmail = await User.findOne({ email: email.toLowerCase() });
 
-    if(otherEmail){
-      return res.status(400).json({error: "EMAIL ALREADY EXIST"});
+    if (otherEmail) {
+      return res.status(400).json({ error: "EMAIL ALREADY EXIST" });
     }
+
+    // Create jsonwebtoken for verification
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPass = await bcrypt.hash(password, salt);
 
-    const humanNum = Math.floor(Math.random() * 100000000);
-    const othersNum = await User.findOne({humanNum});
+    let humanNum = Math.floor(Math.random() * 100000000);
+    let othersNum = await User.findOne({ humanNum });
 
     while (othersNum) {
       humanNum = Math.floor(Math.random() * 100000000);
-      othersNum = await User.findOne({humanNum});
+      othersNum = await User.findOne({ humanNum });
     }
 
     const newUser = new User({
-      username,
-      email,
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
       password: hashedPass,
       profilePic: Math.ceil(Math.random() * 12),
-      humanNum
+      humanNum,
     });
 
     if (newUser) {
-      generateToken(newUser._id, res);
-
       await newUser.save();
 
-      res.status(201).json({
-        id: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
-        humanNum: newUser.humanNum
-      });
+      await sendVerificationEmail(email, `https://zodomix.com/verify/${token}`);
+
+      res.status(201).json({ message: "Verification email sent" });
     } else {
       res.status(400).json({ error: "INVALID USER DATA" });
     }
@@ -77,6 +81,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: "INVALID USER OR PASSWORD" });
     }
 
+    if (!user.isVerified) {
+      return res.status(401).json({ error: "EMAIL NOT VERIFIED" });
+    }
+
     generateToken(user._id, res);
 
     res.status(200).json({
@@ -84,20 +92,20 @@ export const login = async (req, res) => {
       username: user.username,
       email: user.email,
       profilePic: user.profilePic,
-      humanNum: user.humanNum
+      humanNum: user.humanNum,
     });
   } catch (error) {
-    console.log("ERROR IN AUTHCONTROLLER" , error.message);
-    res.status(500).json({error:"INTERVAL SERVER ERROR"});
+    console.log("ERROR IN AUTHCONTROLLER", error.message);
+    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
   }
 };
 
 export const logout = (req, res) => {
   try {
-    res.cookie("jwt" , "" , {maxAge:0});
-    res.status(200).json({message:"LOGGED OUT SUCCESSFULLY"})
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "LOGGED OUT SUCCESSFULLY" });
   } catch (error) {
-    console.log("ERROR IN AUTHCONTROLLER " , error.message);
-    res.status(500).json({error:"INTERVAL SERVER ERROR"});
+    console.log("ERROR IN AUTHCONTROLLER ", error.message);
+    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
   }
 };

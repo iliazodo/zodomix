@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRouter.js";
 import messageRoutes from "./routes/messageRouter.js";
 import userRoutes from "./routes/userRouter.js";
 import groupRoutes from "./routes/groupRouter.js";
+import verifyRoutes from "./routes/verifyRouter.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
 
@@ -48,6 +49,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
+app.use("/api/verify", verifyRoutes);
 
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));

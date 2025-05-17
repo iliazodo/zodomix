@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useSignup from "../hooks/useSignup.js";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [inputs, setInputs] = useState({
@@ -27,6 +28,16 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await signUp(inputs);
+
+    setInputs({
+    website: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  toast.success("PLEASE VERIFY YOUR EMAIL");
   };
 
   return (

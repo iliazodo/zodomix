@@ -9,6 +9,7 @@ import {Navigate , Route, Routes, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { useAuthContext } from "./context/AuthContext.jsx";
+import VerifyZone from "./pages/VerifyZone.jsx";
 
 
 function App() {
@@ -20,11 +21,12 @@ function App() {
     <div className=" font-thin">
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path={`/chatZone/*`} element={<ChatZone/>} />
+        <Route path={`/chatZone/:group`} element={<ChatZone/>} />
         <Route path="/explore" element={<Explore/>} />
         <Route path="/profile" element={authUser ? <Profile/> : <Navigate to="/login" />} />
         <Route path="/signUp" element={authUser ? <Navigate to="/" /> : <SignUp />} />
         <Route path="/login" element={authUser ? <Navigate to="/" /> : <Login />} />
+        <Route path="/verify/:token" element={<VerifyZone/>} />
       </Routes>
       <Toaster
         position="top-center"

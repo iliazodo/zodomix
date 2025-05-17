@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     humanNum:{
         type:Number,
         required:true
+    },
+    isVerified:{
+        type:Boolean,
+        default:false
     }
 } , {timestamps:true})
 
