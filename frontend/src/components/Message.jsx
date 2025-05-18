@@ -1,9 +1,20 @@
 import React from "react";
 
+const bannedWords = ["nigger" , "nigga" , "niga" , ];
+
+const sanitizeMessage = (message) => {
+  let sanitized = message;
+  bannedWords.forEach((word) => {
+    const regex = new RegExp(`\\b${word}\\b`, "gi");
+    sanitized = sanitized.replace(regex, "****");
+  });
+  return sanitized;
+};
+
 const renderMessageWithLinks = (message) => {
   const urlPattern = /(https?:\/\/[^\s]+)/g;
-
-  const parts = message.split(urlPattern);
+  const sanitizedMessage = sanitizeMessage(message);
+  const parts = sanitizedMessage.split(urlPattern);
 
   return parts.map((part, index) =>
     urlPattern.test(part) ? (
