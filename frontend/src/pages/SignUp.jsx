@@ -16,8 +16,9 @@ const Login = () => {
 
   const { loading, signUp } = useSignup();
 
+  const [serverMessage , setServerMessage] = useState(null);
+
   useEffect(() => {
-    console.log(error);
     if (inputs.password !== inputs.confirmPassword) {
       setError("PASSWORDS DON'T MATCH");
     } else {
@@ -38,6 +39,9 @@ const Login = () => {
   });
 
   toast.success("PLEASE VERIFY YOUR EMAIL");
+
+  setServerMessage("CHECK YOUR SPAM FOLDER. \n WE SENT YOU AN EMAIL, PLEASE CLICK ON LINK TO VERIFY YOUR EMAIL.");
+  
   };
 
   return (
@@ -49,6 +53,10 @@ const Login = () => {
           className="lg:w-2/3 md:w-3/4 m-auto mt-10"
         />
       </Link>
+
+      {/* verify message */}
+      {serverMessage && (<div className="w-full h-auto text-green-300 text-center md:text-xl py-5">CHECK YOUR SPAM FOLDER. WE SENT YOU AN EMAIL, PLEASE CLICK ON THE LINK TO VERIFY YOUR EMAIL. IF YOU DID'T RECEIVE ANY EMAIL DO THE SIGNUP AGAIN.</div>)}
+
       <form
         onSubmit={handleSubmit}
         className="w-full flex flex-col md:grid-cols-2 xl:w-2/3 items-center justify-center gap-3 z-10"

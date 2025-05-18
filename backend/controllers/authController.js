@@ -22,13 +22,21 @@ export const signup = async (req, res) => {
     const user = await User.findOne({ username: username.toLowerCase() });
 
     if (user) {
-      return res.status(400).json({ error: "USER ALREADY EXIST" });
+      if (!user.isVerified) {
+        await User.deleteOne({ username: username.toLowerCase() });
+      } else {
+        return res.status(400).json({ error: "USER ALREADY EXIST" });
+      }
     }
 
     const otherEmail = await User.findOne({ email: email.toLowerCase() });
 
     if (otherEmail) {
-      return res.status(400).json({ error: "EMAIL ALREADY EXIST" });
+      if (!otherEmail.isVerified) {
+        await User.deleteOne({ email: email.toLowerCase() });
+      } else {
+        return res.status(400).json({ error: "EMAIL ALREADY EXIST" });
+      }
     }
 
     // Create jsonwebtoken for verification
