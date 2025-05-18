@@ -25,8 +25,6 @@ const Home = () => {
               -signup required-
             </Link>
           )}
-          <br />
-          🔞+18 age required for using chat groups.🔞
         </Text>
 
         <Text title={"News"}>You can do advertise in ADS group for FREE.</Text>
