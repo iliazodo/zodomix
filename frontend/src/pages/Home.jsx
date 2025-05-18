@@ -3,6 +3,7 @@ import React from "react";
 import Header from "../components/Nav.jsx";
 import { useAuthContext } from "../context/AuthContext.jsx";
 import Text from "../components/homeComponents.jsx/Text.jsx";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const { authUser } = useAuthContext();
@@ -16,7 +17,7 @@ const Home = () => {
           <br />
           Say WHATEVER you want.
           <br/>
-          Your Human Number is {authUser ? authUser.humanNum : "-signup required-"}
+          Your Human Number is {authUser ? authUser.humanNum : (<Link to="/signup" style={{color: "#FF00EE"}}>-signup required-</Link>)}
           <br/>
           🔞+18 age required for using chat groups.🔞
         </Text>
