@@ -71,7 +71,6 @@ const ChatZone = () => {
 
     const handleUserSocketId = (data) => {
       setTempInfo({ id: data.id, pic: data.pic });
-      console.log("Received:", data);
     };
 
     socket.on("userSocketId", handleUserSocketId);
