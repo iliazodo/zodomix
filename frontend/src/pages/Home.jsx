@@ -16,28 +16,35 @@ const Home = () => {
           ZODOMIX is a ANONYMOUS chatroom.
           <br />
           Say WHATEVER you want.
-          <br/>
-          Your Human Number is {authUser ? authUser.humanNum : (<Link to="/signup" style={{color: "#FF00EE"}}>-signup required-</Link>)}
-          <br/>
+          <br />
+          Your Human Number is{" "}
+          {authUser ? (
+            authUser.humanNum
+          ) : (
+            <Link to="/signup" style={{ color: "#FF00EE" }}>
+              -signup required-
+            </Link>
+          )}
+          <br />
           🔞+18 age required for using chat groups.🔞
         </Text>
 
-        <Text title={"News"}>
-          You can do advertise in ADS group for FREE.
-        </Text>
+        <Text title={"News"}>You can do advertise in ADS group for FREE.</Text>
 
         <Text title={"website"}>
           If there was any error or bug try Logout and Login again.
-          <br/>
+          <br />
           For having permanent username and profile picture SIGN UP!
-          <br/>
+          <br />
           For verifying your email check your spam folder too!
         </Text>
 
         <Text title={"About"}>
-        Creator: Zodo
-        <br/>
-        Email: sendtozodo@gmail.com
+          Creator: Zodo
+          <br />
+          Email: sendtozodo@gmail.com
+          <br/>
+          Copyright &copy; 2025 zodomix
         </Text>
       </div>
     </>
