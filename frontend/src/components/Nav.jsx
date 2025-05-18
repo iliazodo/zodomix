@@ -52,17 +52,17 @@ const Nav = () => {
         <ul className=" flex flex-row justify-between w-ful px-2">
           <li className="w-16">
             <Link to="/">
-              <img src="/home.png" alt="Home" className="transition duration-100 ease-in" />
+              <img src="/home.png" alt="Home" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>
           <li className="w-16">
             <Link to={`/chatZone/:${currGroup}`}>
-              <img src="/chat.png" alt="Chat" className="transition duration-100 ease-in" />
+              <img src="/chat.png" alt="Chat" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>
           <li className="w-16">
             <Link to="/explore">
-              <img src="/explore.png" alt="Explore" className="transition duration-100 ease-in" />
+              <img src="/explore.png" alt="Explore" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>
         </ul>
