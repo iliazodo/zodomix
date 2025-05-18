@@ -16,17 +16,19 @@ const Home = () => {
           <br />
           Say WHATEVER you want.
           <br/>
-          Your Human Number is {authUser ? authUser.humanNum : "00000000"}
+          Your Human Number is {authUser ? authUser.humanNum : "-signup required-"}
+          <br/>
+          🔞+18 age required for using chat groups.🔞
         </Text>
 
         <Text title={"News"}>
           You can do advertise in ADS group for FREE.
-          <br/>
-          For having permanent username and profile picture SIGN UP!
         </Text>
 
-        <Text title={"Updates"}>
+        <Text title={"website"}>
           If there was any error or bug try Logout and Login again.
+          <br/>
+          For having permanent username and profile picture SIGN UP!
           <br/>
           For verifying your email check your spam folder too!
         </Text>

@@ -67,8 +67,7 @@ const ChatZone = () => {
     /*socket stuff */
   }
   useEffect(() => {
-    // const socket = io("http://localhost:3030");
-    if (!socket) return; // <-- wait for socket to be initialized
+    if (!socket) return;
 
     const handleUserSocketId = (data) => {
       setTempInfo({ id: data.id, pic: data.pic });
