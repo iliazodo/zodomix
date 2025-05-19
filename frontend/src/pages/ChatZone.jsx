@@ -112,7 +112,7 @@ const ChatZone = () => {
               <Message
                 key={msg._id}
                 img={`/profiles/${
-                  msg.senderId ? msg.senderId.profilePic : msg.tempPic
+                  msg.senderId ? msg.senderId.profilePic : "defaultPic"
                 }.png`}
                 username={`${
                   msg.senderId

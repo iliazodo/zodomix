@@ -1,6 +1,6 @@
 import React from "react";
 
-const bannedWords = ["nigger" , "nigga" , "niga" , ];
+const bannedWords = ["nigger" , "nigga" , "niga" ,"n i g a" , "n i g g e r" , "Nigger" , "NIGGER"];
 
 const sanitizeMessage = (message) => {
   let sanitized = message;
