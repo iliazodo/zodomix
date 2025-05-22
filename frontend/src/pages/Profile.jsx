@@ -18,11 +18,11 @@ const Profile = () => {
       <div className="py-40 flex flex-col gap-5 justify-center items-center w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div className="w-full flex flex-col justify-center items-center gap-10">
           <img
-            className="border-4 rounded-full w-1/3 max-w-80 m-auto -z-50"
+            className="border-4 rounded-full w-1/3 lg:w-1/6 max-w-80 m-auto -z-50"
             src={`./profiles/${authUser.profilePic}.png`}
             alt="profile picture"
           />
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 text-2xl">
             <h3>USERNAME: {authUser.username}</h3>
             <h3>EMAIL: {authUser.email}</h3>
           </div>
