@@ -127,10 +127,10 @@ const ChatZone = () => {
           <div className="mb-40"></div>
         </div>
         {/* chat inputs */}
-        <form onSubmit={handleSendMessage} className="">
-          <div className="fixed flex flex-row justify-between bg-black py-3 gap-1 w-full bottom-20 md:bottom-0">
+        <form onSubmit={handleSendMessage} className="flex items-center justify-center">
+          <div className="fixed flex flex-row justify-between rounded-full py-3 gap-1 w-full lg:w-1/2 bottom-20 md:bottom-10 ">
             <input
-              className="resize-none overflow-auto scrollbar-hide w-3/4 md:h-20 h-14 bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
+              className="resize-none bg-neutral-950 overflow-auto scrollbar-hide w-3/4 md:h-20 h-14 bg-transparent rounded-full p-5 text-2xl font-mono border-2  border-b-fuchsia-600 border-l-fuchsia-400 border-r-fuchsia-400  outline-none"
               type="text"
               value={myMessage.message}
               onChange={(e) =>
@@ -142,7 +142,7 @@ const ChatZone = () => {
               }
             />
             <button
-              className={`w-1/4 bg-transparent border-2 rounded-full text-2xl transition duration-300 ease-out ${
+              className={`w-1/4 bg-neutral-950 border-2 rounded-full text-2xl transition duration-300 ease-out ${
                 !loading &&
                 " lg:hover:bg-white lg:hover:text-black active:bg-black active:text-white"
               } xl:w-1/4 cursor-pointer`}

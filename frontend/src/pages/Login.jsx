@@ -23,7 +23,7 @@ const Login = () => {
       <img
         src="zodomixLogo.png"
         alt="zodomix logo"
-        className="lg:w-2/3 md:w-3/4 m-auto mt-10"
+        className="lg:w-2/3 md:w-3/4 m-auto mt-10 "
       />
       </Link>
       <form
@@ -47,7 +47,7 @@ const Login = () => {
           </div>
 
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl">USERNAME</label>
+            <label className="text-2xl showUpAnimate">USERNAME</label>
             <input
               type="text"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -58,7 +58,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl">PASSWORD</label>
+            <label className="text-2xl showUpAnimate">PASSWORD</label>
             <input
               type="password"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"

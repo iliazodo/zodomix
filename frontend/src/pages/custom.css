@@ -36,8 +36,23 @@ box-shadow: -4px -4px #fff, -4px 0 #fff, -8px 0 #fff, 0 -8px #fff, -4px 4px #000
     color: #FF00EE
 }
 
+.showUpAnimate{
+    animation: showUp 2s ease;
+    overflow: hidden;
+    display: block;
+}
+
 @keyframes disappear {
     to{
         opacity: 0%;
+    }
+}
+
+@keyframes showUp {
+    from{
+        max-height: 0ex;
+    }
+    to{
+        max-height: 20ex;
     }
 }

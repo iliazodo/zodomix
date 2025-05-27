@@ -26,6 +26,9 @@ const useSignup = () => {
                 throw new Error(data.error);
             }
 
+              toast.success("PLEASE VERIFY YOUR EMAIL");
+
+              return res;
 
         } catch (error) {
             toast.error(error.message);

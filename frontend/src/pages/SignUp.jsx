@@ -16,7 +16,7 @@ const Login = () => {
 
   const { loading, signUp } = useSignup();
 
-  const [serverMessage , setServerMessage] = useState(null);
+  const [serverMessage, setServerMessage] = useState(null);
 
   useEffect(() => {
     if (inputs.password !== inputs.confirmPassword) {
@@ -28,20 +28,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signUp(inputs);
+    const res = await signUp(inputs);
 
     setInputs({
-    website: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+      website: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
 
-  toast.success("PLEASE VERIFY YOUR EMAIL");
-
-  setServerMessage("CHECK YOUR SPAM FOLDER. \n WE SENT YOU AN EMAIL, PLEASE CLICK ON LINK TO VERIFY YOUR EMAIL.");
-  
+    if (res.ok) {
+      setServerMessage(
+        "CHECK YOUR SPAM FOLDER. \n WE SENT YOU AN EMAIL, PLEASE CLICK ON LINK TO VERIFY YOUR EMAIL."
+      );
+    }
   };
 
   return (
@@ -55,7 +56,13 @@ const Login = () => {
       </Link>
 
       {/* verify message */}
-      {serverMessage && (<div className="w-full h-auto text-green-300 text-center md:text-xl py-5">CHECK YOUR SPAM FOLDER. WE SENT YOU AN EMAIL, PLEASE CLICK ON THE LINK TO VERIFY YOUR EMAIL. IF YOU DID'T RECEIVE ANY EMAIL DO THE SIGNUP AGAIN.</div>)}
+      {serverMessage && (
+        <div className="w-full h-auto text-green-300 text-center md:text-xl py-5">
+          CHECK YOUR SPAM FOLDER. WE SENT YOU AN EMAIL, PLEASE CLICK ON THE LINK
+          TO VERIFY YOUR EMAIL. IF YOU DID'T RECEIVE ANY EMAIL DO THE SIGNUP
+          AGAIN.
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}
@@ -78,7 +85,7 @@ const Login = () => {
           </div>
 
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl">USERNAME</label>
+            <label className="text-2xl showUpAnimate">USERNAME</label>
             <input
               type="text"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -89,7 +96,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl">EMAIL</label>
+            <label className="text-2xl showUpAnimate">EMAIL</label>
             <input
               type="email"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -98,7 +105,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl">PASSWORD</label>
+            <label className="text-2xl showUpAnimate">PASSWORD</label>
             <input
               type="password"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
@@ -109,7 +116,7 @@ const Login = () => {
             />
           </div>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl">CONFIRM PASSWORD</label>
+            <label className="text-2xl showUpAnimate">CONFIRM PASSWORD</label>
             <input
               type="password"
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
