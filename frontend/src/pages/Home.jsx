@@ -13,7 +13,7 @@ const Home = () => {
       <Header />
       <div className="overflow-auto h-screen grid grid-cols-1 md:grid-cols-2 py-32 gap-20">
         <Text title={`Hey ${authUser ? authUser.username : "Guest"},`}>
-          ZODOMIX is a ANONYMOUS chatroom.
+          ZODOMIX is a ANONYMOUS realTime chatroom.
           <br />
           Say WHATEVER you want.
           <br />
