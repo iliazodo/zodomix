@@ -5,7 +5,7 @@ import ChatZone from "./pages/ChatZone.jsx";
 import Explore from "./pages/Explore.jsx";
 import Profile from "./pages/Profile.jsx";
 
-import {Navigate , Route, Routes, useNavigate } from "react-router-dom";
+import {Navigate , Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { useAuthContext } from "./context/AuthContext.jsx";
@@ -21,6 +21,7 @@ function App() {
     <div className=" font-thin">
       <Routes>
         <Route path="/" element={<Home/>} />
+        <Route path="/home" element={<Home/>} />
         <Route path={`/chatZone/:group`} element={<ChatZone/>} />
         <Route path="/explore" element={<Explore/>} />
         <Route path="/profile" element={authUser ? <Profile/> : <Navigate to="/login" />} />
