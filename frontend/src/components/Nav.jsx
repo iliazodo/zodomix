@@ -48,19 +48,19 @@ const Nav = () => {
       </Link>
       </div>
       {/*footer navbar*/}
-      <div className="md:hidden fixed bottom-0 bg-black w-full py-2">
+      <div className="md:hidden fixed bottom-0 bg-black w-full py-3">
         <ul className=" flex flex-row justify-between w-ful px-2">
-          <li className="w-16">
+          <li className="w-14">
             <Link to="/">
               <img src="/home.png" alt="Home" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>
-          <li className="w-16">
+          <li className="w-14">
             <Link to={`/chatZone/:${currGroup}`}>
               <img src="/chat.png" alt="Chat" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>
-          <li className="w-16">
+          <li className="w-14">
             <Link to="/explore">
               <img src="/explore.png" alt="Explore" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
