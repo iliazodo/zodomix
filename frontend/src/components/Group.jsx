@@ -70,7 +70,7 @@ const Group = (props) => {
           onClick={handleFav}
           className={` ${
             isFavGroup ? "bg-white" : "bg-transparent"
-          } border-2 rounded-full text-4xl transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white xl:w-1/2 w-1/5 xl:m-auto cursor-pointer
+          } border-2 rounded-full text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white xl:w-1/2 w-1/5 xl:m-auto cursor-pointer
           `}
         >
           💜
