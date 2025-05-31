@@ -21,9 +21,11 @@ const ChatZone = () => {
   const [myMessage, setMyMessage] = useState({ message: "", id: "", pic: "" });
   const [conversation, setConversation] = useState([]);
   const [tempInfo, setTempInfo] = useState({ id: "", pic: "" });
-  const [history, setHistory] = useState(
-    JSON.parse(localStorage.getItem("zdm-chat-history")).reverse()
-  );
+  const [history, setHistory] = useState(() => {
+    const stored = localStorage.getItem("zdm-chat-history");
+    return stored ? JSON.parse(stored).reverse() : [];
+  });
+
   const [favGroups, setFavGroups] = useState([]);
 
   const { loading, sendMessage } = useSendMessages();
