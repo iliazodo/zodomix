@@ -24,10 +24,10 @@ const Group = (props) => {
   };
 
   const handleFav = async () => {
-    const res = await addFavGroup(props.id);
-    if (res.ok) {
+    if (authUser) {
       isFavGroup ? setIsFavGroup(false) : setIsFavGroup(true);
     }
+    await addFavGroup(props.id);
   };
 
   useEffect(() => {
