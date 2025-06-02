@@ -4,13 +4,14 @@ import Home from "./pages/Home.jsx";
 import ChatZone from "./pages/ChatZone.jsx";
 import Explore from "./pages/Explore.jsx";
 import Profile from "./pages/Profile.jsx";
+import AddGroup from "./pages/AddGroup.jsx";
+import EditGroup from "./pages/EditGroup.jsx";
 
 import {Navigate , Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { useAuthContext } from "./context/AuthContext.jsx";
 import VerifyZone from "./pages/VerifyZone.jsx";
-
 
 function App() {
 
@@ -22,8 +23,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/home" element={<Home/>} />
-        <Route path={`/chatZone/:group`} element={<ChatZone/>} />
+        <Route path={`/chatZone/:groupName`} element={<ChatZone/>} />
         <Route path="/explore" element={<Explore/>} />
+        <Route path="/addGroup" element={<AddGroup/>} />
+        <Route path="/edit/:groupId" element={<EditGroup/>} />
         <Route path="/profile" element={authUser ? <Profile/> : <Navigate to="/login" />} />
         <Route path="/signUp" element={authUser ? <Navigate to="/" /> : <SignUp />} />
         <Route path="/login" element={authUser ? <Navigate to="/" /> : <Login />} />

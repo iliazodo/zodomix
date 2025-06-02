@@ -30,7 +30,7 @@ const Nav = () => {
             </Link>
           </li>
           <li className="md:w-16 xl:w-20 md:p-3">
-            <Link to={`/chatZone/:${currGroup}`}>
+            <Link to={`/chatZone/${currGroup}`}>
               <img src="/chat.png" alt="Chat" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>
@@ -56,7 +56,7 @@ const Nav = () => {
             </Link>
           </li>
           <li className="w-14">
-            <Link to={`/chatZone/:${currGroup}`}>
+            <Link to={`/chatZone/${currGroup}`}>
               <img src="/chat.png" alt="Chat" className="hover:scale-125 transition duration-100 ease-in" />
             </Link>
           </li>

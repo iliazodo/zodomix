@@ -1,16 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Nav from "../components/Nav.jsx";
 import { useAuthContext } from "../context/AuthContext.jsx";
 import useLogout from "../hooks/useLogout.js";
+import useGetMyGroups from "../hooks/useGetMyGroups.js";
+import useDeleteGroup from "../hooks/useDeleteGroup.js";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { authUser } = useAuthContext();
   const { loading, logout } = useLogout();
+  const { groupLoading, getMyGroups } = useGetMyGroups();
+  const { deleteLoading, deleteGroup } = useDeleteGroup();
+
+  const [myGroups, setMyGroups] = useState([]);
 
   const handleLogout = async () => {
     await logout();
   };
+
+  const handleEdit = () => {};
+
+  const handleDelete = async (groupId) => {
+    if (window.confirm("ARE YOU SURE?")) {
+      await deleteGroup(groupId);
+      gettingMyGroups();
+    }
+  };
+
+  const gettingMyGroups = async () => {
+    const data = await getMyGroups();
+    setMyGroups(data);
+  };
+
+  useEffect(() => {
+    gettingMyGroups();
+  }, []);
 
   return (
     <>
@@ -25,6 +50,55 @@ const Profile = () => {
           <div className="flex flex-col gap-5 text-2xl">
             <h3>USERNAME: {authUser.username}</h3>
             <h3>EMAIL: {authUser.email}</h3>
+          </div>
+          <div className="w-full">
+            <p className="text-4xl text-center w-1/2 m-auto mb-10 text-fuchsia-500 border-2 border-b-fuchsia-500 border-transparent pb-2">
+              Your Groups
+            </p>
+            {myGroups.length == 0 && (
+              <Link to={"/addGroup"}>
+                <p className="text-center text-2xl text-fuchsia-500">
+                  CREATE YOUR FIRST GROUP ⇨
+                </p>
+              </Link>
+            )}
+            {groupLoading ? (
+              <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
+            ) : (
+              myGroups.map((group) => (
+                <div
+                  key={group._id}
+                  className="flex flex-row relative m-auto border-2 border-white rounded-3xl w-[calc(100%-50px)] h-32"
+                >
+                  <img
+                    src={`/groups/group-${1}.png`}
+                    className="border-2 border-white rounded-full w-28 h-28 my-auto ml-3"
+                    alt={group.name}
+                  />
+                  <div className="flex flex-col">
+                    <p className="text-3xl text-center absolute left-1/3 font-bold">
+                      {group.name}
+                    </p>
+                    <div className="flex flex-row gap-7 py-5 pl-32 absolute bottom-1 right-5">
+                      <Link to={`/edit/${group._id}`}>
+                      <button
+                        onClick={handleEdit}
+                        className="border-2 rounded-3xl py-2 px-5 text-xl bg-green-500 font-bold"
+                      >
+                        Edit
+                      </button>
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(group._id)}
+                        className="border-2 rounded-3xl py-2 px-5 text-xl bg-red-500 font-bold"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

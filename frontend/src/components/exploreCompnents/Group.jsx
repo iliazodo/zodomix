@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAddFavGroup from "../hooks/useAddFavGroup.js";
-import useGetFavGroups from "../hooks/useGetFavGroups.js";
-import { useAuthContext } from "../context/AuthContext.jsx";
+import useAddFavGroup from "../../hooks/useAddFavGroup.js";
+import useGetFavGroups from "../../hooks/useGetFavGroups.js";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 
 const Group = (props) => {
   const [isFavGroup, setIsFavGroup] = useState(false);
@@ -15,7 +15,7 @@ const Group = (props) => {
 
   const handleJoin = () => {
     localStorage.setItem("zdm-group", JSON.stringify(props.name));
-    navigate(`/chatZone/:${props.name}`);
+    navigate(`/chatZone/${props.name}`);
 
     // Add group to history
     let existing = JSON.parse(localStorage.getItem("zdm-chat-history")) || [];

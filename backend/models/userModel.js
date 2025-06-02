@@ -26,10 +26,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    ownGroups: {
+      type: [String]
+    },
     favGroups: [
       {
-        groupName: { type: String, required: true },
-        groupPic: { type: String, required: true },
+        groupName: { type: String },
+        groupPic: { type: String },
       },
     ],
   },

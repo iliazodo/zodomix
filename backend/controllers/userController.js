@@ -1,22 +1,29 @@
 import User from "../models/userModel.js";
+import Group from "../models/groupModel.js";
 
-export const getUser = async (req , res) => {
+export const addUser = async (req , res) => {
     try {
-        const {userId} = req.body;
+        const {groupId , username} = req.body;
+        const userId = req.user._id;
 
+        const addUser = await User.findOne({username});
         const user = await User.findById(userId);
 
-        if(!user){
-            return res.status(404).json({error: "INVALID ID"});
+        if(!addUser){
+            return res.status(404).json({error:"USER NOT EXIST"});
         }
 
-        res.status(200).json({
-            userId: user._id,
-            username: user.username,
-            email: user.email,
-            profilePic: user.profilePic
-        })
+        if(!user.ownGroups.includes(groupId)){
+            return res.status(400).json({error:"ACTION DENIED"});
+        }
 
+        const group = await Group.findById(groupId);
+
+        group.members.push(addUser._id);
+        await group.save();
+
+        res.status(200).json({message: "USER ADDED SUCCESSFULLY"});
+        
     } catch (error) {
         console.log("ERROR IN USERCONTROLLER: " , error.message);
         res.status(500).json({error:"INTERVAL SERVER ERROR"});

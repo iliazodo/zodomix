@@ -5,12 +5,29 @@ const groupSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  creatorId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"User"
+  },
   picture: {
     type: String,
     default: "",
   },
   description: {
     type: String,
+    default: ""
+  },
+  members:{
+    type:[String],
+  },
+  isPublic:{
+    type:Boolean
+  },
+  isAnonymous:{
+    type:Boolean
+  },
+  password:{
+    type:String,
     default: ""
   }
 });

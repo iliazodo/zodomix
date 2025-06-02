@@ -50,6 +50,7 @@ const Login = () => {
             <label className="text-2xl showUpAnimate">USERNAME</label>
             <input
               type="text"
+              maxLength={25}
               className="bg-transparent rounded-full p-5 text-2xl font-mono border-2 outline-none"
               value={inputs.username}
               onChange={(e) =>
