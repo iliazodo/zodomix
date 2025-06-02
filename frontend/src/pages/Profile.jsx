@@ -76,21 +76,21 @@ const Profile = () => {
                     alt={group.name}
                   />
                   <div className="flex flex-col">
-                    <p className="text-3xl text-center absolute left-1/3 font-bold">
+                    <p className="text-xl text-center absolute left-1/3 font-bold">
                       {group.name}
                     </p>
-                    <div className="flex flex-row gap-7 py-5 pl-32 absolute bottom-1 right-5">
+                    <div className="flex flex-row gap-4 py-5 pl-32 absolute bottom-1 right-5">
                       <Link to={`/edit/${group._id}`}>
                       <button
                         onClick={handleEdit}
-                        className="border-2 rounded-3xl py-2 px-5 text-xl bg-green-500 font-bold"
+                        className="border-2 rounded-3xl py-2 px-5 text-base bg-green-500 font-bold"
                       >
                         Edit
                       </button>
                       </Link>
                       <button
                         onClick={() => handleDelete(group._id)}
-                        className="border-2 rounded-3xl py-2 px-5 text-xl bg-red-500 font-bold"
+                        className="border-2 rounded-3xl py-2 px-5 text-base bg-red-500 font-bold"
                       >
                         Delete
                       </button>
