@@ -68,7 +68,7 @@ const Profile = () => {
               myGroups.map((group) => (
                 <div
                   key={group._id}
-                  className="flex flex-row relative m-auto border-2 border-white rounded-3xl w-[calc(100%-50px)] h-32"
+                  className="flex flex-row relative m-auto border-2 border-white rounded-3xl w-[calc(100%-50px)] lg:w-1/2 xl:w-1/3 h-32"
                 >
                   <img
                     src={`/groups/group-${1}.png`}
@@ -76,7 +76,7 @@ const Profile = () => {
                     alt={group.name}
                   />
                   <div className="flex flex-col">
-                    <p className="text-xl text-center absolute left-1/3 font-bold">
+                    <p className="text-xl md:text-3xl text-center absolute left-1/3 font-bold">
                       {group.name}
                     </p>
                     <div className="flex flex-row gap-4 py-5 pl-32 absolute bottom-1 right-5">
