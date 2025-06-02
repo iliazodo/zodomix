@@ -55,7 +55,7 @@ const AddGroup = () => {
             />
           </div>
           <div className="mx-auto flex flex-row justify-center gap-20">
-            <label className="text-2xl justify-center">
+            <label className="md:text-2xl text-lg justify-center">
               <input
                 type="radio"
                 className="accent-fuchsia-500 h-9 w-9"
@@ -65,7 +65,7 @@ const AddGroup = () => {
               />
               Public
             </label>
-            <label className="text-2xl">
+            <label className="md:text-2xl text-lg">
               <input
                 type="radio"
                 className="accent-fuchsia-500 h-9 w-9"
@@ -92,17 +92,17 @@ const AddGroup = () => {
           )}
 
           <div className="mx-auto flex flex-row justify-center gap-5">
-            <label className="text-2xl justify-center">
+            <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="accent-fuchsia-500 h-9 w-9 -pt-"
+                className=" accent-fuchsia-500 h-9 w-9 -pt-"
                 name="isAnonymous"
                 defaultChecked
                 onChange={(e) => setInputs({ ...inputs, isAnonymous: true })}
               />
               Anonymous
             </label>
-            <label className="text-2xl">
+            <label className="md:text-2xl text-lg">
               <input
                 type="radio"
                 className="accent-fuchsia-500 h-9 w-9"
