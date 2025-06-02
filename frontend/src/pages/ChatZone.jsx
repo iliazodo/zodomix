@@ -29,7 +29,7 @@ const ChatZone = () => {
     members: "",
   });
   const [chatLoading, setChatLoading] = useState(false);
-  const [isAllowed, setIsAllowed] = useState(false);
+  const [isAllowed, setIsAllowed] = useState("checking");
   const [myMessage, setMyMessage] = useState({ message: "", id: "", pic: "" });
   const [conversation, setConversation] = useState([]);
   const [tempInfo, setTempInfo] = useState({ id: "", pic: "" });
@@ -76,10 +76,12 @@ const ChatZone = () => {
         members: data.members,
       });
       if (data.isPublic) {
-        setIsAllowed(true);
+        setIsAllowed("yes");
+      } else {
+        setIsAllowed("no");
       }
       if (data.members.includes(authUser.id)) {
-        setIsAllowed(true);
+        setIsAllowed("yes");
       }
     };
 
@@ -173,7 +175,7 @@ const ChatZone = () => {
         groupId: groupInfo.id,
         password: groupPass,
       });
-      setIsAllowed(res);
+      setIsAllowed(res ? "yes" : "no");
     }
   };
 
@@ -267,7 +269,7 @@ const ChatZone = () => {
         </div>
 
         {/* chat container */}
-        {isAllowed ? (
+        {isAllowed === "yes" ? (
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
@@ -301,42 +303,48 @@ const ChatZone = () => {
           </div>
         ) : (
           <div className="flex flex-col w-full lg:mx-auto xl:w-4/6 overflow-auto p-3 xl:px-3 text-xl">
-            <div className="mt-32 md:mt-40"></div>
-            <p className="mb-20 text-center text-4xl">This Group is Private</p>
-            <form
-              onSubmit={handlePass}
-              className="w-5/6 flex flex-col space-y-3 mx-auto"
-            >
-              <label className="text-2xl showUpAnimate">Password</label>
-              <input
-                type="password"
-                maxLength={25}
-                value={groupPass}
-                onChange={(e) => setGroupPass(e.target.value)}
-                className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
-              />
-              <br />
-              <br />
-              <button
-                type="submit"
-                className={`mb-8 bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto ${
-                  !passLoading &&
-                  "hover:bg-white hover:text-black active:bg-black active:text-white"
-                }  xl:w-1/4 cursor-pointer`}
-                disabled={passLoading}
-              >
-                {passLoading ? (
-                  <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
-                ) : (
-                  "ENTER"
-                )}
-              </button>
-            </form>
+            {isAllowed === "no" && (
+              <>
+                <div className="mt-32 md:mt-40"></div>
+                <p className="mb-20 text-center text-4xl">
+                  This Group is Private
+                </p>
+                <form
+                  onSubmit={handlePass}
+                  className="w-5/6 flex flex-col space-y-3 mx-auto"
+                >
+                  <label className="text-2xl showUpAnimate">Password</label>
+                  <input
+                    type="password"
+                    maxLength={25}
+                    value={groupPass}
+                    onChange={(e) => setGroupPass(e.target.value)}
+                    className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
+                  />
+                  <br />
+                  <br />
+                  <button
+                    type="submit"
+                    className={`mb-8 bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto ${
+                      !passLoading &&
+                      "hover:bg-white hover:text-black active:bg-black active:text-white"
+                    }  xl:w-1/4 cursor-pointer`}
+                    disabled={passLoading}
+                  >
+                    {passLoading ? (
+                      <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
+                    ) : (
+                      "ENTER"
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         )}
 
         {/* chat inputs */}
-        {isAllowed && (
+        {isAllowed === "yes" && (
           <form
             onSubmit={handleSendMessage}
             className="z-50 flex items-center justify-center"
