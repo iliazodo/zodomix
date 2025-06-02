@@ -104,7 +104,7 @@ const Profile = () => {
 
         <button
           onClick={handleLogout}
-          className={`bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto mt-20
+          className={`bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto mt-10
              xl:w-1/4 cursor-pointer ${
                !loading &&
                "hover:bg-white hover:text-black active:bg-black active:text-white"
