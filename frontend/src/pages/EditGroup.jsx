@@ -55,7 +55,7 @@ const AddGroup = () => {
   return (
     <>
       <Nav />
-      <div className="overflow-auto flex flex-col items-center md:grid-cols-2 xl:grid-cols-3 sm:pt-32 py-28">
+      <div className="max-w-4xl m-auto overflow-auto flex flex-col items-center sm:pt-32 py-28">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center gap-10 h-5/6 w-[calc(100%-40px)] p-3 border-2 border-white rounded-3xl"
