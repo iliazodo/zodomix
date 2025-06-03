@@ -79,16 +79,16 @@ export const getGroup = async (req, res) => {
 
 export const getGroupInfo = async (req, res) => {
   try {
-    const { groupId , groupName } = req.body;
+    const { groupId, groupName } = req.body;
 
     let group;
-    
-    if(groupId){
+
+    if (groupId) {
       group = await Group.findById(groupId);
-    } else if(groupName){
-      group = await Group.findOne({name: groupName});
+    } else if (groupName) {
+      group = await Group.findOne({ name: groupName });
     } else {
-      return res.status(400).json({error: "NEED ID OR NAME"});
+      return res.status(400).json({ error: "NEED ID OR NAME" });
     }
 
     res.status(200).json(group);
@@ -150,7 +150,7 @@ export const updateGroup = async (req, res) => {
       );
     }
 
-    res.status(200).json({message: "GROUP UPDATED SUCCESSFULLY"});
+    res.status(200).json({ message: "GROUP UPDATED SUCCESSFULLY" });
   } catch (error) {
     console.log("ERROR IN GROUPCOTROLLER: ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });
@@ -228,6 +228,18 @@ export const getFavGroup = async (req, res) => {
     const userId = req.user._id;
 
     const user = await User.findById(userId);
+
+    const validFavGroups = [];
+
+    await Promise.all(
+      user.favGroups.map(async (favGroup) => {
+        const group = await Group.findOne({ name: favGroup.groupName });
+        if (group) validFavGroups.push(favGroup);
+      })
+    );
+
+    user.favGroups = validFavGroups;
+    await user.save();
 
     if (!user) {
       return res
