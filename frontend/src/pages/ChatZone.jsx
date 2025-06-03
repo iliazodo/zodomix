@@ -198,12 +198,12 @@ const ChatZone = () => {
           <h2 className="text-center 2xl:text-2xl xl:text-xl pixel-font border-b-2 pb-3">
             HISTORY
           </h2>
-          <div className="grid grid-cols-2 overflow-auto">
+          <div className="grid grid-cols-3 gap-3 mt-3 overflow-auto">
             {history.map((group, index) => {
               return (
                 <Link
-                  className=" hover:scale-90 hover:border-white hover:border-2 hover:rounded-lg"
-                  to={`/chatZone/:${group.name}`}
+                  className="transform duration-200 ease-out hover:scale-90 hover:border-white hover:border-2 hover:rounded-lg"
+                  to={`/chatZone/${group.name}`}
                   key={index}
                   onClick={() => {
                     localStorage.setItem(
@@ -215,7 +215,7 @@ const ChatZone = () => {
                   <img
                     src={`/groups/${group.pic}.png`}
                     alt={group.name}
-                    className="rounded-full"
+                    className="rounded-full border-2"
                   />
                   <p className="text-center max-w-32 overflow-hidden">
                     {group.name}
@@ -231,7 +231,7 @@ const ChatZone = () => {
           <h2 className="text-center 2xl:text-2xl xl:text-xl pixel-font border-b-2 pb-3">
             FAVORITE
           </h2>
-          <div className="grid grid-cols-2 mx-auto">
+          <div className="grid grid-cols-3 gap-3 mt-3 overflow-auto">
             {favLoading ? (
               <div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -243,8 +243,8 @@ const ChatZone = () => {
               favGroups.map((group, index) => {
                 return (
                   <Link
-                    className=" hover:scale-90 hover:border-white hover:border-2 hover:rounded-lg"
-                    to={`/chatZone/:${group.groupName}`}
+                    className="transform duration-200 ease-out hover:scale-90 hover:border-white hover:border-2 hover:rounded-lg"
+                    to={`/chatZone/${group.groupName}`}
                     key={index}
                     onClick={() => {
                       localStorage.setItem(
@@ -256,7 +256,7 @@ const ChatZone = () => {
                     <img
                       src={`/groups/${group.groupPic}.png`}
                       alt={group.groupName}
-                      className="rounded-full"
+                      className="border-2 rounded-full"
                     />
                     <p className="text-center max-w-32 overflow-hidden">
                       {group.groupName}
