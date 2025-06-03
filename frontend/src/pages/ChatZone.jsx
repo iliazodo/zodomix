@@ -194,7 +194,7 @@ const ChatZone = () => {
         )}
 
         {/* history */}
-        <div className="fixed left-5 top-32 w-[calc(16%-10px)] h-5/6 overflow-hidden xl:block hidden border-white border-2 border-l-fuchsia-600 rounded-3xl mx-auto p-3 break-words">
+        <div className="fixed left-5 top-32 w-[calc(16%-10px)] h-5/6 overflow-auto xl:block hidden border-white border-2 border-l-fuchsia-600 rounded-3xl mx-auto p-3 break-words">
           <h2 className="text-center 2xl:text-2xl xl:text-xl pixel-font border-b-2 pb-3">
             HISTORY
           </h2>
@@ -227,7 +227,7 @@ const ChatZone = () => {
         </div>
 
         {/* favorite */}
-        <div className="fixed right-5 top-32 w-[calc(16%-10px)] h-5/6 overflow-hidden xl:block hidden border-white border-2 border-r-fuchsia-600 rounded-3xl mx-auto p-3 break-words">
+        <div className="fixed right-5 top-32 w-[calc(16%-10px)] h-5/6 overflow-auto xl:block hidden border-white border-2 border-r-fuchsia-600 rounded-3xl mx-auto p-3 break-words">
           <h2 className="text-center 2xl:text-2xl xl:text-xl pixel-font border-b-2 pb-3">
             FAVORITE
           </h2>
