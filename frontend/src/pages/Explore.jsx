@@ -43,8 +43,8 @@ const Explore = () => {
             type="search"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search"
-            className="m-auto border-2 bg-transparent text-2xl py-2 lg:py-5 px-4 rounded-full w-4/5   outline-none"
+            placeholder="Search..."
+            className="m-auto border-2 bg-transparent text-2xl py-2 lg:py-5 px-7 rounded-full w-4/5   outline-none"
           />
           <button
             onClick={handleAddGroup}
