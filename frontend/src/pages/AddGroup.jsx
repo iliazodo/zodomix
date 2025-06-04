@@ -54,7 +54,7 @@ const AddGroup = () => {
               className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
             />
           </div>
-          <div className="mx-auto flex flex-row justify-center gap-20">
+          <div className="mx-auto flex flex-row justify-center md:gap-20 gap-2">
             <label className="md:text-2xl text-lg justify-center">
               <input
                 type="radio"
@@ -91,7 +91,7 @@ const AddGroup = () => {
             </div>
           )}
 
-          <div className="mx-auto flex flex-row justify-center gap-5">
+          <div className="mx-auto flex flex-row justify-center md:gap-5 gap-2">
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
