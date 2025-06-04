@@ -56,24 +56,22 @@ const Group = (props) => {
           alt="profle"
           className="rounded-full border-2 border-white w-24 h-24"
         />
-        <h3 className="text-5xl text-center">{props.name}</h3>
+        <h3 className="text-2xl lg:text-3xl text-center font-bold">{props.name}</h3>
       </div>
       <p className="p-5">{props.description}</p>
       <div className="w-full flex flex-row gap-5">
         <button
           onClick={handleJoin}
-          className="py-2 bg-transparent border-2 rounded-full text-2xl transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white xl:w-1/2 w-4/5 xl:m-auto cursor-pointer"
+          className="py-2 bg-transparent border-2 rounded-full text-2xl transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white w-4/5 xl:m-auto cursor-pointer"
         >
           JOIN
         </button>
         <button
           onClick={handleFav}
-          className={` ${
-            isFavGroup ? "bg-white" : "bg-transparent"
-          } border-2 rounded-full text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white xl:w-1/2 w-1/5 xl:m-auto cursor-pointer
+          className={` border-2 rounded-full text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white w-1/5 xl:m-auto cursor-pointer
           `}
         >
-          💜
+        {isFavGroup ? "♥︎" : "♡"}
         </button>
       </div>
     </div>
