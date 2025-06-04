@@ -6,6 +6,7 @@ import { useAuthContext } from "../../context/AuthContext.jsx";
 
 const Group = (props) => {
   const [isFavGroup, setIsFavGroup] = useState(false);
+  const [favLoading, setFavLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,10 @@ const Group = (props) => {
             setIsFavGroup(true);
           }
         });
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setFavLoading(false);
+      }
     };
 
     if (authUser) {
@@ -56,7 +60,9 @@ const Group = (props) => {
           alt="profle"
           className="rounded-full border-2 border-white w-24 h-24"
         />
-        <h3 className="text-2xl lg:text-3xl text-center font-bold">{props.name}</h3>
+        <h3 className="text-2xl lg:text-3xl text-center font-bold">
+          {props.name}
+        </h3>
       </div>
       <p className="p-5">{props.description}</p>
       <div className="w-full flex flex-row gap-5">
@@ -71,7 +77,7 @@ const Group = (props) => {
           className={` border-2 rounded-full text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white w-1/5 xl:m-auto cursor-pointer
           `}
         >
-        {isFavGroup ? "♥︎" : "♡"}
+          { favLoading ? <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" /> : (isFavGroup ? "♥︎" : "♡") }
         </button>
       </div>
     </div>
