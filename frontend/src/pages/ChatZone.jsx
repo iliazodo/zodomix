@@ -198,7 +198,7 @@ const ChatZone = () => {
           <h2 className="text-center 2xl:text-2xl xl:text-xl pixel-font border-b-2 pb-3">
             HISTORY
           </h2>
-          <div className="grid grid-cols-3 gap-3 mt-3 overflow-auto">
+          <div className="grid grid-cols-2 gap-3 mt-3 overflow-auto">
             {history.map((group, index) => {
               return (
                 <Link
@@ -215,7 +215,7 @@ const ChatZone = () => {
                   <img
                     src={`/groups/${group.pic}.png`}
                     alt={group.name}
-                    className="rounded-full border-2"
+                    className="w-2/3 m-auto rounded-full border-2"
                   />
                   <p className="text-center max-w-32 overflow-hidden">
                     {group.name}
@@ -231,7 +231,7 @@ const ChatZone = () => {
           <h2 className="text-center 2xl:text-2xl xl:text-xl pixel-font border-b-2 pb-3">
             FAVORITE
           </h2>
-          <div className="grid grid-cols-3 gap-3 mt-3 overflow-auto">
+          <div className="grid grid-cols-2 gap-3 mt-3 overflow-auto">
             {favLoading ? (
               <div>
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -256,7 +256,7 @@ const ChatZone = () => {
                     <img
                       src={`/groups/${group.groupPic}.png`}
                       alt={group.groupName}
-                      className="border-2 rounded-full"
+                      className="w-2/3 m-auto border-2 rounded-full"
                     />
                     <p className="text-center max-w-32 overflow-hidden">
                       {group.groupName}
