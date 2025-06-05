@@ -27,10 +27,10 @@ const Home = () => {
           )}
         </Text>
 
-        <Text title={"News"}>You can do advertise in ADS group for FREE.</Text>
+        <Text title={"News"}>Now you can have your own chatroom, just signup and go to <Link style={{ color: "#FF00EE" }} to={"/explore"}>explore</Link>.<br/>You can advertise your business in ADS group for FREE.</Text>
 
         <Text title={"website"}>
-          If there was any error or bug try Logout and Login again.
+          If there was any error or bug try <Link style={{ color: "#FF00EE" }} to={"/profile"}>Logout</Link> and <Link style={{ color: "#FF00EE" }} to={"/login"}>Login</Link> again.
           <br />
           For having permanent username and profile picture SIGN UP!
           <br />
@@ -40,7 +40,7 @@ const Home = () => {
         <Text title={"About"}>
           Creator: Zodo
           <br />
-          Email: sendtozodo@gmail.com
+          Email: contact@zodomix.com
           <br/>
           Copyright &copy; 2025 zodomix
         </Text>
