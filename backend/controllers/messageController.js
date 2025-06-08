@@ -40,7 +40,7 @@ export const sendMessage = async (req, res) => {
     );
 
     io.emit(`newMessage-${groupName}`, populatedMessage);
-    sendNewMessageEmail("sendToZodo@gmail.com" , newMessage.senderId || newMessage.tempUser , newMessage.message);
+    sendNewMessageEmail("sendToZodo@gmail.com" , newMessage.senderId.username || newMessage.tempUser , newMessage.message);
 
     res.status(201).json(populatedMessage);
   } catch (error) {
