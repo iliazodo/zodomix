@@ -50,6 +50,10 @@ const ChatZone = () => {
 
   const currGroup = JSON.parse(localStorage.getItem("zdm-group")) || "ALL";
 
+  {
+    /* Send Message Handler */
+  }
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     await sendMessage(myMessage, currGroup);

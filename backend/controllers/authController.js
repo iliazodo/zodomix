@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../myCookie/generateToken.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import sendVerificationEmail from "../utils/sendEmail.js";
+import {sendVerificationEmail} from "../utils/sendEmail.js";
 
 export const signup = async (req, res) => {
   try {
