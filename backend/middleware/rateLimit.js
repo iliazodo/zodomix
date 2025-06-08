@@ -22,7 +22,7 @@ export const authLimit = rateLimit({
 
 export const messageLimit = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 8,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => {
