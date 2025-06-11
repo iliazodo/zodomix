@@ -1,9 +1,10 @@
+import { useState } from "react";
 
 
 const useGetGroups = () => {
-
+  const [loading , setLoading] = useState(false);
   const getGroups = async () => {
-
+    setLoading(true);
     try {
         const res = await fetch("/api/group/get" , {
             method: "GET",
@@ -16,10 +17,12 @@ const useGetGroups = () => {
 
     } catch (error) {
       console.log(error.message);
+    } finally{
+      setLoading(false);
     }
   };
 
-  return { getGroups };
+  return { loading ,getGroups };
 };
 
 export default useGetGroups;
