@@ -12,6 +12,9 @@ const Home = () => {
     <>
       <Header />
       <div className="overflow-auto h-screen grid grid-cols-1 md:grid-cols-2 py-32 gap-20">
+
+        {/* Home content */}
+        
         <Text title={`Hey ${authUser ? authUser.username : "Guest"},`}>
           ZODOMIX is a ANONYMOUS realTime chatroom.
           <br />
@@ -27,10 +30,25 @@ const Home = () => {
           )}
         </Text>
 
-        <Text title={"News"}>Now you can have your own chatroom, just signup and go to <Link style={{ color: "#FF00EE" }} to={"/explore"}>explore</Link>.<br/>You can advertise your business in ADS group for FREE.</Text>
+        <Text title={"News"}>
+          Now you can have your own chatroom, just signup and go to{" "}
+          <Link style={{ color: "#FF00EE" }} to={"/explore"}>
+            explore
+          </Link>
+          .<br />
+          You can advertise your business in ADS group for FREE.
+        </Text>
 
         <Text title={"website"}>
-          If there was any error or bug try <Link style={{ color: "#FF00EE" }} to={"/profile"}>Logout</Link> and <Link style={{ color: "#FF00EE" }} to={"/login"}>Login</Link> again.
+          If there was any error or bug try{" "}
+          <Link style={{ color: "#FF00EE" }} to={"/profile"}>
+            Logout
+          </Link>{" "}
+          and{" "}
+          <Link style={{ color: "#FF00EE" }} to={"/login"}>
+            Login
+          </Link>{" "}
+          again.
           <br />
           For having permanent username and profile picture SIGN UP!
           <br />
@@ -41,7 +59,7 @@ const Home = () => {
           Creator: Zodo
           <br />
           Email: contact@zodomix.com
-          <br/>
+          <br />
           Copyright &copy; 2025 zodomix
         </Text>
       </div>
