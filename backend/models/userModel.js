@@ -26,8 +26,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
     ownGroups: {
-      type: [String]
+      type: [String],
     },
     favGroups: [
       {
