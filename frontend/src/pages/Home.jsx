@@ -12,9 +12,8 @@ const Home = () => {
     <>
       <Header />
       <div className="overflow-auto h-screen grid grid-cols-1 md:grid-cols-2 py-32 gap-20">
-
         {/* Home content */}
-        
+
         <Text title={`Hey ${authUser ? authUser.username : "Guest"},`}>
           ZODOMIX is a ANONYMOUS real-time groupchat.
           <br />
@@ -26,10 +25,21 @@ const Home = () => {
               -signup required-
             </Link>
           )}
-          <br/>
-          Create your own free group and chat with strangers or create a password and make it private, use for yourself or with friends.
-          <br/>
-          <Link to="/signup" style={{ color: "#FF00EE" }} className="flex justify-center pt-3 "><span className="text-xl border-2 border-b-fuchsia-500 border-l-fuchsia-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-fuchsia-500 hover:text-white hover:border-r-fuchsia-300 hover:border-t-fuchsia-300 hover:border-l-white hover:border-b-white">Get Started</span></Link>
+          <br />
+          Create your own free group and chat with strangers or create a
+          password and make it private, use for yourself or with friends.
+          <br />
+          {!authUser && (
+            <Link
+              to="/signup"
+              style={{ color: "#FF00EE" }}
+              className="flex justify-center pt-3 "
+            >
+              <span className="text-xl border-2 border-b-fuchsia-500 border-l-fuchsia-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-fuchsia-500 hover:text-white hover:border-r-fuchsia-300 hover:border-t-fuchsia-300 hover:border-l-white hover:border-b-white">
+                Get Started
+              </span>
+            </Link>
+          )}
         </Text>
 
         <Text title={"News"}>
