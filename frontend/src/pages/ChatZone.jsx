@@ -56,12 +56,12 @@ const ChatZone = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (authUser) {
+  //  if (authUser) {
       await sendMessage(myMessage, currGroup);
       setMyMessage({ message: "" });
-    } else {
-      toast.error("PLEASE LOGIN OR SIGNUP FOR THIS OPTION");
-    }
+  //  } else {
+  //    toast.error("PLEASE LOGIN OR SIGNUP FOR THIS OPTION");
+  //  }
   };
 
   const lastMessageRef = useRef(null);
