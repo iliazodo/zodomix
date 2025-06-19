@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import Message from "../models/messageModel.js";
 import User from "../models/userModel.js";
 import { io } from "../socket/socket.js";
-import {sendNewMessageEmail} from "../utils/sendEmail.js"
+import {sendTelegramMessage} from "../utils/sendEmail.js"
 
 export const sendMessage = async (req, res) => {
   try {
@@ -40,7 +40,7 @@ export const sendMessage = async (req, res) => {
     );
 
     io.emit(`newMessage-${groupName}`, populatedMessage);
-    sendNewMessageEmail("sendToZodo@gmail.com" , newMessage.senderId.username || newMessage.tempUser , newMessage.message);
+    sendTelegramMessage(newMessage.message);
 
     res.status(201).json(populatedMessage);
   } catch (error) {

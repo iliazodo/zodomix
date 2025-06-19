@@ -34,20 +34,18 @@ export const sendVerificationEmail = async (email, link) => {
   });
 };
 
-export const sendNewMessageEmail = async (email , user , message) =>{
-  const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587,
-    auth: {
-      user: "apikey",
-      pass: process.env.SENDGRID_API_KEY,
-    },
-  });
+export const sendTelegramMessage = async (message) => {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
 
-  await transporter.sendMail({
-    from: '"Zodmix" <no-reply@zodomix.com>',
-    to: email,
-    subject: "You have new Message",
-    text: `User: ${user} Message: ${message}`
+  const text = `💬${message}`;
+
+  await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: text,
+    }),
   });
-}
+};
