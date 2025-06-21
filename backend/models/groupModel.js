@@ -4,10 +4,12 @@ const groupSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
+    index: true,
   },
-  creatorId:{
+  creatorId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"User"
+    ref: "User",
   },
   picture: {
     type: String,
@@ -15,21 +17,25 @@ const groupSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    default: ""
+    default: "",
   },
-  members:{
-    type:[String],
+  members: {
+    type: [String],
   },
-  isPublic:{
-    type:Boolean
+  isPublic: {
+    type: Boolean,
   },
-  isAnonymous:{
-    type:Boolean
+  isAnonymous: {
+    type: Boolean,
   },
-  password:{
-    type:String,
-    default: ""
-  }
+  password: {
+    type: String,
+    default: "",
+  },
+  messageCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Group = mongoose.model("Group", groupSchema);

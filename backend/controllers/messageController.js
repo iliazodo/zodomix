@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 
 import Message from "../models/messageModel.js";
+import Group from "../models/groupModel.js";
 import User from "../models/userModel.js";
 import { io } from "../socket/socket.js";
-import {sendTelegramMessage} from "../utils/sendEmail.js"
+import { sendTelegramMessage } from "../utils/sendEmail.js";
 
 export const sendMessage = async (req, res) => {
   try {
@@ -41,6 +42,12 @@ export const sendMessage = async (req, res) => {
 
     io.emit(`newMessage-${groupName}`, populatedMessage);
     sendTelegramMessage(newMessage.message);
+
+    // Icreasing messageCount
+    await Group.findOneAndUpdate(
+      { name: groupName },
+      { $inc: { messageCount: 1 } }
+    );
 
     res.status(201).json(populatedMessage);
   } catch (error) {
