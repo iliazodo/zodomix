@@ -40,6 +40,16 @@ const Home = () => {
               </span>
             </Link>
           )}
+          {authUser && (
+            <Link
+              to="/addGroup"
+              className="flex justify-center pt-3 text-green-500 "
+            >
+              <span className="text-xl border-2 border-b-green-500 border-l-green-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-green-500 hover:text-white hover:border-r-green-300 hover:border-t-green-300 hover:border-l-white hover:border-b-white">
+                Create Your Group
+              </span>
+            </Link>
+          )}
         </Text>
 
         <Text title={"News"}>
