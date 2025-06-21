@@ -54,7 +54,7 @@ const Group = (props) => {
 
   return (
     <div className="p-5 flex flex-col border-2 border-white border-l-fuchsia-600 border-b-fuchsia-600 rounded-3xl w-[calc(100%-50px)] m-auto">
-      <div className="flex flex-row justify-center items-center gap-7 xl:gap-40">
+      <div className="flex flex-row justify-center items-center gap-7 xl:gap-30">
         <img
           src={`/groups/${props.picture}.png`}
           alt="profle"
@@ -63,6 +63,7 @@ const Group = (props) => {
         <h3 className="text-2xl lg:text-3xl text-center font-bold">
           {props.name}
         </h3>
+        <span className="">{props.messageCount}</span>
       </div>
       <p className="p-5">{props.description}</p>
       <div className="w-full flex flex-row gap-5">

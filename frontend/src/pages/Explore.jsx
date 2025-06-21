@@ -85,6 +85,7 @@ const Explore = () => {
                   name={group.name}
                   description={group.description}
                   picture={group.picture}
+                  messageCount={group.messageCount}
                 />
               ))
             : groups
@@ -100,6 +101,7 @@ const Explore = () => {
                     name={group.name}
                     description={group.description}
                     picture={group.picture}
+                    messageCount={group.messageCount}
                   />
                 ))}
         </div>
