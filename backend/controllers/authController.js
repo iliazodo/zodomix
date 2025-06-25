@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import generateToken from "../myCookie/generateToken.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import {sendVerificationEmail} from "../utils/sendEmail.js";
+import {sendTelegramMessage, sendVerificationEmail} from "../utils/sendEmail.js";
 
 export const signup = async (req, res) => {
   try {
@@ -68,6 +68,7 @@ export const signup = async (req, res) => {
 
       await sendVerificationEmail(email, `https://zodomix.com/verify/${token}`);
 
+      sendTelegramMessage("A NEW USER BORNED");
       res.status(201).json({ message: "Verification email sent" });
     } else {
       res.status(400).json({ error: "INVALID USER DATA" });
