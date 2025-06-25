@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 import Nav from "../components/Nav.jsx";
 import "./custom.css";
@@ -302,6 +305,7 @@ const ChatZone = () => {
                   }.png`}
                   username={`${displayName}`}
                   message={msg.message}
+                  time={dayjs(msg.createdAt).fromNow()}
                 />
               );
             })}

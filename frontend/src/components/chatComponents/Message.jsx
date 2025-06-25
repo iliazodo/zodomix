@@ -42,7 +42,7 @@ const Message = (props) => {
         alt="avatar"
       />
       <div className="flex flex-col">
-        <p className="-ml-12 md:-ml-16 mt-2 text-xs md:text-base pixel-font">{props.username}</p>
+        <div className="flex items-center"><p className="-ml-12 md:-ml-16 mt-2 text-xs md:text-base pixel-font">{props.username} </p><span className="md:text-sm text-xs ml-3 mt-2">{props.time}</span></div>
         <div className="bubble grow left break-words  text-base font-semibold xl:text-2xl md:text-xl max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
           {renderMessageWithLinks(props.message)}
         </div>
