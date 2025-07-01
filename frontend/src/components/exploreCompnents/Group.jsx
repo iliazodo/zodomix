@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAddFavGroup from "../../hooks/useAddFavGroup.js";
-import useGetFavGroups from "../../hooks/useGetFavGroups.js";
+import useAddFavGroup from "../../hooks/group/useAddFavGroup.js";
+import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 
 const Group = (props) => {

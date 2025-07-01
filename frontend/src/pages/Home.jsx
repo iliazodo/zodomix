@@ -58,7 +58,13 @@ const Home = () => {
             explore
           </Link>
           .<br />
-          You can advertise your business in ADS group for FREE.
+          You can promote your business in ADS group for FREE.
+          <br />
+          Now you can chat grouply with ai{" "}
+          <Link style={{ color: "#FF00EE" }} to={"/robot"}>
+            HERE
+          </Link>
+          .
         </Text>
 
         <Text title={"website"}>

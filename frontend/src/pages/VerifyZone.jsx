@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../components/Nav.jsx";
-import useVerifyEmail from "../hooks/useVerifyEmail.js";
+import useVerifyEmail from "../hooks/auth/useVerifyEmail.js";
 import { useNavigate, useParams } from "react-router-dom";
 
 const VerifyZone = () => {

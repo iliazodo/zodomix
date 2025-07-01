@@ -9,6 +9,7 @@ import messageRoutes from "./routes/messageRouter.js";
 import userRoutes from "./routes/userRouter.js";
 import groupRoutes from "./routes/groupRouter.js";
 import verifyRoutes from "./routes/verifyRouter.js";
+import aiRoutes from "./routes/aiRouter.js"
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
 
@@ -50,6 +51,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
 app.use("/api/verify", verifyRoutes);
+app.use("/api/ai" , aiRoutes);
 
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));

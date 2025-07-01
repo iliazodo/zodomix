@@ -5,11 +5,11 @@ dayjs.extend(relativeTime);
 
 import Nav from "../components/Nav.jsx";
 import "./custom.css";
-import useSendMessages from "../hooks/useSendMessages.js";
-import useGetMessages from "../hooks/useGetMessages.js";
-import useGetFavGroups from "../hooks/useGetFavGroups.js";
-import useGetGroupInfo from "../hooks/useGetGroupInfo.js";
-import useSendPass from "../hooks/useSendPass.js";
+import useSendMessages from "../hooks/message/useSendMessages.js";
+import useGetMessages from "../hooks/message/useGetMessages.js";
+import useGetFavGroups from "../hooks/group/useGetFavGroups.js";
+import useGetGroupInfo from "../hooks/group/useGetGroupInfo.js";
+import useSendPass from "../hooks/group/useSendPass.js";
 
 import io from "socket.io-client";
 import Message from "../components/chatComponents/Message.jsx";

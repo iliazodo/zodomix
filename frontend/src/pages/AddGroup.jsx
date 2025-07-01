@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../components/Nav";
-import useAddGroup from "../hooks/useAddGroup.js";
+import useAddGroup from "../hooks/group/useAddGroup.js";
 import { useNavigate } from "react-router-dom";
 
 const AddGroup = () => {

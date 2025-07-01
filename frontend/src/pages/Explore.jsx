@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Nav from "../components/Nav.jsx";
 import Group from "../components/exploreCompnents/Group.jsx";
-import useGetGroups from "../hooks/useGetGroups.js";
+import useGetGroups from "../hooks/group/useGetGroups.js";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext.jsx";
 import toast from "react-hot-toast";

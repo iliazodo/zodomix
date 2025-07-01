@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useSignup from "../hooks/useSignup.js";
+import useSignup from "../hooks/auth/useSignup.js";
 import toast from "react-hot-toast";
 
 const Login = () => {

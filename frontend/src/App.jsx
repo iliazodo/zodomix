@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 
 import { useAuthContext } from "./context/AuthContext.jsx";
 import VerifyZone from "./pages/VerifyZone.jsx";
+import Robot from "./pages/Robot.jsx";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/home" element={<Home/>} />
         <Route path={`/chatZone/:groupName`} element={<ChatZone/>} />
         <Route path="/explore" element={<Explore/>} />
+        <Route path="/robot" element={<Robot/>} />
         <Route path="/addGroup" element={<AddGroup/>} />
         <Route path="/edit/:groupId" element={<EditGroup/>} />
         <Route path="/profile" element={authUser ? <Profile/> : <Navigate to="/login" />} />

@@ -38,3 +38,22 @@ export const messageLimit = rateLimit({
     });
   },
 });
+
+export const aiMessageLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    const forwarded = req.headers['x-forwarded-for'];
+    if (forwarded) {
+      return forwarded.split(',')[0]; 
+    }
+    return req.ip;
+  },
+  handler: (req, res) => {
+    res.status(429).json({
+      error: "3 MESSAGES EVERY 15 MINUTES",
+    });
+  },
+});

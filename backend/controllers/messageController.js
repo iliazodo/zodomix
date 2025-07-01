@@ -8,7 +8,7 @@ import { sendTelegramMessage } from "../utils/sendEmail.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { message, tempUser, tempPic } = req.body;
+    const { message, tempUser } = req.body;
     const groupName = req.params.group;
 
     if (!message) {
@@ -27,7 +27,6 @@ export const sendMessage = async (req, res) => {
     const newMessage = new Message({
       senderId,
       tempUser,
-      tempPic,
       groupName,
       message,
     });
