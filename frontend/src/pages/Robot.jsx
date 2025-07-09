@@ -149,7 +149,7 @@ const Robot = () => {
             <input
               className="resize-none bg-black overflow-auto scrollbar-hide w-3/4 md:h-20 h-14  rounded-full p-5 text-xl font-mono border-2  border-b-fuchsia-600 border-l-fuchsia-400 border-r-fuchsia-400  outline-none placeholder:text-xs md:placeholder:text-lg"
               type="text"
-              placeholder="Call Ai with: zdm , ai or bot"
+              placeholder="!!!Call Ai with: zdm , ai or bot"
               value={myMessage.message}
               disabled={isAiThinking}
               onChange={(e) =>

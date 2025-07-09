@@ -15,7 +15,7 @@ const AlertMessage = (props) => {
   return (
     <div
       id={`message-${props.message}`}
-      className="opAnimate rounded-full p-5 absolute left-1/2 top-24 -translate-x-1/2 bg-black z-50 text-4xl"
+      className="opAnimate rounded-full p-5 absolute left-1/2 top-24 -translate-x-1/2 bg-black z-50 md:text-2xl text-base"
     >
       {props.message}
     </div>

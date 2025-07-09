@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime';
+import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 import Nav from "../components/Nav.jsx";
@@ -19,6 +19,7 @@ import { SocketContext } from "../context/SocketContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext.jsx";
 import toast from "react-hot-toast";
+import useDeleteMessage from "../hooks/message/useDeleteMessage.js";
 
 const ChatZone = () => {
   const { socket } = useContext(SocketContext);
@@ -41,7 +42,7 @@ const ChatZone = () => {
     return stored ? JSON.parse(stored).reverse() : [];
   });
   const [groupPass, setGroupPass] = useState("");
-
+  const [replyTarget, setReplyTarget] = useState(null);
   const [favGroups, setFavGroups] = useState([]);
 
   const { loading, sendMessage } = useSendMessages();
@@ -50,6 +51,7 @@ const ChatZone = () => {
   const { authUser } = useAuthContext();
   const { getGroupInfo } = useGetGroupInfo();
   const { passLoading, sendPass } = useSendPass();
+  const { deleteMessageLoading , deleteMessage} = useDeleteMessage();
 
   const currGroup = JSON.parse(localStorage.getItem("zdm-group")) || "ALL";
 
@@ -59,12 +61,9 @@ const ChatZone = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-  //  if (authUser) {
-      await sendMessage(myMessage, currGroup);
-      setMyMessage({ message: "" });
-  //  } else {
-  //    toast.error("PLEASE LOGIN OR SIGNUP FOR THIS OPTION");
-  //  }
+    await sendMessage(myMessage, currGroup, replyTarget?._id);
+    setMyMessage({ message: "" });
+    setReplyTarget(null);
   };
 
   const lastMessageRef = useRef(null);
@@ -189,6 +188,31 @@ const ChatZone = () => {
     }
   };
 
+  {
+    /* DropDown Actions */
+  }
+
+  const handleReplyMsg = (messageId, messageText) => {
+    setReplyTarget({ _id: messageId, message: messageText });
+  };
+
+  const handleCopyMsg = (messageText) => {
+    navigator.clipboard.writeText(messageText);
+  };
+
+  const handleDeleteMsg = async (messageId) => {
+    if (authUser) {
+      if (window.confirm("ARE YOU SURE TO DELETE THE MESSAGE?")) {
+        const res = await deleteMessage(messageId);
+        if(res.ok){
+          location.reload();
+        }
+      }
+    }else{
+      toast.error("YOU NEED TO LOGIN OR SIGNUP FOR THIS OPTION!");
+    }
+  };
+
   return (
     <>
       <Nav />
@@ -306,6 +330,11 @@ const ChatZone = () => {
                   username={`${displayName}`}
                   message={msg.message}
                   time={dayjs(msg.createdAt).fromNow()}
+                  messageId={msg._id}
+                  reply={msg.replyTo}
+                  handleReplyMsg={handleReplyMsg}
+                  handleCopyMsg={handleCopyMsg}
+                  handleDeleteMsg={handleDeleteMsg}
                 />
               );
             })}
@@ -356,38 +385,54 @@ const ChatZone = () => {
 
         {/* chat inputs */}
         {isAllowed === "yes" && (
-          <form
-            onSubmit={handleSendMessage}
-            className="z-50 flex items-center justify-center"
-          >
-            <div className="fixed flex flex-row justify-between rounded-full py-3 gap-1 w-full lg:w-1/2 bottom-16 md:bottom-10 ">
-              <input
-                className="resize-none bg-black overflow-auto scrollbar-hide w-3/4 md:h-20 h-14  rounded-full p-5 text-2xl font-mono border-2  border-b-fuchsia-600 border-l-fuchsia-400 border-r-fuchsia-400  outline-none"
-                type="text"
-                value={myMessage.message}
-                onChange={(e) =>
-                  setMyMessage({
-                    message: e.target.value,
-                    id: tempInfo.id,
-                    pic: tempInfo.pic,
-                  })
-                }
-              />
-              <button
-                className={`w-1/4 bg-black border-2 border-b border-l-fuchsia-400 border-b-fuchsia-400 rounded-full text-2xl transition duration-300 ease-out ${
-                  !loading &&
-                  " lg:hover:bg-white lg:hover:text-black active:bg-black active:text-white"
-                } xl:w-1/4 cursor-pointer`}
-                disabled={loading}
-              >
-                {loading ? (
-                  <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
-                ) : (
-                  "SEND"
+          <>
+            <form
+              onSubmit={handleSendMessage}
+              className="z-50 flex items-center justify-center"
+            >
+              <div className="fixed flex flex-row justify-between rounded-full py-3 gap-1 w-full lg:w-1/2 bottom-16 md:bottom-10 ">
+                {/* reply display */}
+                {replyTarget && (
+                  <div className="flex justify-between md:text-lg lg:text-xl w-full lg:w-1/2 z-0 bg-slate-800 rounded-full px-5 py-3 bottom-32 fixed">
+                    <p className="break-words break-all">
+                      Replying to:{" "}
+                      {replyTarget.message.length > 95
+                        ? replyTarget.message.slice(0, 95) + "..."
+                        : replyTarget.message}
+                    </p>
+                    <button type="button" onClick={() => setReplyTarget(null)}>
+                      <img src="/cancelBtn.png" className="w-6" />
+                    </button>
+                  </div>
                 )}
-              </button>
-            </div>
-          </form>
+                <input
+                  className="z-10 resize-none bg-black overflow-auto scrollbar-hide w-3/4 md:h-20 h-14  rounded-full p-5 text-2xl font-mono border-2  border-b-fuchsia-600 border-l-fuchsia-400 border-r-fuchsia-400  outline-none"
+                  type="text"
+                  value={myMessage.message}
+                  onChange={(e) =>
+                    setMyMessage({
+                      message: e.target.value,
+                      id: tempInfo.id,
+                      pic: tempInfo.pic,
+                    })
+                  }
+                />
+                <button
+                  className={`w-1/4 z-10 bg-black border-2 border-b border-l-fuchsia-400 border-b-fuchsia-400 rounded-full text-2xl transition duration-300 ease-out ${
+                    !loading &&
+                    " lg:hover:bg-white lg:hover:text-black active:bg-black active:text-white"
+                  } xl:w-1/4 cursor-pointer`}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
+                  ) : (
+                    "SEND"
+                  )}
+                </button>
+              </div>
+            </form>
+          </>
         )}
       </div>
     </>

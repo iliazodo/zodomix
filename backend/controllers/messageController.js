@@ -8,7 +8,7 @@ import { sendTelegramMessage } from "../utils/sendEmail.js";
 
 export const sendMessage = async (req, res) => {
   try {
-    const { message, tempUser } = req.body;
+    const { message, tempUser, replyMessageId } = req.body;
     const groupName = req.params.group;
 
     if (!message) {
@@ -24,20 +24,29 @@ export const sendMessage = async (req, res) => {
       senderId = user._id;
     }
 
+    let messageReplied = null;
+
+    if (replyMessageId) {
+      messageReplied = await Message.findById(replyMessageId);
+    }
+
     const newMessage = new Message({
       senderId,
       tempUser,
       groupName,
       message,
+      replyTo: messageReplied?._id,
     });
 
     const savedMessage = await newMessage.save();
 
     // Emit new message to all users
-    const populatedMessage = await savedMessage.populate(
-      "senderId",
-      "-password"
-    );
+    const populatedMessage = await Message.findById(savedMessage._id)
+      .populate("senderId", "-password")
+      .populate({
+        path: "replyTo",
+        populate: { path: "senderId", select: "-password" },
+      });
 
     io.emit(`newMessage-${groupName}`, populatedMessage);
     sendTelegramMessage(newMessage.message);
@@ -59,12 +68,44 @@ export const getMessage = async (req, res) => {
   try {
     const group = req.params.group;
 
-    const messages = await Message.find({ groupName: group }).populate(
-      "senderId",
-      "-password"
-    );
+    const messages = await Message.find({ groupName: group })
+      .populate("senderId", "-password")
+      .populate({
+        path: "replyTo",
+        populate: { path: "senderId", select: "-password" },
+      });
 
     res.status(200).json(messages);
+  } catch (error) {
+    console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+  }
+};
+
+export const deleteMessage = async (req, res) => {
+  try {
+    const { messageId } = req.body;
+    const userId = req.user._id;
+
+    const message = await Message.findById(messageId);
+
+    if (!message) {
+      return res.status(404).json({ error: "MESSAGE DOESN'T EXIST" });
+    }
+
+    if (userId != String(message.senderId)) {
+      return res
+        .status(400)
+        .json({
+          error: "THIS IS NOT YOUR MESSAGE",
+          userId,
+          msgId: message.senderId,
+        });
+    }
+
+    await Message.findByIdAndDelete(messageId);
+
+    res.status(200).json({ message: "MESSAGE DELETED SUCCESSFULLY" });
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
     res.status(500).json({ error: "INTERVAL SERVER ERROR" });

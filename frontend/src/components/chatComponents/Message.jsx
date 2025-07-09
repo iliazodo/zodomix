@@ -1,8 +1,17 @@
 import React from "react";
 
-const bannedWords = ["nigger" , "nigga" , "niga" ,"n i g a" , "n i g g e r" , "Nigger" , "NIGGER"];
+const bannedWords = [
+  "nigger",
+  "nigga",
+  "niga",
+  "n i g a",
+  "n i g g e r",
+  "Nigger",
+  "NIGGER",
+];
 
 const sanitizeMessage = (message) => {
+
   let sanitized = message;
   bannedWords.forEach((word) => {
     const regex = new RegExp(`\\b${word}\\b`, "gi");
@@ -35,16 +44,64 @@ const renderMessageWithLinks = (message) => {
 
 const Message = (props) => {
   return (
-    <div className="flex flex-row z-0 md:mb-3">
-      <img
-        src={props.img}
-        className="rounded-full w-16 h-16 md:w-20 md:h-20 mt-8"
-        alt="avatar"
-      />
-      <div className="flex flex-col">
-        <div className="flex items-center"><p className="-ml-12 md:-ml-16 mt-2 text-xs md:text-base pixel-font">{props.username} </p><span className="md:text-sm text-xs ml-3 mt-2">{props.time}</span></div>
-        <div className="bubble grow left break-words  text-base font-semibold xl:text-2xl md:text-xl max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
-          {renderMessageWithLinks(props.message)}
+    <div>
+      {/* Replying Display */}
+      {props.reply && (
+        <div className="relative">
+          <div className="flex w-full h-10 items-center">
+            <img
+              className="w-10 h-10"
+              src={`/profiles/${
+                props.reply?.senderId
+                  ? props.reply?.senderId?.profilePic
+                  : "defaultPic"
+              }.png`}
+            />
+            <p className="break-all text-xs md:text-lg md:max-w-full">
+              {props.reply?.message?.length > 50
+                ? props.reply?.message.slice(0, 40) + "..."
+                : props.reply?.message}
+            </p>
+          </div>
+          <div className="absolute z-0 ml-5 h-16 w-20 border-l-2 border-b-2 border-white"></div>
+        </div>
+      )}
+      <div className={`${props.reply && "ml-10"} flex flex-row z-10 md:mb-3`}>
+        <img
+          src={props.img}
+          className="z-10 rounded-full w-16 h-16 md:w-20 md:h-20 mt-8"
+          alt="avatar"
+        />
+        <div className="flex flex-col">
+          <div className=" flex items-center">
+            <p className="-ml-12 md:-ml-16 mt-2 text-xs md:text-base pixel-font">
+              {props.username}{" "}
+            </p>
+            <span className="md:text-sm text-xs ml-3 mt-2">{props.time}</span>
+          </div>
+          <div className="bubble grow ">
+            <div className="left pr-3 break-words relative text-base font-semibold xl:text-2xl md:text-xl max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
+              {renderMessageWithLinks(props.message)}
+            </div>
+
+            <button
+              role="button"
+              className="dropdown absolute h-10 w-10 -right-5 -top-2"
+            >
+              <img src="/menuIcon.png" alt="options" />
+              <ul className="text-white menu dropdown-content bg-base-100 rounded-box shadow-sm">
+                <li>
+                  <a onClick={() => props.handleReplyMsg(props.messageId , props.message)}>Reply</a>
+                </li>
+                <li>
+                  <a onClick={() => props.handleCopyMsg(props.message)}>Copy</a>
+                </li>
+                <li>
+                  <a onClick={() => props.handleDeleteMsg(props.messageId)}>Delete</a>
+                </li>
+              </ul>
+            </button>
+          </div>
         </div>
       </div>
     </div>

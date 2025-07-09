@@ -58,7 +58,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg justify-center">
               <input
                 type="radio"
-                className="mr-2 accent-fuchsia-500 h-9 w-9"
+                className="mr-2 checkbox h-9 w-9"
                 name="isPublic"
                 defaultChecked
                 onChange={(e) => setInputs({ ...inputs, isPublic: true })}
@@ -68,7 +68,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="mr-2 accent-fuchsia-500 h-9 w-9"
+                className="mr-2 checkbox h-9 w-9"
                 name="isPublic"
                 onChange={(e) => setInputs({ ...inputs, isPublic: false })}
               />
@@ -95,7 +95,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="mr-2 accent-fuchsia-500 h-9 w-9 -pt-"
+                className="mr-2 checkbox h-9 w-9 -pt-"
                 name="isAnonymous"
                 defaultChecked
                 onChange={(e) => setInputs({ ...inputs, isAnonymous: true })}
@@ -105,7 +105,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="mr-2 accent-fuchsia-500 h-9 w-9"
+                className="mr-2 checkbox h-9 w-9"
                 name="isAnonymous"
                 onChange={(e) => setInputs({ ...inputs, isAnonymous: false })}
               />
