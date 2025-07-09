@@ -206,6 +206,8 @@ const ChatZone = () => {
         const res = await deleteMessage(messageId);
         if(res.ok){
           location.reload();
+        } else {
+          toast.error("YOU CAN ONLY DELETE YOUR OWN MESSAGES");
         }
       }
     }else{
