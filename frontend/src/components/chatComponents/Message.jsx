@@ -86,7 +86,7 @@ const Message = (props) => {
 
             <button
               role="button"
-              className="dropdown absolute h-10 w-10 -right-5 -top-2"
+              className="dropdown dropdown-end absolute h-10 w-10 -right-5 -top-2"
             >
               <img src="/menuIcon.png" alt="options" />
               <ul className="text-white menu dropdown-content bg-base-100 rounded-box shadow-sm">
