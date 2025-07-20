@@ -6,7 +6,7 @@ dayjs.extend(relativeTime);
 import Nav from "../components/Nav.jsx";
 import useSendToAi from "../hooks/robot/useSendToAi.js";
 import useGetAiMessages from "../hooks/robot/useGetAiMessages.js";
-import Message from "../components/chatComponents/Message.jsx";
+import Message from "../components/robotComponents/Message.jsx";
 import { SocketContext } from "../context/SocketContext";
 
 const Robot = () => {
