@@ -30,18 +30,18 @@ const Login = () => {
     e.preventDefault();
     const res = await signUp(inputs);
 
-    setInputs({
-      website: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-
     if (res.ok) {
       setServerMessage(
         "CHECK YOUR SPAM FOLDER. \n WE SENT YOU AN EMAIL, PLEASE CLICK ON LINK TO VERIFY YOUR EMAIL."
       );
+
+      setInputs({
+        website: "",
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     }
   };
 

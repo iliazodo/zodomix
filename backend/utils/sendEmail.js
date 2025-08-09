@@ -2,11 +2,11 @@ import nodemailer from "nodemailer";
 
 export const sendVerificationEmail = async (email, link) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
+    host: "smtp-relay.brevo.com",
     port: 587,
     auth: {
-      user: "apikey",
-      pass: process.env.SENDGRID_API_KEY,
+      user: process.env.BREVO_SMTP_LOGIN,
+      pass: process.env.BREVO_SMTP_PASS,
     },
   });
 
