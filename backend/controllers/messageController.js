@@ -60,7 +60,7 @@ export const sendMessage = async (req, res) => {
     res.status(201).json(populatedMessage);
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
 
@@ -78,7 +78,7 @@ export const getMessage = async (req, res) => {
     res.status(200).json(messages);
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
 
@@ -108,6 +108,6 @@ export const deleteMessage = async (req, res) => {
     res.status(200).json({ message: "MESSAGE DELETED SUCCESSFULLY" });
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };

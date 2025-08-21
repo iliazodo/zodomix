@@ -75,7 +75,7 @@ export const signup = async (req, res) => {
     }
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
 
@@ -105,7 +105,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
 
@@ -115,6 +115,6 @@ export const logout = (req, res) => {
     res.status(200).json({ message: "LOGGED OUT SUCCESSFULLY" });
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };

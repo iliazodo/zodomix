@@ -99,7 +99,7 @@ export const messageToAi = async (req, res) => {
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("ERROR IN AICONTROLLER: ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
 
@@ -119,6 +119,6 @@ export const getAiMessages = async (req, res) => {
     res.status(200).json(messages);
   } catch (error) {
     console.log("ERROR IN AICONTROLLER: ", error.message);
-    res.status(500).json({ error: "INTERVAL SERVER ERROR" });
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };

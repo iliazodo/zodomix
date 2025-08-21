@@ -26,6 +26,6 @@ export const addUser = async (req , res) => {
         
     } catch (error) {
         console.log("ERROR IN USERCONTROLLER: " , error.message);
-        res.status(500).json({error:"INTERVAL SERVER ERROR"});
+        res.status(500).json({error:"INTERNAL SERVER ERROR"});
     }
 }
