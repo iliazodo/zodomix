@@ -50,6 +50,7 @@ const Profile = () => {
           <div className="flex flex-col gap-5 text-2xl">
             <h3>USERNAME: {authUser.username}</h3>
             <h3>EMAIL: {authUser.email}</h3>
+            <p><span className="text-fuchsia-500">{authUser.messagesNum}</span> MESSAGES</p>
           </div>
           <div className="w-full">
             <p className="text-4xl text-center w-1/2 m-auto mb-10 text-fuchsia-500 border-2 border-b-fuchsia-500 border-transparent pb-2">

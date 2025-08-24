@@ -102,6 +102,7 @@ export const login = async (req, res) => {
       email: user.email,
       profilePic: user.profilePic,
       humanNum: user.humanNum,
+      messagesNum: user.messagesNum,
     });
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER", error.message);
