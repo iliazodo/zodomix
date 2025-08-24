@@ -78,7 +78,7 @@ const Explore = () => {
                 .fill(0)
                 .map((_, i) => <GroupLoader key={i} />)
             : !searchInput
-            ? groups.map((group) => (
+            ? groups?.map((group) => (
                 <Group
                   key={group._id}
                   id={group._id}

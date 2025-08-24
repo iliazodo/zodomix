@@ -89,7 +89,7 @@ const ChatZone = () => {
       } else {
         setIsAllowed("no");
       }
-      if (data.members.includes(authUser.id)) {
+      if (data.members.includes(authUser?.id)) {
         setIsAllowed("yes");
       }
     };

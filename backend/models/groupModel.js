@@ -11,6 +11,11 @@ const groupSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  groupType:{
+    type: String,
+    enum: ["main" , "uCreation"],
+    default: "uCreation",
+  },
   picture: {
     type: String,
     default: "",
