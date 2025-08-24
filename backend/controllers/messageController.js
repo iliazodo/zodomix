@@ -57,6 +57,14 @@ export const sendMessage = async (req, res) => {
       { $inc: { messageCount: 1 } }
     );
 
+    const group = await Group.findOne({ name: groupName });
+    if (group.groupType === "main") {
+      await User.findOneAndUpdate(
+        { _id: senderId },
+        { $inc: { messagesNum: 1 } }
+      );
+    }
+
     res.status(201).json(populatedMessage);
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
@@ -94,16 +102,28 @@ export const deleteMessage = async (req, res) => {
     }
 
     if (userId != String(message.senderId)) {
-      return res
-        .status(400)
-        .json({
-          error: "THIS IS NOT YOUR MESSAGE",
-          userId,
-          msgId: message.senderId,
-        });
+      return res.status(400).json({
+        error: "THIS IS NOT YOUR MESSAGE",
+        userId,
+        msgId: message.senderId,
+      });
     }
 
     await Message.findByIdAndDelete(messageId);
+
+    // Decreasing messageCount
+    await Group.findOneAndUpdate(
+      { name: message.groupName },
+      { $inc: { messageCount: -1 } }
+    );
+
+    const group = await Group.findOne({ name: message.groupName });
+    if (group.groupType === "main") {
+      await User.findOneAndUpdate(
+        { _id: userId },
+        { $inc: { messagesNum: -1 } }
+      );
+    }
 
     res.status(200).json({ message: "MESSAGE DELETED SUCCESSFULLY" });
   } catch (error) {

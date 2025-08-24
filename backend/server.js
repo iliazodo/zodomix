@@ -9,7 +9,8 @@ import messageRoutes from "./routes/messageRouter.js";
 import userRoutes from "./routes/userRouter.js";
 import groupRoutes from "./routes/groupRouter.js";
 import verifyRoutes from "./routes/verifyRouter.js";
-import aiRoutes from "./routes/aiRouter.js"
+import aiRoutes from "./routes/aiRouter.js";
+import updateRoutes from "./routes/updateRouter.js";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
 
@@ -37,10 +38,9 @@ app.get("/ip", (req, res) => {
   });
 });
 
-
 // Redirecting users to zodomix.com
 app.use((req, res, next) => {
-  if (req.hostname === 'zodomix.onrender.com') {
+  if (req.hostname === "zodomix.onrender.com") {
     return res.redirect(301, `https://zodomix.com${req.originalUrl}`);
   }
   next();
@@ -51,8 +51,8 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
 app.use("/api/verify", verifyRoutes);
-app.use("/api/ai" , aiRoutes);
-
+app.use("/api/ai", aiRoutes);
+app.use("/api/update" , updateRoutes);
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
@@ -60,10 +60,6 @@ app.use(express.static(path.join(__dirname, "/frontend/dist")));
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
-
-
-
-
 
 server.listen(port, () => {
   console.log(`server is running on port: ${port}`);

@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
         groupPic: { type: String },
       },
     ],
+    messagesNum:{
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
