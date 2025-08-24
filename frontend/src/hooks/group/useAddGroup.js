@@ -25,8 +25,10 @@ const useAddGroup = () => {
         body: JSON.stringify({ name, description, isPublic, isAnonymous, password }),
       });
 
+      const data = await res.json();
+
       if(res.status === 403){
-        toast.error("USERS ONLY CAN CREATE ONE GROUP");
+        toast.error(data.error);
       }
 
       return res.ok;

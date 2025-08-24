@@ -11,8 +11,16 @@ export const createGroup = async (req, res) => {
 
     const user = await User.findById(userId);
 
-    if (user.ownGroups.length > 0) {
-      return res.status(403).json({ error: "USERS ONLY CAN CREATE ONE GROUP" });
+    if (user.messagesNum < 50 && user.ownGroups.length > 0) {
+      return res.status(403).json({ error: "RIGHT NOW YOU CAN ONLY HAVE 1 GROUP" });
+    } else if (user.messagesNum < 100 && user.ownGroups.length > 1) {
+      return res.status(403).json({ error: "RIGHT NOW YOU CAN ONLY HAVE 2 GROUPS" });
+    } else if (user.messagesNum < 200 && user.ownGroups.length > 2) {
+      return res.status(403).json({ error: "RIGHT NOW YOU CAN ONLY HAVE 3 GROUPS" });
+    } else if (user.messagesNum < 400 && user.ownGroups.length > 3) {
+      return res.status(403).json({ error: "RIGHT NOW YOU CAN ONLY HAVE 4 GROUPS" });
+    } else if (user.messagesNum < 800 && user.ownGroups.length > 4) {
+      return res.status(403).json({ error: "RIGHT NOW YOU CAN ONLY HAVE 5 GROUPS" });
     }
 
     if (name.length > 30) {

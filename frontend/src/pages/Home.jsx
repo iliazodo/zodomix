@@ -35,7 +35,7 @@ const Home = () => {
               style={{ color: "#FF00EE" }}
               className="flex justify-center pt-3 "
             >
-              <span className="text-xl border-2 border-b-fuchsia-500 border-l-fuchsia-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-fuchsia-500 hover:text-white hover:border-r-fuchsia-300 hover:border-t-fuchsia-300 hover:border-l-white hover:border-b-white">
+              <span className="text-3xl border-2 border-b-fuchsia-500 border-l-fuchsia-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-fuchsia-500 hover:text-white hover:border-r-fuchsia-300 hover:border-t-fuchsia-300 hover:border-l-white hover:border-b-white">
                 Get Started
               </span>
             </Link>
@@ -45,8 +45,8 @@ const Home = () => {
               to="/addGroup"
               className="flex justify-center pt-3 text-green-500 "
             >
-              <span className="text-xl border-2 border-b-green-500 border-l-green-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-green-500 hover:text-white hover:border-r-green-300 hover:border-t-green-300 hover:border-l-white hover:border-b-white">
-                Create Your Group
+              <span className="text-3xl border-2 border-b-green-500 border-l-green-500  rounded-full px-5 py-2 hover transform duration-200 ease-in hover:bg-green-500 hover:text-white hover:border-r-green-300 hover:border-t-green-300 hover:border-l-white hover:border-b-white">
+                Create a Group
               </span>
             </Link>
           )}
