@@ -7,6 +7,7 @@ import { useAuthContext } from "../../context/AuthContext.jsx";
 const Group = (props) => {
   const [isFavGroup, setIsFavGroup] = useState(false);
   const [favLoading, setFavLoading] = useState(true);
+  const [currentGroup , setCurrentGroup] = useState(JSON.parse(localStorage.getItem("zdm-group")));
 
   const navigate = useNavigate();
 
@@ -56,7 +57,7 @@ const Group = (props) => {
   }, []);
 
   return (
-    <div className="p-5 flex flex-col bg-neutral-950 border-2 border-white border-l-fuchsia-600 border-b-fuchsia-600 rounded-3xl w-[calc(100%-50px)] m-auto">
+    <div className="p-5  flex flex-col bg-neutral-950 border-4 border-white border-l-fuchsia-600 border-b-fuchsia-600 rounded-3xl w-[calc(100%-50px)] m-auto">
       {props.groupType === "main" ? (<div className="w-full bg-yellow-500 mb-2"><p className="text-center m-auto text-black font-bold">Main Group</p></div>) : (<div className="w-full bg-green-500 mb-2"><p className="text-center m-auto text-black font-bold">User Created Group</p></div>)}
       <div className="flex flex-row justify-center items-center gap-7 xl:gap-30">
         <img
@@ -67,7 +68,7 @@ const Group = (props) => {
         <h3 className="text-2xl lg:text-3xl text-center font-bold">
           {props.name}
         </h3>
-        <span className="">{props.messageCount}</span>
+        <span className="">{props.messageCount} MSG</span>
       </div>
       <p className="p-5">{props.description}</p>
       <div className="w-full flex flex-row gap-5">
@@ -75,7 +76,7 @@ const Group = (props) => {
           onClick={handleJoin}
           className="py-2 bg-transparent border-2 rounded-full text-2xl transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white w-4/5 xl:m-auto cursor-pointer"
         >
-          JOIN
+          {currentGroup === props.name ? "ALREADY IN" : "JOIN"}
         </button>
         <button
           onClick={handleFav}
