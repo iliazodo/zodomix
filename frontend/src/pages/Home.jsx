@@ -68,19 +68,25 @@ const Home = () => {
         </Text>
 
         <Text title={"website"}>
-          If there was any error or bug try{" "}
-          <Link style={{ color: "#FF00EE" }} to={"/profile"}>
-            Logout
-          </Link>{" "}
-          and{" "}
-          <Link style={{ color: "#FF00EE" }} to={"/login"}>
-            Login
-          </Link>{" "}
-          again.
+          <ul className="list-disc list-inside">
+            <li className="marker:text-red-500">
+              {" "}
+              If there was any error or bug try
+              <Link style={{ color: "#FF00EE" }} to={"/profile"}>
+                Logout
+              </Link>
+              and
+              <Link style={{ color: "#FF00EE" }} to={"/login"}>
+                Login
+              </Link>
+              again.
+            </li>
+            <li className="marker:text-red-500">For having permanent username and profile picture SIGN UP!</li>
+            <li className="marker:text-red-500">For verifying your email check your spam folder too!</li>
+            <li className="marker:text-red-500">For creating more groups increase your messages number on main groups!<span className="text-green-500 font-bold">(</span> you can track the number on your profile <span className="text-green-500 font-bold">)</span></li>
+          </ul>
           <br />
-          For having permanent username and profile picture SIGN UP!
           <br />
-          For verifying your email check your spam folder too!
         </Text>
 
         <Text title={"About"}>
