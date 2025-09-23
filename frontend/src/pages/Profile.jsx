@@ -66,7 +66,7 @@ const Profile = () => {
             {groupLoading ? (
               <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
             ) : (
-              myGroups.map((group) => (
+              myGroups?.map((group) => (
                 <div
                   key={group._id}
                   className="flex flex-row relative m-auto border-2 border-white rounded-3xl w-[calc(100%-50px)] lg:w-1/2 xl:w-1/3 h-32"
