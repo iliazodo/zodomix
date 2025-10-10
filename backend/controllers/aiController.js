@@ -52,12 +52,18 @@ export const messageToAi = async (req, res) => {
     ) {
       io.emit("is-ai-thinking", true);
       try {
-        let conversation = await Message.find({ isAiConversation: true });
+        let conversation = await Message.find({ isAiConversation: true })
+          .sort({ createdAt: -1 })
+          .limit(20)
+          .lean()
+          .exec();
+
+        conversation = conversation.reverse();
         let parsedConversation = [
           {
             role: "system",
             content:
-              "You are a helpful and friendly Ai in an Anonymous group chat website that named Zodomix. Your name is ZDM-Ai. You will get User id and Temp User id. Answer to each User differently, read their previous messages and then talk with them. Don't talk too much if it's not necessary or do it if user ask for it.",
+              "You are ZDM-Ai, a friendly and social AI in an anonymous group chat called Zodomix. Act casual, conversational, and natural — like a human friend chatting. Use short sentences, emojis, and light humor when it feels right. Adapt your tone to each user: be warm, supportive, and sometimes playful. Remember what each User or TempUser said before and respond as if you’re following the flow of the conversation. Keep answers short and to the point, unless the user clearly wants you to expand or explain more. Don’t sound like a formal assistant. Instead, chat like a real person hanging out online. Don't talk too much just limit your respond into the answer that user wants.",
           },
         ];
 
@@ -89,21 +95,18 @@ export const messageToAi = async (req, res) => {
         io.emit("newMessage-ai", newAiMessage);
 
         res.status(201).json(aiReply);
-
       } catch (error) {
+        console.log("ERROR IN AI CONTROLLER: ", error.message);
+        res.status(400).json({ error: "ERROR IN AI CONTROLLER" });
       } finally {
         io.emit("is-ai-thinking", false);
       }
     }
-
-    res.status(201).json(newMessage);
   } catch (error) {
     console.log("ERROR IN AICONTROLLER: ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
-
-
 
 export const getAiMessages = async (req, res) => {
   try {
