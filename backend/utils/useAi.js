@@ -4,7 +4,7 @@ const sendToAi = async (messages) => {
   const response = await axios.post(
     "https://openrouter.ai/api/v1/chat/completions",
     {
-      model: "alibaba/tongyi-deepresearch-30b-a3b:free",
+      model: "allenai/olmo-3.1-32b-instruct",
       messages,
     },
     {
