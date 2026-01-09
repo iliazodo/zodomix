@@ -1,5 +1,7 @@
 # [Zodomix](https://zodomix.com/)
 
+![zodomixLogo](frontend/public/zodomixLogo.png) 
+
 **Zodomix** is an anonymous group chat app where users can message without signup. Users get random usernames but can sign up for permanent IDs and extra features like creating private/public groups and controlling anonymity.
 LINK ➡️ [https://zodomix.com](https://zodomix.com)
 
@@ -61,3 +63,5 @@ MIT License — code is protected; copying not allowed.
 
 ## Author
 Zodo
+
+![](frontend/public/profiles/1.png) ![](frontend/public/profiles/3.png) ![](frontend/public/profiles/4.png) ![](frontend/public/profiles/5.png) ![](frontend/public/profiles/6.png) ![](frontend/public/profiles/7.png) 
