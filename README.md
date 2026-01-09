@@ -64,4 +64,4 @@ MIT License — code is protected; copying not allowed.
 ## Author
 Zodo
 
-![](frontend/public/profiles/1.png) ![](frontend/public/profiles/3.png) ![](frontend/public/profiles/4.png) ![](frontend/public/profiles/5.png) ![](frontend/public/profiles/6.png) ![](frontend/public/profiles/7.png)![](frontend/public/profiles/2.png) ![](frontend/public/profiles/8.png) ![](frontend/public/profiles/9.png) ![](frontend/public/profiles/10.png) ![](frontend/public/profiles/11.png) 
+![](frontend/public/profiles/1.png) ![](frontend/public/profiles/3.png) ![](frontend/public/profiles/4.png) ![](frontend/public/profiles/5.png) ![](frontend/public/profiles/6.png) ![](frontend/public/profiles/7.png)![](frontend/public/profiles/2.png) ![](frontend/public/profiles/8.png) ![](frontend/public/profiles/9.png) ![](frontend/public/profiles/10.png)
