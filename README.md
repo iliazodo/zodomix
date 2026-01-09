@@ -1,4 +1,4 @@
-# Zodomix
+# [Zodomix](zodomix.com)
 
 **Zodomix** is an anonymous group chat app where users can message without signup. Users get random usernames but can sign up for permanent IDs and extra features like creating private/public groups and controlling anonymity.
 
