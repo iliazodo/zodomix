@@ -16,7 +16,7 @@ import Message from "../components/chatComponents/Message.jsx";
 import AlertMessage from "../components/chatComponents/AlertMessage.jsx";
 import { useContext } from "react";
 import { SocketContext } from "../context/SocketContext";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import useDeleteMessage from "../hooks/message/useDeleteMessage.js";
@@ -51,10 +51,9 @@ const ChatZone = () => {
   const { authUser } = useAuthContext();
   const { getGroupInfo } = useGetGroupInfo();
   const { passLoading, sendPass } = useSendPass();
-  const { deleteMessageLoading , deleteMessage} = useDeleteMessage();
+  const { deleteMessageLoading, deleteMessage } = useDeleteMessage();
 
   const currGroup = JSON.parse(localStorage.getItem("zdm-group")) || "ALL";
-
   {
     /* Send Message Handler */
   }
@@ -74,28 +73,28 @@ const ChatZone = () => {
     /* Get Group Status */
   }
 
-  useEffect(() => {
-    const gettingGroupInfo = async () => {
-      const data = await getGroupInfo({ groupName });
-      setGroupInfo({
-        id: data._id,
-        creatorId: data.creatorId,
-        isAnonymous: data.isAnonymous,
-        isPublic: data.isPublic,
-        members: data.members,
-      });
-      if (data.isPublic) {
-        setIsAllowed("yes");
-      } else {
-        setIsAllowed("no");
-      }
-      if (data.members.includes(authUser?.id)) {
-        setIsAllowed("yes");
-      }
-    };
+  const gettingGroupInfo = async () => {
+    const data = await getGroupInfo({ groupName });
+    setGroupInfo({
+      id: data._id,
+      creatorId: data.creatorId,
+      isAnonymous: data.isAnonymous,
+      isPublic: data.isPublic,
+      members: data.members,
+    });
+    if (data.isPublic) {
+      setIsAllowed("yes");
+    } else {
+      setIsAllowed("no");
+    }
+    if (data.members.includes(authUser?.id)) {
+      setIsAllowed("yes");
+    }
+  };
 
-    gettingGroupInfo();
-  }, []);
+  // useEffect(() => {
+  //   gettingGroupInfo();
+  // }, []);
 
   {
     /*Scroll Handling*/
@@ -130,6 +129,7 @@ const ChatZone = () => {
     };
 
     gettingMessages();
+    gettingGroupInfo();
   }, [navigate]);
 
   {
@@ -204,13 +204,13 @@ const ChatZone = () => {
     if (authUser) {
       if (window.confirm("ARE YOU SURE TO DELETE THE MESSAGE?")) {
         const res = await deleteMessage(messageId);
-        if(res.ok){
+        if (res.ok) {
           location.reload();
         } else {
           toast.error("YOU CAN ONLY DELETE YOUR OWN MESSAGES");
         }
       }
-    }else{
+    } else {
       toast.error("YOU NEED TO LOGIN OR SIGNUP FOR THIS OPTION!");
     }
   };
@@ -221,13 +221,6 @@ const ChatZone = () => {
       <div className="h-screen overflow-auto flex flex-col">
         {/* chat name */}
         <AlertMessage message={currGroup} />
-
-        {/* chat loading */}
-        {chatLoading && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className=" w-48 h-48 border-4 border-white border-t-transparent rounded-full animate-spin m-auto" />
-          </div>
-        )}
 
         {/* history */}
         <div className="fixed left-5 top-32 w-[calc(16%-10px)] h-5/6 overflow-auto xl:block hidden border-white border-2 border-l-fuchsia-600 rounded-3xl mx-auto p-3 break-words">
@@ -244,7 +237,7 @@ const ChatZone = () => {
                   onClick={() => {
                     localStorage.setItem(
                       "zdm-group",
-                      JSON.stringify(group.name)
+                      JSON.stringify(group.name),
                     );
                   }}
                 >
@@ -285,7 +278,7 @@ const ChatZone = () => {
                     onClick={() => {
                       localStorage.setItem(
                         "zdm-group",
-                        JSON.stringify(group.groupName)
+                        JSON.stringify(group.groupName),
                       );
                     }}
                   >
@@ -304,8 +297,15 @@ const ChatZone = () => {
           </div>
         </div>
 
+        {/* chat loading */}
+        {chatLoading && (
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className=" w-48 h-48 border-4 border-white border-t-transparent rounded-full animate-spin m-auto" />
+          </div>
+        )}
+
         {/* chat container */}
-        {isAllowed === "yes" ? (
+        {(isAllowed === "yes") && !chatLoading ? (
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
