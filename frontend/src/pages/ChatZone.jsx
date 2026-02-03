@@ -74,15 +74,16 @@ const ChatZone = () => {
   }
 
   const gettingGroupInfo = async () => {
-    const data = await getGroupInfo({ groupName });
+    const data = await getGroupInfo(groupName);
+    console.log(data);
     setGroupInfo({
-      id: data._id,
-      creatorId: data.creatorId,
-      isAnonymous: data.isAnonymous,
-      isPublic: data.isPublic,
-      members: data.members,
+      id: data?._id,
+      creatorId: data?.creatorId,
+      isAnonymous: data?.isAnonymous,
+      isPublic: data?.isPublic,
+      members: data?.members,
     });
-    if (data.isPublic) {
+    if (data?.isPublic) {
       setIsAllowed("yes");
     } else {
       setIsAllowed("no");
@@ -91,10 +92,6 @@ const ChatZone = () => {
       setIsAllowed("yes");
     }
   };
-
-  // useEffect(() => {
-  //   gettingGroupInfo();
-  // }, []);
 
   {
     /*Scroll Handling*/

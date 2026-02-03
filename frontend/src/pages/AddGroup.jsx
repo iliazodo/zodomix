@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import useAddGroup from "../hooks/group/useAddGroup.js";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AddGroup = () => {
   const [inputs, setInputs] = useState({
@@ -18,6 +19,13 @@ const AddGroup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check for dangerous URL characters
+    const dangerousChars = /[?&=#]/;
+    if (dangerousChars.test(inputs.name)) {
+      toast.error("Group name cannot contain: ? & = #");
+      return
+    }
 
     const res = await addGroup(inputs);
     if (res) {
@@ -120,7 +128,9 @@ const AddGroup = () => {
               maxLength={200}
               className="bg-transparent rounded-3xl py-3 px-8 text-2xl font-mono border-2 outline-none"
               value={inputs.description}
-              onChange={(e) => setInputs({ ...inputs, description: e.target.value })}
+              onChange={(e) =>
+                setInputs({ ...inputs, description: e.target.value })
+              }
             />
           </div>
 
