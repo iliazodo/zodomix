@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { CircleX } from 'lucide-react';
 dayjs.extend(relativeTime);
 
 import Nav from "../components/Nav.jsx";
@@ -392,15 +393,15 @@ const ChatZone = () => {
               <div className="fixed flex flex-row justify-between rounded-full py-3 gap-1 w-full lg:w-1/2 bottom-16 md:bottom-10 ">
                 {/* reply display */}
                 {replyTarget && (
-                  <div className="flex justify-between md:text-lg lg:text-xl w-full lg:w-1/2 z-0 bg-slate-800 rounded-full px-5 py-3 bottom-32 fixed">
+                  <div className="flex justify-between md:text-lg lg:text-xl w-full lg:w-1/2 z-0 bg-black border-2 border-white rounded-full px-5 py-3 bottom-[135px] fixed">
                     <p className="break-words break-all">
                       Replying to:{" "}
-                      {replyTarget.message.length > 95
-                        ? replyTarget.message.slice(0, 95) + "..."
+                      {replyTarget.message.length > 70
+                        ? replyTarget.message.slice(0, 70) + "..."
                         : replyTarget.message}
                     </p>
                     <button type="button" onClick={() => setReplyTarget(null)}>
-                      <img src="/cancelBtn.png" className="w-6" />
+                      <CircleX className="h-6 w-6 text-red-500"/>
                     </button>
                   </div>
                 )}
