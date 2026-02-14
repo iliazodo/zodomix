@@ -13,7 +13,7 @@ const Home = () => {
         {/* Hero Section */}
         <section className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 lg:px-12 py-2 md:py-3 lg:py-4">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-2">
+            <div className="text-center md:flex md:flex-row md:items-center md:justify-between mb-2">
               <p className="text-2xl text-white sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent mb-2 md:mb-4">
                 {authUser ? (
                   <>

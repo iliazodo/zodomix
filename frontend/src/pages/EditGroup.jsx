@@ -46,9 +46,11 @@ const AddGroup = () => {
   };
 
   useEffect(() => {
-    const nameWithDash = inputs.name.replace(/\s+/g, "-");
-    if (nameWithDash !== inputs.name) {
-      setInputs((prev) => ({ ...prev, name: nameWithDash }));
+    if (typeof inputs.name === "string") {
+      const nameWithDash = inputs.name.replace(/\s+/g, "-");
+      if (nameWithDash !== inputs.name) {
+        setInputs((prev) => ({ ...prev, name: nameWithDash }));
+      }
     }
   }, [inputs.name]);
 

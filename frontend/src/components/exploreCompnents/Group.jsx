@@ -57,7 +57,7 @@ const Group = (props) => {
   }, []);
 
   return (
-    <div className="p-3 md:p-4 lg:p-5 flex flex-col bg-black border-4 border-white border-l-fuchsia-600 border-b-fuchsia-600 rounded-3xl w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] m-auto">
+    <div className="p-3 md:p-4 lg:p-5 flex flex-col bg-black border-4 border-t-cyan-300 border-r-green-300 border-l-fuchsia-300 border-b-yellow-300 rounded-3xl w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] m-auto">
       {props.groupType === "main" ? (<div className="w-full bg-yellow-500 mb-2"><p className="text-center m-auto text-black font-bold text-xs md:text-sm">Main Group</p></div>) : (<div className="w-full bg-green-500 mb-2"><p className="text-center m-auto text-black font-bold text-xs md:text-sm">User Created Group</p></div>)}
       <div className="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 lg:gap-7">
         <img
@@ -69,20 +69,20 @@ const Group = (props) => {
           <h3 className="text-lg md:text-xl lg:text-3xl text-center md:text-left font-bold">
             {props.name}
           </h3>
-          <span className="text-xs md:text-sm lg:text-base font-bold">{props.messageCount} Messages</span>
+          <span className="text-xs md:text-sm lg:text-base font-medium">{props.messageCount} Messages</span>
         </div>
       </div>
-      <p className="p-3 text-gray-400 font-semibold md:p-4 md:mb-3 text-xs md:text-sm lg:text-base line-clamp-2">{props.description}</p>
+      <p className="p-3 md:p-4 text-xs md:text-sm lg:text-base line-clamp-2">{props.description}</p>
       <div className="w-full flex flex-row gap-2 md:gap-3 lg:gap-4">
         <button
           onClick={handleJoin}
-          className="py-2 md:py-2 lg:py-3 bg-transparent border-2 rounded-full text-xs md:text-sm lg:text-xl font-semibold transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white w-4/5 xl:m-auto cursor-pointer"
+          className="py-2 md:py-2 bg-black lg:py-3 border-2 rounded-full text-xs md:text-sm lg:text-xl font-semibold transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white w-4/5 xl:m-auto cursor-pointer"
         >
           {currentGroup === props.name ? "IN" : "JOIN"}
         </button>
         <button
           onClick={handleFav}
-          className={`border-2 rounded-full text-2xl md:text-2xl lg:text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white w-1/5 xl:m-auto cursor-pointer flex items-center justify-center`}
+          className={`border-2 bg-black rounded-full text-2xl md:text-2xl lg:text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white w-1/5 xl:m-auto cursor-pointer flex items-center justify-center`}
         >
           { favLoading ? <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 border-2 border-white border-t-transparent rounded-full animate-spin" /> : (isFavGroup ? "♥︎" : "♡") }
         </button>
