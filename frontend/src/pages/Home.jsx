@@ -17,17 +17,17 @@ const Home = () => {
               <p className="text-2xl text-white sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent mb-2 md:mb-4">
                 {authUser ? (
                   <>
-                  Hello 
-                    <span className="" style={{ color: "#EAFF00" }}> {authUser.username}</span>
+                    Hello
+                    <span className="" style={{ color: "#EAFF00" }}>
+                      {" "}
+                      {authUser.username}
+                    </span>
                   </>
                 ) : (
                   "Hello Stranger"
                 )}
               </p>
-              <h1
-                className="text-sm sm:text-base md:text-lg font-semibold mb-2"
-                
-              >
+              <h1 className="text-sm sm:text-base md:text-lg font-semibold mb-2">
                 Welcome to{" "}
                 <span className="font-bold" style={{ color: "#FF00EE" }}>
                   ZODOMIX
@@ -123,12 +123,21 @@ const Home = () => {
                 </h2>
                 <div className="space-y-1 sm:space-y-2 text-sm sm:text-base md:text-lg font-medium">
                   <p>
-                    Have your own chatroom, signup and go to{" "}
+                    Have your own chatroom,{" "}
+                    <Link
+                      to="/signup"
+                      style={{ color: "#00F2FF" }}
+                      className="hover:opacity-80 font-bold transition"
+                    >
+                      signup
+                    </Link>{" "}
+                    and go to
                     <Link
                       to="/explore"
                       style={{ color: "#00F2FF" }}
                       className="hover:opacity-80 font-bold transition"
                     >
+                      {" "}
                       explore
                     </Link>
                     .
@@ -255,7 +264,7 @@ const Home = () => {
               <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Email:{" "}
                 <span className="font-mono" style={{ color: "#00FF7B" }}>
-                  contact@zodomix.com
+                  sendtozodo@gmail.com
                 </span>
               </p>
               <p className="text-xs opacity-75">Copyright © 2025 zodomix</p>
