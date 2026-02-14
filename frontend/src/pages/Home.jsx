@@ -25,7 +25,7 @@ const Home = () => {
                 )}
               </p>
               <h1
-                className="text-xs sm:text-sm md:text-base mb-2"
+                className="text-sm sm:text-base md:text-lg font-semibold mb-2"
                 
               >
                 Welcome to{" "}
@@ -48,7 +48,7 @@ const Home = () => {
               <div className="space-y-2 md:space-y-3 lg:space-y-4">
                 <div>
                   <p
-                    className="text-xs sm:text-sm md:text-base mb-1 md:mb-2"
+                    className="text-sm sm:text-base md:text-lg font-semibold mb-1 md:mb-2"
                     style={{ color: "#FF00EE" }}
                   >
                     Your Human Number
@@ -75,7 +75,7 @@ const Home = () => {
                   style={{ borderColor: "#FF00EE", borderTopWidth: "1px" }}
                   className="pt-2 md:pt-3"
                 >
-                  <p className="text-xs sm:text-sm md:text-base leading-relaxed">
+                  <p className="text-sm sm:text-base md:text-lg font-medium leading-relaxed">
                     Create your own free group and chat with strangers or make
                     it private — for yourself or friends.
                   </p>
@@ -121,13 +121,13 @@ const Home = () => {
                 >
                   📰 News
                 </h2>
-                <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm md:text-base">
+                <div className="space-y-1 sm:space-y-2 text-sm sm:text-base md:text-lg font-medium">
                   <p>
                     Have your own chatroom, signup and go to{" "}
                     <Link
                       to="/explore"
                       style={{ color: "#00F2FF" }}
-                      className="hover:opacity-80 font-semibold transition"
+                      className="hover:opacity-80 font-bold transition"
                     >
                       explore
                     </Link>
@@ -138,7 +138,7 @@ const Home = () => {
                     <Link
                       to="/chatZone/ADS"
                       style={{ color: "#00F2FF" }}
-                      className="hover:opacity-80 font-semibold transition"
+                      className="hover:opacity-80 font-bold transition"
                     >
                       ADS group
                     </Link>{" "}
@@ -149,7 +149,7 @@ const Home = () => {
                     <Link
                       to="/robot"
                       style={{ color: "#00F2FF" }}
-                      className="hover:opacity-80 font-semibold transition"
+                      className="hover:opacity-80 font-bold transition"
                     >
                       HERE
                     </Link>
@@ -173,7 +173,7 @@ const Home = () => {
                 >
                   💡 Quick Tips
                 </h2>
-                <ul className="space-y-1 text-xs sm:text-xs md:text-sm lg:text-base">
+                <ul className="space-y-1 text-sm sm:text-sm md:text-base lg:text-lg font-medium">
                   <li className="flex items-start">
                     <span
                       className="mr-2 font-bold flex-shrink-0"
@@ -241,18 +241,18 @@ const Home = () => {
               }}
             >
               <h3
-                className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-1 md:mb-2"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 md:mb-2"
                 style={{ color: "#00FF7B" }}
               >
                 About ZODOMIX
               </h3>
-              <p className="text-xs sm:text-xs md:text-sm">
+              <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Creator:{" "}
                 <span className="font-bold" style={{ color: "#00FF7B" }}>
                   Zodo
                 </span>
               </p>
-              <p className="text-xs sm:text-xs md:text-sm">
+              <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Email:{" "}
                 <span className="font-mono" style={{ color: "#00FF7B" }}>
                   contact@zodomix.com
