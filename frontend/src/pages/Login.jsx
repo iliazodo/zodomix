@@ -18,7 +18,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5 h-full w-full bg-black">
+    <div className="flex flex-col items-center justify-center gap-5 h-screen w-full ">
       <Link to="/">
       <img
         src="zodomixLogo.png"

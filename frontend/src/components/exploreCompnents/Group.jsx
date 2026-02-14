@@ -57,7 +57,7 @@ const Group = (props) => {
   }, []);
 
   return (
-    <div className="p-5  flex flex-col bg-neutral-950 border-4 border-white border-l-fuchsia-600 border-b-fuchsia-600 rounded-3xl w-[calc(100%-50px)] m-auto">
+    <div className="p-5  flex flex-col bg-black border-4 border-white border-l-fuchsia-600 border-b-fuchsia-600 rounded-3xl w-[calc(100%-50px)] m-auto">
       {props.groupType === "main" ? (<div className="w-full bg-yellow-500 mb-2"><p className="text-center m-auto text-black font-bold">Main Group</p></div>) : (<div className="w-full bg-green-500 mb-2"><p className="text-center m-auto text-black font-bold">User Created Group</p></div>)}
       <div className="flex flex-row justify-center items-center gap-7 xl:gap-30">
         <img

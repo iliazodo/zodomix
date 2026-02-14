@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+html, body{
+    /* background: linear-gradient(40deg, #000000 0%, #1a004d82 15%, #000000 30%, #004d2a51 45%, #000000 60%, #66005558 75%, #000000 90%, #004d664f 100%); */
     background-color: black;
     color: white;
-    
     scrollbar-color:#ff00ee black;
 }

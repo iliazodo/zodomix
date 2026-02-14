@@ -15,7 +15,7 @@ const Nav = () => {
   const { authUser } = useAuthContext();
 
   return (
-    <nav className="flex flex-row items-center md:justify-between gap-5 w-full fixed bg-black z-50">
+    <nav className="flex flex-row items-center md:justify-between gap-5 w-full fixed top-0 bg-black z-50">
       {/*logo*/}
       <Link to="/" className="md:w-1/4">
         <img
