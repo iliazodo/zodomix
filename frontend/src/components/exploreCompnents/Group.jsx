@@ -72,7 +72,7 @@ const Group = (props) => {
           <span className="text-xs md:text-sm lg:text-base font-bold">{props.messageCount} Messages</span>
         </div>
       </div>
-      <p className="p-3 md:p-4 text-xs font-bold text-gray-400 md:text-sm lg:text-base line-clamp-2">{props.description}</p>
+      <p className="p-3 md:p-4 text-xs font-bold text-gray-400 md:text-sm lg:text-base ">{props.description}</p>
       <div className="w-full flex flex-row gap-2 md:gap-3 lg:gap-4">
         <button
           onClick={handleJoin}
