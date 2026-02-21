@@ -57,21 +57,39 @@ const Explore = () => {
   }, []);
 
   // Skeleton loader
-  const GroupLoader = () => (
+const GroupLoader = () => (
+  <div className="p-3 md:p-4 lg:p-5 w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] m-auto">
     <ContentLoader
       speed={2}
-      width={350}
-      height={160}
-      viewBox="0 0 350 160"
+      width="100%"
+      height={320}
+      viewBox="0 0 600 320"
       backgroundColor="#2c2c2c"
       foregroundColor="#999"
-      className="mx-auto"
+      className="w-full"
     >
-      <rect x="0" y="0" rx="12" ry="12" width="350" height="100" />
-      <rect x="0" y="110" rx="6" ry="6" width="220" height="15" />
-      <rect x="0" y="135" rx="6" ry="6" width="180" height="15" />
+      {/* top label */}
+      <rect x="0" y="0" rx="8" ry="8" width="600" height="30" />
+
+      {/* image */}
+      <circle cx="80" cy="100" r="50" />
+
+      {/* name */}
+      <rect x="160" y="70" rx="8" ry="8" width="300" height="30" />
+
+      {/* message count */}
+      <rect x="160" y="110" rx="6" ry="6" width="200" height="20" />
+
+      {/* description */}
+      <rect x="0" y="170" rx="8" ry="8" width="600" height="20" />
+      <rect x="0" y="200" rx="8" ry="8" width="550" height="20" />
+
+      {/* buttons */}
+      <rect x="0" y="250" rx="25" ry="25" width="450" height="45" />
+      <rect x="470" y="250" rx="25" ry="25" width="120" height="45" />
     </ContentLoader>
-  );
+  </div>
+);
 
   useEffect(() => {
     handleGetGroups();
