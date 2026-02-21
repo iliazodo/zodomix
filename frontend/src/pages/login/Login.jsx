@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import useLogin from "../hooks/auth/useLogin.js";
+import useLogin from "../../hooks/auth/useLogin.js";
 
 const Login = () => {
   const [inputs, setInputs] = useState({

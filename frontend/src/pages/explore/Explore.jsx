@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import Nav from "../components/Nav.jsx";
-import Group from "../components/exploreCompnents/Group.jsx";
-import useGetGroups from "../hooks/group/useGetGroups.js";
+import Nav from "../../components/Nav.jsx";
+import Group from "../../components/exploreCompnents/Group.jsx";
+import useGetGroups from "../../hooks/group/useGetGroups.js";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext.jsx";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import ContentLoader from "react-content-loader";
 import { CopyPlus } from 'lucide-react';

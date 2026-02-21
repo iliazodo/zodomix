@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Nav from "../components/Nav";
+import Nav from "../../components/Nav.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import useGetGroupInfo from "../hooks/group/useGetGroupInfo.js";
-import useEditGroup from "../hooks/group/useEditGroup.js";
+import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
+import useEditGroup from "../../hooks/group/useEditGroup.js";
 
 const AddGroup = () => {
   const { groupId } = useParams();

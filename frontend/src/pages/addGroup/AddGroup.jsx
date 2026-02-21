@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Nav from "../components/Nav";
-import useAddGroup from "../hooks/group/useAddGroup.js";
+import Nav from "../../components/Nav.jsx";
+import useAddGroup from "../../hooks/group/useAddGroup.js";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 

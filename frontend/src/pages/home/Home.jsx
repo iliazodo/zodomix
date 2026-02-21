@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../components/Nav.jsx";
-import { useAuthContext } from "../context/AuthContext.jsx";
+import Header from "../../components/Nav.jsx";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 import { Link } from "react-router-dom";
 
 const Home = () => {

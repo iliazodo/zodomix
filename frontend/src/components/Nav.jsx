@@ -85,7 +85,7 @@ const Nav = () => {
               <img
                 src="/home.png"
                 alt="Home"
-                className="scale-110 hover:scale-150 transition duration-100 ease-in"
+                className="scale-110 transition duration-100 ease-in"
               />
             </Link>
           </li>
@@ -94,7 +94,7 @@ const Nav = () => {
               <img
                 src="/chat.png"
                 alt="Chat"
-                className="hover:scale-125 transition duration-100 ease-in"
+                className="transition duration-100 ease-in"
               />
             </Link>
           </li>
@@ -103,7 +103,7 @@ const Nav = () => {
               <img
                 src="/explore.png"
                 alt="Explore"
-                className="hover:scale-125 transition duration-100 ease-in"
+                className="transition duration-100 ease-in"
               />
             </Link>
           </li>
@@ -112,7 +112,7 @@ const Nav = () => {
               <img
                 src="/robot.png"
                 alt="Robot"
-                className="scale-110 hover:scale-150 transition duration-100 ease-in"
+                className="scale-110 transition duration-100 ease-in"
               />
             </Link>
           </li>

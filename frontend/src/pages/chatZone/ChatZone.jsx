@@ -4,23 +4,23 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { CircleX } from 'lucide-react';
 dayjs.extend(relativeTime);
 
-import Nav from "../components/Nav.jsx";
-import "./custom.css";
-import useSendMessages from "../hooks/message/useSendMessages.js";
-import useGetMessages from "../hooks/message/useGetMessages.js";
-import useGetFavGroups from "../hooks/group/useGetFavGroups.js";
-import useGetGroupInfo from "../hooks/group/useGetGroupInfo.js";
-import useSendPass from "../hooks/group/useSendPass.js";
+import Nav from "../../components/Nav.jsx";
+import "../custom.css";
+import useSendMessages from "../../hooks/message/useSendMessages.js";
+import useGetMessages from "../../hooks/message/useGetMessages.js";
+import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
+import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
+import useSendPass from "../../hooks/group/useSendPass.js";
 
 import io from "socket.io-client";
-import Message from "../components/chatComponents/Message.jsx";
-import AlertMessage from "../components/chatComponents/AlertMessage.jsx";
+import Message from "../../components/chatComponents/Message.jsx";
+import AlertMessage from "../../components/chatComponents/AlertMessage.jsx";
 import { useContext } from "react";
-import { SocketContext } from "../context/SocketContext";
+import { SocketContext } from "../../context/SocketContext.jsx";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext.jsx";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
-import useDeleteMessage from "../hooks/message/useDeleteMessage.js";
+import useDeleteMessage from "../../hooks/message/useDeleteMessage.js";
 
 const ChatZone = () => {
   const { socket } = useContext(SocketContext);

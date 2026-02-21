@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import Nav from "../components/Nav.jsx";
-import { useAuthContext } from "../context/AuthContext.jsx";
-import useLogout from "../hooks/auth/useLogout.js";
-import useGetMyGroups from "../hooks/group/useGetMyGroups.js";
-import useDeleteGroup from "../hooks/group/useDeleteGroup.js";
+import Nav from "../../components/Nav.jsx";
+import { useAuthContext } from "../../context/AuthContext.jsx";
+import useLogout from "../../hooks/auth/useLogout.js";
+import useGetMyGroups from "../../hooks/group/useGetMyGroups.js";
+import useDeleteGroup from "../../hooks/group/useDeleteGroup.js";
 import { Link } from "react-router-dom";
 
 const Profile = () => {

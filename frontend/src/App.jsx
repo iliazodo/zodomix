@@ -1,18 +1,18 @@
-import SignUp from "./pages/SignUp.jsx";
-import Login from "./pages/Login.jsx";
-import Home from "./pages/Home.jsx";
-import ChatZone from "./pages/ChatZone.jsx";
-import Explore from "./pages/Explore.jsx";
-import Profile from "./pages/Profile.jsx";
-import AddGroup from "./pages/AddGroup.jsx";
-import EditGroup from "./pages/EditGroup.jsx";
+import SignUp from "./pages/signup/SignUp.jsx";
+import Login from "./pages/login/Login.jsx";
+import Home from "./pages/home/Home.jsx";
+import ChatZone from "./pages/chatZone/ChatZone.jsx";
+import Explore from "./pages/explore/Explore.jsx";
+import Profile from "./pages/profile/Profile.jsx";
+import AddGroup from "./pages/addGroup/AddGroup.jsx";
+import EditGroup from "./pages/editGroup/EditGroup.jsx";
+import VerifyZone from "./pages/verifyingZone/VerifyZone.jsx";
+import Robot from "./pages/robot/Robot.jsx";
 
 import {Navigate , Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { useAuthContext } from "./context/AuthContext.jsx";
-import VerifyZone from "./pages/VerifyZone.jsx";
-import Robot from "./pages/Robot.jsx";
 
 function App() {
 
