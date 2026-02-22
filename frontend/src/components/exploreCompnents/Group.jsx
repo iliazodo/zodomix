@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAddFavGroup from "../../hooks/group/useAddFavGroup.js";
 import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
+import "../../pages/custom.css"
 
 const Group = (props) => {
   const [isFavGroup, setIsFavGroup] = useState(false);
@@ -57,7 +58,7 @@ const Group = (props) => {
   }, []);
 
   return (
-    <div className="p-3 md:p-4 lg:p-5 flex flex-col bg-black border-4 border-t-cyan-300 border-r-green-300 border-l-fuchsia-300 border-b-yellow-300 rounded-3xl w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] m-auto">
+    <div className="showUpAnimate p-3 md:p-4 lg:p-5 flex flex-col bg-black border-4 border-t-cyan-300 border-r-green-300 border-l-fuchsia-300 border-b-yellow-300 rounded-3xl w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] m-auto">
       {props.groupType === "main" ? (<div className="w-full bg-yellow-500 mb-2"><p className="text-center m-auto text-black font-bold text-xs md:text-sm">Main Group</p></div>) : (<div className="w-full bg-green-500 mb-2"><p className="text-center m-auto text-black font-bold text-xs md:text-sm">User Created Group</p></div>)}
       <div className="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 lg:gap-7">
         <img

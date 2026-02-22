@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { CircleX } from 'lucide-react';
+import { CircleX } from "lucide-react";
 dayjs.extend(relativeTime);
 
 import Nav from "../../components/Nav.jsx";
@@ -11,6 +11,7 @@ import useGetMessages from "../../hooks/message/useGetMessages.js";
 import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
 import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
 import useSendPass from "../../hooks/group/useSendPass.js";
+import useDeleteMessage from "../../hooks/message/useDeleteMessage.js";
 
 import io from "socket.io-client";
 import Message from "../../components/chatComponents/Message.jsx";
@@ -20,7 +21,7 @@ import { SocketContext } from "../../context/SocketContext.jsx";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
-import useDeleteMessage from "../../hooks/message/useDeleteMessage.js";
+import MessageSkeleton from "../../components/chatComponents/MessageSkeleton.jsx";
 
 const ChatZone = () => {
   const { socket } = useContext(SocketContext);
@@ -75,7 +76,7 @@ const ChatZone = () => {
   }
 
   const gettingGroupInfo = async () => {
-    const data = await getGroupInfo({groupName});
+    const data = await getGroupInfo({ groupName });
     setGroupInfo({
       id: data?._id,
       creatorId: data?.creatorId,
@@ -295,48 +296,47 @@ const ChatZone = () => {
         </div>
 
         {/* chat loading */}
-        {chatLoading && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className=" w-48 h-48 border-4 border-white border-t-transparent rounded-full animate-spin m-auto" />
-          </div>
-        )}
 
         {/* chat container */}
-        {(isAllowed === "yes") && !chatLoading ? (
+        {isAllowed === "yes" ? (
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
             className="flex flex-col w-full lg:mx-auto xl:w-4/6 overflow-auto p-3 xl:px-3 text-xl"
           >
             <div className="mt-28 md:mt-40"></div>
-            {conversation.map((msg) => {
-              let displayName = "";
-              if (!groupInfo.isAnonymous) {
-                displayName = msg.senderId
-                  ? msg.senderId.username
-                  : "GUEST-" + msg.tempUser.slice(0, 10);
-              } else {
-                displayName = msg.senderId
-                  ? "HUMAN-" + msg.senderId.humanNum
-                  : "GUEST-" + msg.tempUser.slice(0, 10);
-              }
-              return (
-                <Message
-                  key={msg._id}
-                  img={`/profiles/${
-                    msg.senderId ? msg.senderId.profilePic : "defaultPic"
-                  }.png`}
-                  username={`${displayName}`}
-                  message={msg.message}
-                  time={dayjs(msg.createdAt).fromNow()}
-                  messageId={msg._id}
-                  reply={msg.replyTo}
-                  handleReplyMsg={handleReplyMsg}
-                  handleCopyMsg={handleCopyMsg}
-                  handleDeleteMsg={handleDeleteMsg}
-                />
-              );
-            })}
+            {chatLoading
+              ? Array(5)
+                  .fill(0)
+                  .map((_, i) => <MessageSkeleton key={i} />)
+              : conversation.map((msg) => {
+                  let displayName = "";
+                  if (!groupInfo.isAnonymous) {
+                    displayName = msg.senderId
+                      ? msg.senderId.username
+                      : "GUEST-" + msg.tempUser.slice(0, 10);
+                  } else {
+                    displayName = msg.senderId
+                      ? "HUMAN-" + msg.senderId.humanNum
+                      : "GUEST-" + msg.tempUser.slice(0, 10);
+                  }
+                  return (
+                    <Message
+                      key={msg._id}
+                      img={`/profiles/${
+                        msg.senderId ? msg.senderId.profilePic : "defaultPic"
+                      }.png`}
+                      username={`${displayName}`}
+                      message={msg.message}
+                      time={dayjs(msg.createdAt).fromNow()}
+                      messageId={msg._id}
+                      reply={msg.replyTo}
+                      handleReplyMsg={handleReplyMsg}
+                      handleCopyMsg={handleCopyMsg}
+                      handleDeleteMsg={handleDeleteMsg}
+                    />
+                  );
+                })}
             <div ref={lastMessageRef} />
             <div className="mb-40"></div>
           </div>
@@ -400,7 +400,7 @@ const ChatZone = () => {
                         : replyTarget.message}
                     </p>
                     <button type="button" onClick={() => setReplyTarget(null)}>
-                      <CircleX className="h-6 w-6 text-red-500"/>
+                      <CircleX className="h-6 w-6 text-red-500" />
                     </button>
                   </div>
                 )}
