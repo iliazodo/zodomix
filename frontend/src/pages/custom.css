@@ -32,16 +32,15 @@ background: white;
 box-shadow: -4px -4px #fff, -4px 0 #fff, -8px 0 #fff, 0 -8px #fff, -4px 4px #000, -8px 4px #000, -12px 4px #000, -16px 4px #000, -12px 0 #000, -8px -4px #000, -4px -8px #000, 0 -4px #fff;
 }
 
+.bubble-border {
+  border: 20px solid transparent; /* thickness */
+  border-image: url("../border.png") 16 round;
+}
+
 .opAnimate{
     font-family: 'Public Pixel', sans-serif;
     animation: disappear 1.5s ease-in;
     color: #FF00EE
-}
-
-.showUpAnimate{
-    animation: showUp 2s ease;
-    overflow: hidden;
-    display: block;
 }
 
 @keyframes disappear {
@@ -50,11 +49,17 @@ box-shadow: -4px -4px #fff, -4px 0 #fff, -8px 0 #fff, 0 -8px #fff, -4px 4px #000
     }
 }
 
+.showUpAnimate {
+  animation: showUp 0.6s ease forwards;
+}
+
 @keyframes showUp {
-    from{
-        max-height: 0ex;
-    }
-    to{
-        max-height: 20ex;
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -3,6 +3,7 @@ import Nav from "../../components/Nav.jsx";
 import useAddGroup from "../../hooks/group/useAddGroup.js";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import "../custom.css";
 
 const AddGroup = () => {
   const [inputs, setInputs] = useState({
@@ -49,10 +50,10 @@ const AddGroup = () => {
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center gap-10 h-5/6 w-[calc(100%-40px)] p-3 border-2 border-white rounded-3xl"
         >
-          <h1 className="pixel-font text-xl text-center border-b-2 w-3/4 m-auto mb-6 pb-3">
-            Add new Group
+          <h1 className="pixel-font md:text-xl text-center border-b-2 w-3/4 m-auto pb-2">
+            Create a Group
           </h1>
-          <div className="w-5/6 flex flex-col  space-y-3 m-auto">
+          <div className="w-5/6 flex flex-col space-y-3 mx-auto">
             <label className="text-2xl showUpAnimate">Group Name</label>
             <input
               type="text"
@@ -66,7 +67,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg justify-center">
               <input
                 type="radio"
-                className="mr-2 checkbox h-9 w-9"
+                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
                 name="isPublic"
                 defaultChecked
                 onChange={(e) => setInputs({ ...inputs, isPublic: true })}
@@ -76,7 +77,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="mr-2 checkbox h-9 w-9"
+                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
                 name="isPublic"
                 onChange={(e) => setInputs({ ...inputs, isPublic: false })}
               />
@@ -103,7 +104,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="mr-2 checkbox h-9 w-9 -pt-"
+                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
                 name="isAnonymous"
                 defaultChecked
                 onChange={(e) => setInputs({ ...inputs, isAnonymous: true })}
@@ -113,7 +114,7 @@ const AddGroup = () => {
             <label className="md:text-2xl text-lg">
               <input
                 type="radio"
-                className="mr-2 checkbox h-9 w-9"
+                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
                 name="isAnonymous"
                 onChange={(e) => setInputs({ ...inputs, isAnonymous: false })}
               />
@@ -145,7 +146,7 @@ const AddGroup = () => {
             {loading ? (
               <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
             ) : (
-              "ENTER"
+              "CREATE"
             )}
           </button>
         </form>

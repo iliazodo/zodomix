@@ -75,8 +75,7 @@ const ChatZone = () => {
   }
 
   const gettingGroupInfo = async () => {
-    const data = await getGroupInfo(groupName);
-    console.log(data);
+    const data = await getGroupInfo({groupName});
     setGroupInfo({
       id: data?._id,
       creatorId: data?.creatorId,

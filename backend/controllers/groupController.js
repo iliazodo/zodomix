@@ -87,14 +87,16 @@ export const getGroup = async (req, res) => {
 
 export const getGroupInfo = async (req, res) => {
   try {
-    const { groupName } = req.body;
+    const { groupName, groupId } = req.body;
 
     let group;
 
     if (groupName) {
       group = await Group.findOne({ name: groupName });
+    } else if (groupId) {
+      group = await Group.findById(groupId);
     } else {
-      return res.status(400).json({ error: "NEED GROUP NAME" });
+      return res.status(400).json({ error: "NEED GROUP NAME OR GROUP ID" });
     }
 
     res.status(200).json(group);

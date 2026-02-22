@@ -23,11 +23,12 @@ const AddGroup = () => {
   useEffect(() => {
     const gettingGroupInfo = async () => {
       const data = await getGroupInfo({groupId});
+      console.log(data);
       setInputs({
-        groupId: data._id,
-        name: data.name,
-        description: data.description,
-        isPublic: data.isPublic,
+        groupId: data?._id,
+        name: data?.name,
+        description: data?.description,
+        isPublic: data?.isPublic,
       });
     };
 
@@ -62,8 +63,8 @@ const AddGroup = () => {
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center gap-10 h-5/6 w-[calc(100%-40px)] p-3 border-2 border-white rounded-3xl"
         >
-          <h1 className="pixel-font text-xl text-center border-b-2 w-3/4 m-auto mb-6 pb-3">
-            Add new Group
+          <h1 className="pixel-font md:text-xl text-center border-b-2 w-3/4 m-auto pb-3">
+            Edit {inputs.name}
           </h1>
           <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
             <label className="text-2xl showUpAnimate">Group Name</label>

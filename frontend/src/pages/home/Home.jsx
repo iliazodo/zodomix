@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../components/Nav.jsx";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import { Link } from "react-router-dom";
+import "../custom.css";
 
 const Home = () => {
   const { authUser } = useAuthContext();
@@ -16,13 +17,13 @@ const Home = () => {
             <div className="text-center md:flex md:flex-row md:items-center md:justify-between mb-2">
               <p className="text-2xl text-white sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent mb-2 md:mb-4">
                 {authUser ? (
-                  <>
+                  <span className="showUpAnimate">
                     Hello
                     <span className="" style={{ color: "#EAFF00" }}>
                       {" "}
                       {authUser.username}
                     </span>
-                  </>
+                  </span>
                 ) : (
                   "Hello Stranger"
                 )}
@@ -37,8 +38,9 @@ const Home = () => {
             </div>
 
             {/* Main Info Card */}
+
             <div
-              className="border rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl mb-4 md:mb-6 lg:mb-8"
+              className="showUpAnimate border rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl mb-4 md:mb-6 lg:mb-8"
               style={{
                 background: "rgba(0, 0, 0, 0.6)",
                 borderColor: "#FF00EE",
@@ -108,7 +110,7 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-6 mb-4 md:mb-6 lg:mb-8">
               {/* News Card */}
               <div
-                className="border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 hover:opacity-80 transition"
+                className="showUpAnimate border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 hover:opacity-80 transition"
                 style={{
                   background: "rgba(0, 242, 255, 0.1)",
                   borderColor: "#00F2FF",
@@ -169,7 +171,7 @@ const Home = () => {
 
               {/* Quick Tips Card */}
               <div
-                className="border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 hover:opacity-80 transition"
+                className="showUpAnimate border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 hover:opacity-80 transition"
                 style={{
                   background: "rgba(255, 0, 238, 0.1)",
                   borderColor: "#EAFF00",
@@ -242,7 +244,7 @@ const Home = () => {
 
             {/* Footer Info Card */}
             <div
-              className="border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 text-center"
+              className="showUpAnimate border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 text-center"
               style={{
                 background: "rgba(0, 0, 0, 0.4)",
                 borderColor: "#00FF7B",
@@ -269,7 +271,6 @@ const Home = () => {
               </p>
               <p className="text-xs opacity-75">Copyright © 2025 zodomix</p>
             </div>
-            
           </div>
         </section>
       </div>
