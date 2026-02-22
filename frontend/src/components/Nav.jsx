@@ -78,9 +78,9 @@ const Nav = () => {
         </Link>
       </div>
       {/*footer navbar*/}
-      <div className="md:hidden fixed bottom-0 bg-black w-full py-3">
+      <div className="md:hidden border-t border-t-gray-900 fixed bottom-0 bg-black w-full py-2">
         <ul className=" flex flex-row justify-between w-ful px-2">
-          <li className="w-14">
+          <li className="w-10">
             <Link to="/">
               <img
                 src="/home.png"
@@ -89,7 +89,7 @@ const Nav = () => {
               />
             </Link>
           </li>
-          <li className="w-14">
+          <li className="w-10">
             <Link to={`/chatZone/${currGroup}`}>
               <img
                 src="/chat.png"
@@ -98,7 +98,7 @@ const Nav = () => {
               />
             </Link>
           </li>
-          <li className="w-14">
+          <li className="w-10">
             <Link to="/explore">
               <img
                 src="/explore.png"
@@ -107,7 +107,7 @@ const Nav = () => {
               />
             </Link>
           </li>
-          <li className="w-14">
+          <li className="w-10">
             <Link to="/robot">
               <img
                 src="/robot.png"
