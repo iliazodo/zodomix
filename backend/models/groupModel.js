@@ -11,9 +11,9 @@ const groupSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  groupType:{
+  groupType: {
     type: String,
-    enum: ["main" , "uCreation"],
+    enum: ["main", "uCreation"],
     default: "uCreation",
   },
   picture: {
@@ -41,6 +41,18 @@ const groupSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  voiceMembers: [
+    {
+      socketId: {
+        type: String,
+        required: true,
+      },
+      user: {
+        type: mongoose.Schema.Types.Mixed,
+        required: true,
+      },
+    },
+  ],
 });
 
 const Group = mongoose.model("Group", groupSchema);

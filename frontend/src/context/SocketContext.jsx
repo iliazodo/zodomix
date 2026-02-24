@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useAuthContext } from "./AuthContext";
 import io from "socket.io-client";
 
 export const SocketContext = createContext();
@@ -9,12 +8,12 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     const socket = io("https://zodomix.com");
-    
+
     setSocket(socket);
 
     return () => {
-    socket.disconnect();
-  };
+      socket.disconnect();
+    };
   }, []);
 
   return (
@@ -22,4 +21,8 @@ export const SocketContextProvider = ({ children }) => {
       {children}
     </SocketContext.Provider>
   );
+};
+
+export const useSocket = () => {
+  return useContext(SocketContext);
 };

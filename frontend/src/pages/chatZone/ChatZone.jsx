@@ -22,6 +22,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import MessageSkeleton from "../../components/chatComponents/MessageSkeleton.jsx";
+import VoiceChat from "../../components/chatComponents/VoiceChat.jsx";
 
 const ChatZone = () => {
   const { socket } = useContext(SocketContext);
@@ -29,6 +30,7 @@ const ChatZone = () => {
   const { groupName } = useParams();
 
   const [groupInfo, setGroupInfo] = useState({
+    id: "",
     creatorId: "",
     isAnonymous: "",
     isPublic: "",
@@ -213,9 +215,11 @@ const ChatZone = () => {
     }
   };
 
+
   return (
     <>
       <Nav />
+      <VoiceChat groupId={groupInfo.id} />
       <div className="h-screen overflow-auto flex flex-col">
         {/* chat name */}
         <AlertMessage message={currGroup} />

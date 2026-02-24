@@ -11,6 +11,8 @@ import groupRoutes from "./routes/groupRouter.js";
 import verifyRoutes from "./routes/verifyRouter.js";
 import aiRoutes from "./routes/aiRouter.js";
 import updateRoutes from "./routes/updateRouter.js";
+import voiceRoutes from "./routes/voiceRouter.js";
+
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
 
@@ -53,6 +55,7 @@ app.use("/api/group", groupRoutes);
 app.use("/api/verify", verifyRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/update" , updateRoutes);
+app.use("/api/voice", voiceRoutes);
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
