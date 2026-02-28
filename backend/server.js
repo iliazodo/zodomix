@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.ZODOMIX_ENV === "production" ? "https://zodomix.com" : "http://localhost:5173",
+    origin:"https://zodomix.com",
     credentials: true,
   })
 );
