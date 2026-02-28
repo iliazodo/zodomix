@@ -7,7 +7,11 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socket = io("https://zodomix.com");
+    const socket = io(
+      process.env.NODE_ENV === "production"
+        ? "https://zodomix.com"
+        : "http://localhost:3030",
+    );
 
     setSocket(socket);
 
