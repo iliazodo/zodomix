@@ -21,17 +21,18 @@ const VoiceChat = (props) => {
   const { removeVoiceMember } = useRemoveVoiceMemeber();
   const { getGroupInfo } = useGetGroupInfo();
   const [usersInVoice, setUsersInVoice] = useState([]);
+  const [isGroupAnonymous, setIsGroupAnonymous] = useState(true);
 
   // Get Group Information
   const gettingGroupInfo = async () => {
     const data = await getGroupInfo({ groupId: props.groupId });
     setUsersInVoice(data?.voiceMembers || []);
+    setIsGroupAnonymous(data?.isAnonymous);
   };
 
   useEffect(() => {
     gettingGroupInfo();
   }, [props.groupId]);
-
 
   // Joining voice chat (start audio stream)
   const handleJoin = async () => {
@@ -137,39 +138,42 @@ const VoiceChat = (props) => {
   }, [socket, props.groupId]);
 
   return (
-    <div className="fixed top-[78px] left-0 w-full bg-black text-white px-4 py-2 flex justify-between items-center z-50 border-b border-gray-700">
-      {!usersInVoice.length ? (
-        <p className="font-bold text-sm">No one is in voice chat</p>
-      ) : (
-        <div className="flex flex-row items-center justify-center w-3/4">
-          {usersInVoice.map((e) => (
-            <p key={e.user._id} className="font-bold text-sm mr-4">
-              <img
-                src={`/profiles/${e.user.profilePic}.png`}
-                alt={e.user.username}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            </p>
-          ))}
-        </div>
-      )}
+      <div className="fixed overflow-y-auto md:top-28 top-20 left-0 w-full md:w-1/2 md:left-1/4 mx-auto bg-black text-white px-4 py-2 flex justify-between items-center z-20 rounded-full border-2 border-white">
+        {!usersInVoice.length ? (
+          <p className="font-bold text-sm">No one is in voice chat</p>
+        ) : (
+          <div className="flex flex-row items-center justify-center w-3/4">
+            {usersInVoice.map((e) => (
+              <div key={e.user._id} className="flex flex-col justify-center items-center font-bold text-sm mr-4">
+                <img
+                  src={`/profiles/${e.user.profilePic}.png`}
+                  alt={e.user.username}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <span>
+                  {isGroupAnonymous ? e.user.humanNum : e.user.username}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
-      {!joined ? (
-        <button
-          onClick={handleJoin}
-          className="bg-green-500 hover:bg-green-600 px-4 py-1 rounded text-sm"
-        >
-          Join Voice
-        </button>
-      ) : (
-        <button
-          onClick={handleLeave}
-          className="bg-red-500 hover:bg-red-600 px-4 py-1 rounded text-sm"
-        >
-          Leave
-        </button>
-      )}
-    </div>
+        {!joined ? (
+          <button
+            onClick={handleJoin}
+            className="bg-green-500 hover:bg-green-600 px-4 py-1 rounded text-sm"
+          >
+            Join Voice
+          </button>
+        ) : (
+          <button
+            onClick={handleLeave}
+            className="bg-red-500 hover:bg-red-600 px-4 py-1 rounded text-sm"
+          >
+            Leave
+          </button>
+        )}
+      </div>
   );
 };
 

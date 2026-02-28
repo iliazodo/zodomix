@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className="mt-[80px] mb-[80px] md:mb-0 text-white overflow-hidden flex flex-col">
+      <div className="mt-[80px] mb-[80px] md:mb-10 md:mt-28 text-white overflow-hidden flex flex-col">
         {/* Hero Section */}
         <section className="flex-1 px-4 sm:px-6 md:px-8 lg:px-12 py-2 md:py-3 lg:py-4">
           <div className="max-w-7xl mx-auto">

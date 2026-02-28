@@ -15,13 +15,13 @@ const Nav = () => {
   const { authUser } = useAuthContext();
 
   return (
-    <nav className="flex flex-row items-center md:justify-between gap-5 w-full fixed top-0 bg-black z-50">
+    <nav className="flex flex-row items-center justify-between w-full fixed top-0 bg-black z-50">
       {/*logo*/}
       <Link to="/" className="md:w-1/4">
         <img
           src="/zodomixLogo.png"
           alt="Zodomix Logo"
-          className="w-[calc(100%-1rem)]"
+          className="w-96 h-20 object-contain ml-1 md:ml-5"
         />
       </Link>
       {/*header navbar*/}
@@ -66,14 +66,14 @@ const Nav = () => {
         </ul>
       </div>
       {/*profile image*/}
-      <div className="md:p-3 md:w-24 w-96 mr-4">
+      <div className="md:pt-6 md:w-28 md:h-28 mr-4">
         <Link to="/profile">
           <img
             src={`/profiles/${
               authUser ? authUser.profilePic : "defaultPic"
             }.png`}
             alt="profile"
-            className="md:scale-100 scale-150 border-2 rounded-full"
+            className="border-2 rounded-full w-16 h-16"
           />
         </Link>
       </div>
