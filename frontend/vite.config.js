@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: process.env.NODE_ENV === 'production' ? 'https://zodomix.com' : 'http://localhost:3030',
+        target: process.env.ZODOMIX_ENV === 'production' ? 'https://zodomix.com' : 'http://localhost:3030',
         changeOrigin: true,
         secure: false,
       },

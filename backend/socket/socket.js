@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === "production" ? "https://zodomix.com" : "http://localhost:5173",
+    origin: process.env.ZODOMIX_ENV === "production" ? "https://zodomix.com" : "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
