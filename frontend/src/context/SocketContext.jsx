@@ -30,5 +30,3 @@ export const SocketContextProvider = ({ children }) => {
 export const useSocket = () => {
   return useContext(SocketContext);
 };
-
-export { SocketContext, SocketContextProvider, useSocket };
