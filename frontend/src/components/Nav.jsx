@@ -21,7 +21,7 @@ const Nav = () => {
         <img
           src="/zodomixLogo.png"
           alt="Zodomix Logo"
-          className="w-96 h-20 object-contain ml-1 md:ml-5"
+          className="w-72 h-20 object-contain ml-1 md:ml-5"
         />
       </Link>
       {/*header navbar*/}
@@ -73,7 +73,7 @@ const Nav = () => {
               authUser ? authUser.profilePic : "defaultPic"
             }.png`}
             alt="profile"
-            className="border-2 rounded-full w-16 h-16"
+            className="border-2 rounded-full w-14 h-14"
           />
         </Link>
       </div>
