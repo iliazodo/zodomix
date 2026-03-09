@@ -3,8 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { VoiceContext } from "../context/VoiceContext.jsx";
 import "../pages/custom.css";
 
+const VOICE_COLORS = ["#00FF7B", "#FF00EE", "#00F2FF", "#EAFF00"];
+
 const MiniVoiceBar = () => {
-  const { joined, currentVoiceGroupName, usersInVoice } = useContext(VoiceContext);
+  const { joined, currentVoiceGroupName, usersInVoice, speakingSocketIds } = useContext(VoiceContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,16 +32,26 @@ const MiniVoiceBar = () => {
         {/* Label */}
         <span className="text-green-400 text-xs pixel-font">Voice</span>
 
-        {/* User icons */}
+        {/* User icons with speaking color borders */}
         <div className="flex flex-row -space-x-1">
-          {usersInVoice.map((e) => (
-            <img
-              key={e.socketId || e.user._id}
-              src={`/profiles/${e.user.profilePic}.png`}
-              alt=""
-              className="w-5 h-5 rounded-full border border-green-500"
-            />
-          ))}
+          {usersInVoice.map((e, index) => {
+            const color = VOICE_COLORS[index % 4];
+            const isSpeaking = speakingSocketIds.has(e.socketId);
+            return (
+              <img
+                key={e.socketId || e.user._id}
+                src={`/profiles/${e.user.profilePic}.png`}
+                alt=""
+                className="w-6 h-6 rounded-full"
+                style={{
+                  border: `2px solid ${color}`,
+                  boxShadow: isSpeaking ? `0 0 6px ${color}, 0 0 12px ${color}` : "none",
+                  transition: "box-shadow 0.1s ease",
+                  opacity: isSpeaking ? 1 : 0.7,
+                }}
+              />
+            );
+          })}
         </div>
 
         {/* Group name */}

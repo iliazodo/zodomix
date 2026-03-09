@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://zodomix.com",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
@@ -68,13 +68,23 @@ io.on("connection", (socket) => {
   /* ---------------- LEAVE VOICE ---------------- */
 
   socket.on("leaveVoiceGroup", async (groupId) => {
+    const group = await Group.findById(groupId);
+    if (!group) return;
+
+    const member = group.voiceMembers.find((m) => m.socketId === socket.id);
 
     // Remove from DB
     await Group.findByIdAndUpdate(groupId, {
       $pull: { voiceMembers: { socketId: socket.id } },
     });
 
-    socket.to(groupId).emit("userLeft", socket.id);
+    // Notify others immediately so their UI updates right away
+    if (member) {
+      socket.to(groupId).emit(`voiceMemberRemoved-${groupId}`, {
+        socketId: socket.id,
+        user: member.user,
+      });
+    }
   });
 
   /* ---------------- DISCONNECT ---------------- */

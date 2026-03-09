@@ -7,6 +7,10 @@ import {
   getPeer,
   closeAllPeers,
   stopLocalStream,
+  getLocalAnalyser,
+  getRemoteAnalysers,
+  getAudioLevel,
+  getSpeakingThreshold,
 } from "../voice/voiceService.js";
 import useAddMember from "../hooks/voice/useAddMember.js";
 import useRemoveMember from "../hooks/voice/useRemoveMember.js";
@@ -21,6 +25,7 @@ export const VoiceContextProvider = ({ children }) => {
   const [currentVoiceGroupId, setCurrentVoiceGroupId] = useState(null);
   const [currentVoiceGroupName, setCurrentVoiceGroupName] = useState(null);
   const [usersInVoice, setUsersInVoice] = useState([]);
+  const [speakingSocketIds, setSpeakingSocketIds] = useState(new Set());
 
   const { addVoiceMember } = useAddMember();
   const { removeVoiceMember } = useRemoveMember();
@@ -132,9 +137,45 @@ export const VoiceContextProvider = ({ children }) => {
     };
   }, [socket, currentVoiceGroupId]);
 
+  // Poll audio levels every 100ms to detect who is speaking
+  useEffect(() => {
+    if (!joined || !socket) return;
+
+    const threshold = getSpeakingThreshold();
+
+    const interval = setInterval(() => {
+      const speaking = new Set();
+
+      // Local user
+      if (getAudioLevel(getLocalAnalyser()) > threshold) {
+        speaking.add(socket.id);
+      }
+
+      // Remote users
+      Object.entries(getRemoteAnalysers()).forEach(([socketId, analyser]) => {
+        if (getAudioLevel(analyser) > threshold) {
+          speaking.add(socketId);
+        }
+      });
+
+      // Only update state when the set actually changes (avoids constant re-renders)
+      setSpeakingSocketIds((prev) => {
+        if (
+          prev.size === speaking.size &&
+          [...prev].every((id) => speaking.has(id))
+        ) {
+          return prev;
+        }
+        return speaking;
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [joined, socket]);
+
   return (
     <VoiceContext.Provider
-      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, joinVoice, leaveVoice }}
+      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, speakingSocketIds, joinVoice, leaveVoice }}
     >
       {children}
     </VoiceContext.Provider>
