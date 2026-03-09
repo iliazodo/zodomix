@@ -19,6 +19,8 @@ export const VoiceContextProvider = ({ children }) => {
   const { authUser } = useAuthContext();
   const [joined, setJoined] = useState(false);
   const [currentVoiceGroupId, setCurrentVoiceGroupId] = useState(null);
+  const [currentVoiceGroupName, setCurrentVoiceGroupName] = useState(null);
+  const [usersInVoice, setUsersInVoice] = useState([]);
 
   const { addVoiceMember } = useAddMember();
   const { removeVoiceMember } = useRemoveMember();
@@ -26,6 +28,22 @@ export const VoiceContextProvider = ({ children }) => {
   const joinVoice = async (groupId) => {
     if (!authUser) return toast.error("You must be logged in to join voice chat.");
     if (!socket) return;
+
+    // Fetch group info to get name + current voice members for MiniVoiceBar
+    try {
+      const res = await fetch("/api/group/getGroupById", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ groupId }),
+      });
+      const groupData = await res.json();
+      setCurrentVoiceGroupName(groupData?.name || "");
+      setUsersInVoice(groupData?.voiceMembers || []);
+    } catch (e) {
+      console.log(e);
+    }
+
     await initVoice(socket, groupId, authUser);
     addVoiceMember({ socketId: socket.id, groupId });
     setCurrentVoiceGroupId(groupId);
@@ -40,6 +58,8 @@ export const VoiceContextProvider = ({ children }) => {
     removeVoiceMember({ socketId: socket.id, groupId: currentVoiceGroupId });
     setJoined(false);
     setCurrentVoiceGroupId(null);
+    setCurrentVoiceGroupName(null);
+    setUsersInVoice([]);
   };
 
   // Leave voice on page close/refresh only
@@ -92,8 +112,30 @@ export const VoiceContextProvider = ({ children }) => {
     };
   }, [socket, joined]);
 
+  // Keep usersInVoice in sync for MiniVoiceBar — persists across navigation
+  useEffect(() => {
+    if (!socket || !currentVoiceGroupId) return;
+
+    const addEvent = `newVoiceMember-${currentVoiceGroupId}`;
+    const removeEvent = `voiceMemberRemoved-${currentVoiceGroupId}`;
+
+    const handleAdd = (data) => setUsersInVoice((prev) => [...prev, data]);
+    const handleRemove = (data) =>
+      setUsersInVoice((prev) => prev.filter((e) => e.user._id !== data.user._id));
+
+    socket.on(addEvent, handleAdd);
+    socket.on(removeEvent, handleRemove);
+
+    return () => {
+      socket.off(addEvent, handleAdd);
+      socket.off(removeEvent, handleRemove);
+    };
+  }, [socket, currentVoiceGroupId]);
+
   return (
-    <VoiceContext.Provider value={{ joined, currentVoiceGroupId, joinVoice, leaveVoice }}>
+    <VoiceContext.Provider
+      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, joinVoice, leaveVoice }}
+    >
       {children}
     </VoiceContext.Provider>
   );
