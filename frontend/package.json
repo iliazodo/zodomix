@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "bad-words": "^4.0.0",
     "dayjs": "^1.11.13",
     "lucide-react": "^0.564.0",
     "react": "^19.0.0",

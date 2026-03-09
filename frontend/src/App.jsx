@@ -8,8 +8,8 @@ import AddGroup from "./pages/addGroup/AddGroup.jsx";
 import EditGroup from "./pages/editGroup/EditGroup.jsx";
 import VerifyZone from "./pages/verifyingZone/VerifyZone.jsx";
 import Robot from "./pages/robot/Robot.jsx";
-
-import {Navigate , Route, Routes } from "react-router-dom";
+import Nav from "./components/Nav.jsx";
+import { Navigate , Route, Routes , useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { useAuthContext } from "./context/AuthContext.jsx";
@@ -17,10 +17,14 @@ import { useAuthContext } from "./context/AuthContext.jsx";
 function App() {
 
   const {authUser} = useAuthContext();
+  const location = useLocation();
 
+  const noNavRoutes = ["/login", "/signup"];
+  const shouldShowNav = !noNavRoutes.includes(location.pathname);
 
   return (
     <div className=" font-thin">
+      {shouldShowNav && <Nav />}
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/home" element={<Home/>} />

@@ -19,6 +19,17 @@ export const getLocalStream = () => localStream;
 /* ---------------- CREATE PEER ---------------- */
 
 export const createPeer = (socket, targetId) => {
+  // Clean up existing connection before overwriting to prevent audio leaks
+  if (audioElements[targetId]) {
+    audioElements[targetId].pause();
+    audioElements[targetId].srcObject = null;
+    delete audioElements[targetId];
+  }
+  if (peers[targetId]) {
+    peers[targetId].close();
+    delete peers[targetId];
+  }
+
   const pc = new RTCPeerConnection({
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
   });
