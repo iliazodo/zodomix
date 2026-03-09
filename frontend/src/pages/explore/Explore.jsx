@@ -101,7 +101,7 @@ const GroupLoader = () => (
 
       <div
         ref={scrollRef}
-        className="overflow-auto h-screen flex flex-col sm:pt-32 pt-28"
+        className="overflow-auto h-screen flex flex-col sm:pt-40 pt-32"
       >
         {/* Search + Add */}
         <div
