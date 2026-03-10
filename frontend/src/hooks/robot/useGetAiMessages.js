@@ -3,10 +3,10 @@ import { useState } from "react";
 
 const useGetMessages = () => {
     const [getChatLoading , setGetChatLoading] = useState(false);
-    const getMessages = async () => {
+    const getMessages = async (page = 1) => {
         setGetChatLoading(true);
         try {
-            const res = await fetch("/api/ai/message/get" , {
+            const res = await fetch(`/api/ai/message/get?page=${page}` , {
                 method: "GET",
                 headers: {"Content-Type" : "application/json"},
                 credentials: "include"
@@ -14,11 +14,11 @@ const useGetMessages = () => {
 
             const data = await res.json();
 
-            return data;
-            
+            return data; // { messages, hasMore }
+
         } catch (error) {
             console.log(error.message);
-            return [];
+            return { messages: [], hasMore: false };
         } finally{
             setGetChatLoading(false);
         }

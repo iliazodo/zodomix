@@ -110,16 +110,21 @@ export const messageToAi = async (req, res) => {
 
 export const getAiMessages = async (req, res) => {
   try {
-    const messages = await Message.find({ isAiConversation: true }).populate(
-      "senderId",
-      "-password"
-    );
+    const page = parseInt(req.query.page) || 1;
+    const limit = 50;
+    const skip = (page - 1) * limit;
 
-    if (!messages) {
-      return res.status(404).json({ error: "THERE IS NO MESSAGE YET" });
-    }
+    const total = await Message.countDocuments({ isAiConversation: true });
 
-    res.status(200).json(messages);
+    const messages = await Message.find({ isAiConversation: true })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("senderId", "-password");
+
+    messages.reverse();
+
+    res.status(200).json({ messages, hasMore: skip + limit < total });
   } catch (error) {
     console.log("ERROR IN AICONTROLLER: ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });

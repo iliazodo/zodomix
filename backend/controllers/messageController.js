@@ -75,15 +75,25 @@ export const sendMessage = async (req, res) => {
 export const getMessage = async (req, res) => {
   try {
     const group = req.params.group;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 50;
+    const skip = (page - 1) * limit;
+
+    const total = await Message.countDocuments({ groupName: group });
 
     const messages = await Message.find({ groupName: group })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .populate("senderId", "-password")
       .populate({
         path: "replyTo",
         populate: { path: "senderId", select: "-password" },
       });
 
-    res.status(200).json(messages);
+    messages.reverse();
+
+    res.status(200).json({ messages, hasMore: skip + limit < total });
   } catch (error) {
     console.log("ERROR IN MESSAGECONTROLLER: ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });

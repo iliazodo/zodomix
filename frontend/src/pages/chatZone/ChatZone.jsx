@@ -38,6 +38,9 @@ const ChatZone = () => {
   });
   const [chatLoading, setChatLoading] = useState(false);
   const [isAllowed, setIsAllowed] = useState("checking");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [myMessage, setMyMessage] = useState({ message: "", id: "", pic: "" });
   const [conversation, setConversation] = useState([]);
   const [tempInfo, setTempInfo] = useState({ id: "", pic: "" });
@@ -71,6 +74,10 @@ const ChatZone = () => {
 
   const lastMessageRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const topSentinelRef = useRef(null);
+  const isPrepending = useRef(false);
+  const prevScrollHeight = useRef(0);
+  const isInitialLoad = useRef(true);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
   {
@@ -107,7 +114,19 @@ const ChatZone = () => {
   };
 
   useEffect(() => {
-    if (isAtBottom) {
+    if (isPrepending.current) {
+      // Restore scroll position after prepending older messages
+      const container = chatContainerRef.current;
+      if (container) {
+        container.scrollTop = container.scrollHeight - prevScrollHeight.current;
+      }
+      isPrepending.current = false;
+    } else if (isInitialLoad.current) {
+      // Jump to bottom instantly on first load — no scroll animation
+      lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      isInitialLoad.current = false;
+    } else if (isAtBottom) {
+      // Smooth scroll only for new incoming messages
       setTimeout(() => {
         lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
@@ -118,13 +137,43 @@ const ChatZone = () => {
     /* getting messages */
   }
 
+  const loadMoreMessages = async () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    const nextPage = page + 1;
+    const container = chatContainerRef.current;
+    if (container) prevScrollHeight.current = container.scrollHeight;
+    isPrepending.current = true;
+    const data = await getMessages(currGroup, nextPage);
+    setConversation((prev) => [...data.messages, ...prev]);
+    setHasMore(data.hasMore);
+    setPage(nextPage);
+    setLoadingMore(false);
+  };
+
+  useEffect(() => {
+    if (!topSentinelRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          loadMoreMessages();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(topSentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore]);
+
   useEffect(() => {
     setChatLoading(true);
 
     const gettingMessages = async () => {
-      const data = await getMessages(currGroup);
-
-      setConversation(data);
+      isInitialLoad.current = true;
+      const data = await getMessages(currGroup, 1);
+      setConversation(data.messages);
+      setHasMore(data.hasMore);
+      setPage(1);
       setChatLoading(false);
     };
 
@@ -309,6 +358,12 @@ const ChatZone = () => {
             className="flex flex-col w-full lg:mx-auto xl:w-4/6 overflow-auto p-3 xl:px-3 text-xl"
           >
             <div className="mt-28 md:mt-40"></div>
+            <div ref={topSentinelRef} />
+            {loadingMore && (
+              <div className="flex justify-center py-4">
+                <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
             {chatLoading
               ? Array(5)
                   .fill(0)

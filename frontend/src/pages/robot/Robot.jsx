@@ -7,6 +7,7 @@ import Nav from "../../components/Nav.jsx";
 import useSendToAi from "../../hooks/robot/useSendToAi.js";
 import useGetAiMessages from "../../hooks/robot/useGetAiMessages.js";
 import Message from "../../components/robotComponents/Message.jsx";
+import MessageSkeleton from "../../components/chatComponents/MessageSkeleton.jsx";
 import { SocketContext } from "../../context/SocketContext.jsx";
 
 const Robot = () => {
@@ -16,12 +17,21 @@ const Robot = () => {
   const [myMessage, setMyMessage] = useState({ message: "", id: "" });
   const [tempUser, setTempUser] = useState("");
   const [isAiThinking, setIsAiThinking] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
 
   const { getChatLoading, getMessages } = useGetAiMessages();
   const { loading, sendMessage } = useSendToAi();
 
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+
   const chatContainerRef = useRef(null);
   const lastMessageRef = useRef(null);
+  const topSentinelRef = useRef(null);
+  const isPrepending = useRef(false);
+  const prevScrollHeight = useRef(0);
+  const isInitialLoad = useRef(true);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
   {
@@ -35,12 +45,49 @@ const Robot = () => {
   };
 
   useEffect(() => {
-    if (isAtBottom) {
+    if (isPrepending.current) {
+      const container = chatContainerRef.current;
+      if (container) {
+        container.scrollTop = container.scrollHeight - prevScrollHeight.current;
+      }
+      isPrepending.current = false;
+    } else if (isInitialLoad.current) {
+      lastMessageRef.current?.scrollIntoView({ behavior: "instant" });
+      isInitialLoad.current = false;
+    } else if (isAtBottom) {
       setTimeout(() => {
         lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
   }, [conversation]);
+
+  const loadMoreMessages = async () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    const nextPage = page + 1;
+    const container = chatContainerRef.current;
+    if (container) prevScrollHeight.current = container.scrollHeight;
+    isPrepending.current = true;
+    const data = await getMessages(nextPage);
+    setConversation((prev) => [...data.messages, ...prev]);
+    setHasMore(data.hasMore);
+    setPage(nextPage);
+    setLoadingMore(false);
+  };
+
+  useEffect(() => {
+    if (!topSentinelRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          loadMoreMessages();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(topSentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore]);
 
   {
     /* Send message */
@@ -56,8 +103,13 @@ const Robot = () => {
   }
   useEffect(() => {
     const handleGetMessages = async () => {
-      const data = await getMessages();
-      setConversation(data);
+      isInitialLoad.current = true;
+      setChatLoading(true);
+      const data = await getMessages(1);
+      setConversation(data.messages);
+      setHasMore(data.hasMore);
+      setPage(1);
+      setChatLoading(false);
     };
     handleGetMessages();
   }, []);
@@ -94,13 +146,6 @@ const Robot = () => {
     <>
       <Nav />
       <div className="h-screen overflow-auto flex flex-col">
-        {/* chat loading */}
-        {getChatLoading && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className=" w-48 h-48 border-4 border-white border-t-transparent rounded-full animate-spin m-auto" />
-          </div>
-        )}
-
         {/* chat container */}
         <div
           ref={chatContainerRef}
@@ -108,7 +153,17 @@ const Robot = () => {
           className="flex flex-col w-full lg:mx-auto xl:w-4/6 overflow-auto p-3 xl:px-3 text-xl"
         >
           <div className="mt-28 md:mt-40"></div>
-          {conversation.map((msg) => {
+          <div ref={topSentinelRef} />
+          {loadingMore && (
+            <div className="flex justify-center py-4">
+              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            </div>
+          )}
+          {chatLoading
+            ? Array(5)
+                .fill(0)
+                .map((_, i) => <MessageSkeleton key={i} />)
+            : conversation.map((msg) => {
             return (
               <Message
                 key={msg._id}

@@ -63,3 +63,38 @@ box-shadow: -4px -4px #fff, -4px 0 #fff, -8px 0 #fff, 0 -8px #fff, -4px 4px #000
     transform: translateY(0);
   }
 }
+
+.glow-hover-pink {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover-pink:hover {
+  box-shadow: 0 0 16px 4px #FF00EE, 0 0 32px 10px rgba(255, 0, 238, 0.35);
+}
+
+.glow-hover-cyan {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover-cyan:hover {
+  box-shadow: 0 0 16px 4px #00F2FF, 0 0 32px 10px rgba(0, 242, 255, 0.35);
+}
+
+.glow-hover-yellow {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover-yellow:hover {
+  box-shadow: 0 0 16px 4px #EAFF00, 0 0 32px 10px rgba(234, 255, 0, 0.35);
+}
+
+.glow-hover-green {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover-green:hover {
+  box-shadow: 0 0 16px 4px #00FF7B, 0 0 32px 10px rgba(0, 255, 123, 0.35);
+}
+
+.glow-hover-group {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover-group:hover {
+  box-shadow: 0 0 14px 3px #22d3ee, 0 0 28px 8px rgba(232, 50, 232, 0.3), 0 0 28px 8px rgba(74, 222, 128, 0.2);
+}

@@ -40,7 +40,7 @@ const Home = () => {
             {/* Main Info Card */}
 
             <div
-              className="showUpAnimate border rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl mb-4 md:mb-6 lg:mb-8"
+              className="showUpAnimate glow-hover-pink border rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl mb-4 md:mb-6 lg:mb-8"
               style={{
                 background: "rgba(0, 0, 0, 0.6)",
                 borderColor: "#FF00EE",
@@ -110,7 +110,7 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-6 mb-4 md:mb-6 lg:mb-8">
               {/* News Card */}
               <div
-                className="showUpAnimate border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 hover:opacity-80 transition"
+                className="showUpAnimate glow-hover-cyan border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 transition"
                 style={{
                   background: "rgba(0, 242, 255, 0.1)",
                   borderColor: "#00F2FF",
@@ -172,7 +172,7 @@ const Home = () => {
 
               {/* Quick Tips Card */}
               <div
-                className="showUpAnimate border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 hover:opacity-80 transition"
+                className="showUpAnimate glow-hover-yellow border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 transition"
                 style={{
                   background: "rgba(255, 0, 238, 0.1)",
                   borderColor: "#EAFF00",
@@ -245,7 +245,7 @@ const Home = () => {
 
             {/* Footer Info Card */}
             <div
-              className="showUpAnimate border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 text-center"
+              className="showUpAnimate glow-hover-green border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 text-center"
               style={{
                 background: "rgba(0, 0, 0, 0.4)",
                 borderColor: "#00FF7B",

@@ -41,15 +41,6 @@ const Nav = () => {
                 </Link>
               </li>
               <li className="md:w-16 xl:w-20 md:p-3">
-                <Link to={`/chatZone/${currGroup}`}>
-                  <img
-                    src="/chat.png"
-                    alt="Chat"
-                    className="hover:scale-125 transition duration-100 ease-in"
-                  />
-                </Link>
-              </li>
-              <li className="md:w-16 xl:w-20 md:p-3">
                 <Link to="/explore">
                   <img
                     src="/explore.png"
@@ -96,15 +87,6 @@ const Nav = () => {
                 src="/home.png"
                 alt="Home"
                 className="scale-110 transition duration-100 ease-in"
-              />
-            </Link>
-          </li>
-          <li className="w-10">
-            <Link to={`/chatZone/${currGroup}`}>
-              <img
-                src="/chat.png"
-                alt="Chat"
-                className="transition duration-100 ease-in"
               />
             </Link>
           </li>
