@@ -11,6 +11,8 @@ import {
   getRemoteAnalysers,
   getAudioLevel,
   getSpeakingThreshold,
+  applyEffect,
+  getCurrentDefaultEffect,
 } from "../voice/voiceService.js";
 import useAddMember from "../hooks/voice/useAddMember.js";
 import useRemoveMember from "../hooks/voice/useRemoveMember.js";
@@ -26,15 +28,16 @@ export const VoiceContextProvider = ({ children }) => {
   const [currentVoiceGroupName, setCurrentVoiceGroupName] = useState(null);
   const [usersInVoice, setUsersInVoice] = useState([]);
   const [speakingSocketIds, setSpeakingSocketIds] = useState(new Set());
+  const [currentEffect, setCurrentEffect] = useState("none");
+  const [isVoiceAnonymous, setIsVoiceAnonymous] = useState(false);
 
   const { addVoiceMember } = useAddMember();
   const { removeVoiceMember } = useRemoveMember();
 
-  const joinVoice = async (groupId) => {
+  const joinVoice = async (groupId, isAnonymous = false) => {
     if (!authUser) return toast.error("You must be logged in to join voice chat.");
     if (!socket) return;
 
-    // Fetch group info to get name + current voice members for MiniVoiceBar
     try {
       const res = await fetch("/api/group/getGroupById", {
         method: "POST",
@@ -49,10 +52,17 @@ export const VoiceContextProvider = ({ children }) => {
       console.log(e);
     }
 
-    await initVoice(socket, groupId, authUser);
+    await initVoice(socket, groupId, authUser, isAnonymous);
     addVoiceMember({ socketId: socket.id, groupId });
     setCurrentVoiceGroupId(groupId);
+    setIsVoiceAnonymous(isAnonymous);
+    setCurrentEffect(getCurrentDefaultEffect(isAnonymous));
     setJoined(true);
+  };
+
+  const changeEffect = (effectId) => {
+    applyEffect(effectId);
+    setCurrentEffect(effectId);
   };
 
   const leaveVoice = () => {
@@ -65,6 +75,8 @@ export const VoiceContextProvider = ({ children }) => {
     setCurrentVoiceGroupId(null);
     setCurrentVoiceGroupName(null);
     setUsersInVoice([]);
+    setCurrentEffect("none");
+    setIsVoiceAnonymous(false);
   };
 
   // Leave voice on page close/refresh only
@@ -175,7 +187,7 @@ export const VoiceContextProvider = ({ children }) => {
 
   return (
     <VoiceContext.Provider
-      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, speakingSocketIds, joinVoice, leaveVoice }}
+      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, speakingSocketIds, joinVoice, leaveVoice, currentEffect, changeEffect, isVoiceAnonymous }}
     >
       {children}
     </VoiceContext.Provider>
