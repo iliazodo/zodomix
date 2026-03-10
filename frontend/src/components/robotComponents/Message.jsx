@@ -1,23 +1,16 @@
 import React from "react";
+import { Filter } from "bad-words";
 
-const bannedWords = [
-  "nigger",
-  "nigga",
-  "niga",
-  "n i g a",
-  "n i g g e r",
-  "Nigger",
-  "NIGGER",
-];
+const filter = new Filter();
 
 const sanitizeMessage = (message) => {
-
-  let sanitized = message;
-  bannedWords.forEach((word) => {
-    const regex = new RegExp(`\\b${word}\\b`, "gi");
-    sanitized = sanitized.replace(regex, "****");
+  return message.replace(/\S+/g, (word) => {
+    const stripped = word.replace(/[^a-zA-Z0-9]/g, "");
+    if (stripped && filter.isProfane(stripped)) {
+      return word[0] + "*".repeat(word.length - 1);
+    }
+    return word;
   });
-  return sanitized;
 };
 
 const renderMessageWithLinks = (message) => {

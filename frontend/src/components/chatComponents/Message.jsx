@@ -1,17 +1,16 @@
 import React from "react";
+import { Filter } from "bad-words";
 
-const bannedWords = [
-  "badword1",
-];
+const filter = new Filter();
 
 const sanitizeMessage = (message) => {
-
-  let sanitized = message;
-  bannedWords.forEach((word) => {
-    const regex = new RegExp(`\\b${word}\\b`, "gi");
-    sanitized = sanitized.replace(regex, "****");
+  return message.replace(/\S+/g, (word) => {
+    const stripped = word.replace(/[^a-zA-Z0-9]/g, "");
+    if (stripped && filter.isProfane(stripped)) {
+      return word[0] + "*".repeat(word.length - 1);
+    }
+    return word;
   });
-  return sanitized;
 };
 
 const renderMessageWithLinks = (message) => {
@@ -53,8 +52,8 @@ const Message = (props) => {
             />
             <p className="break-all text-xs md:text-lg md:max-w-full">
               {props.reply?.message?.length > 50
-                ? props.reply?.message.slice(0, 40) + "..."
-                : props.reply?.message}
+                ? sanitizeMessage(props.reply?.message).slice(0, 40) + "..."
+                : sanitizeMessage(props.reply?.message)}
             </p>
           </div>
           <div className="absolute z-0 ml-5 h-16 w-20 border-l-2 border-b-2 border-white"></div>
