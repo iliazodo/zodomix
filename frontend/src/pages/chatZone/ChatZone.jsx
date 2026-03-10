@@ -355,7 +355,7 @@ const ChatZone = () => {
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
-            className="flex flex-col w-full lg:mx-auto xl:w-4/6 overflow-auto p-3 xl:px-3 text-xl"
+            className="flex flex-col w-full lg:mx-auto xl:w-4/6 overflow-y-auto overflow-x-hidden p-3 xl:px-3 text-xl"
           >
             <div className="mt-28 md:mt-40"></div>
             <div ref={topSentinelRef} />
