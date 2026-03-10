@@ -38,3 +38,17 @@ export const isUserValid = (req, res) => {
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
+
+export const getLeaderboard = async (req, res) => {
+  try {
+    const users = await User.find({ isVerified: true })
+      .sort({ messagesNum: -1 })
+      .limit(5)
+      .select("username profilePic messagesNum humanNum");
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.log("ERROR IN USERCONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};

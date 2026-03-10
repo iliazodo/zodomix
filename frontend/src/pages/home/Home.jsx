@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Nav.jsx";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import { Link } from "react-router-dom";
 import "../custom.css";
+import useGetLeaderboard from "../../hooks/user/useGetLeaderboard.js";
+
+const medalColors = ["#FFD700", "#C0C0C0", "#CD7F32", "#00FF7B", "#00FF7B"];
+const medals = ["🥇", "🥈", "🥉", "4", "5"];
 
 const Home = () => {
   const { authUser } = useAuthContext();
+  const { leaderboardLoading, getLeaderboard } = useGetLeaderboard();
+  const [leaders, setLeaders] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await getLeaderboard();
+      setLeaders(data);
+    };
+    fetch();
+  }, []);
 
   return (
     <>
@@ -38,7 +52,6 @@ const Home = () => {
             </div>
 
             {/* Main Info Card */}
-
             <div
               className="showUpAnimate glow-hover-pink border rounded-lg md:rounded-xl p-3 sm:p-4 md:p-6 lg:p-8 shadow-2xl mb-4 md:mb-6 lg:mb-8"
               style={{
@@ -168,7 +181,6 @@ const Home = () => {
                   </p>
                 </div>
               </div>
-              
 
               {/* Quick Tips Card */}
               <div
@@ -243,30 +255,91 @@ const Home = () => {
               </div>
             </div>
 
+            {/* Leaderboard Card */}
+            <div
+              className="showUpAnimate glow-hover-green border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 mb-4 md:mb-6 lg:mb-8"
+              style={{
+                background: "rgba(0, 255, 123, 0.05)",
+                borderColor: "#00FF7B",
+                borderWidth: "2px",
+              }}
+            >
+              <h2
+                className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 md:mb-4"
+                style={{ color: "#00FF7B" }}
+              >
+                🏆 Top Messagers
+              </h2>
+
+              {leaderboardLoading ? (
+                <div className="flex justify-center py-4">
+                  <div className="w-7 h-7 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "#00FF7B", borderTopColor: "transparent" }} />
+                </div>
+              ) : leaders.length === 0 ? (
+                <p className="text-sm text-gray-400">No data yet.</p>
+              ) : (
+                <div className="space-y-2 md:space-y-3">
+                  {leaders.map((user, index) => (
+                    <div
+                      key={user._id}
+                      className="flex items-center gap-3 md:gap-4 p-2 md:p-3 rounded-lg"
+                      style={{ background: "rgba(0, 255, 123, 0.07)" }}
+                    >
+                      {/* Rank */}
+                      <span className="text-lg md:text-2xl w-8 text-center flex-shrink-0">
+                        {medals[index]}
+                      </span>
+
+                      {/* Avatar */}
+                      <img
+                        src={`/profiles/${user.profilePic}.png`}
+                        alt={user.username}
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex-shrink-0"
+                        style={{ borderColor: medalColors[index] }}
+                      />
+
+                      {/* Username */}
+                      <span className="font-bold text-sm md:text-base lg:text-lg flex-1 truncate">
+                        {user.username}
+                      </span>
+
+                      {/* Message count */}
+                      <span
+                        className="text-xs md:text-sm font-bold flex-shrink-0"
+                        style={{ color: "#00FF7B" }}
+                      >
+                        {user.messagesNum.toLocaleString()} msgs
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
             {/* Footer Info Card */}
             <div
-              className="showUpAnimate glow-hover-green border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 text-center"
+              className="showUpAnimate glow-hover-pink border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 text-center"
               style={{
                 background: "rgba(0, 0, 0, 0.4)",
-                borderColor: "#00FF7B",
+                borderColor: "#FF00EE",
                 borderWidth: "2px",
               }}
             >
               <h3
                 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-1 md:mb-2"
-                style={{ color: "#00FF7B" }}
+                style={{ color: "#FF00EE" }}
               >
                 About ZODOMIX
               </h3>
               <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Creator:{" "}
-                <span className="font-bold" style={{ color: "#00FF7B" }}>
+                <span className="font-bold" style={{ color: "#FF00EE" }}>
                   Zodo
                 </span>
               </p>
               <p className="text-sm sm:text-base md:text-lg font-semibold">
                 Email:{" "}
-                <span className="font-mono" style={{ color: "#00FF7B" }}>
+                <span className="font-mono" style={{ color: "#FF00EE" }}>
                   sendtozodo@gmail.com
                 </span>
               </p>
