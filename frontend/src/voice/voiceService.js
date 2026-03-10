@@ -2,6 +2,8 @@ let rawMicStream = null;       // original mic, never modified
 let localStream = null;        // processed stream sent to peers
 const peers = {};
 const audioElements = {};
+const peerStates = {};         // socketId → RTCPeerConnection connectionState
+let onConnectionStateChange = null; // callback set from VoiceContext
 
 // Audio graph
 let audioContext = null;
@@ -209,6 +211,12 @@ export const createPeer = (socket, targetId) => {
     }
   };
 
+  // Track connection state for UI indicator
+  pc.onconnectionstatechange = () => {
+    peerStates[targetId] = pc.connectionState;
+    onConnectionStateChange?.(targetId, pc.connectionState);
+  };
+
   pc.ontrack = (event) => {
     const audio = new Audio();
     audio.srcObject = event.streams[0];
@@ -232,6 +240,8 @@ export const createPeer = (socket, targetId) => {
 };
 
 export const getPeer = (id) => peers[id];
+export const getPeerStates = () => ({ ...peerStates });
+export const setConnectionStateCallback = (cb) => { onConnectionStateChange = cb; };
 
 /* ─── AUDIO LEVEL HELPERS ───────────────────────────────────────────────── */
 
@@ -264,6 +274,7 @@ export const closeAllPeers = () => {
   });
 
   Object.keys(analysers).forEach((id) => delete analysers[id]);
+  Object.keys(peerStates).forEach((id) => delete peerStates[id]);
 
   localAnalyser = null;
 };

@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
+import { WifiOff } from "lucide-react";
 import { SocketContext } from "../../context/SocketContext.jsx";
 import { VoiceContext } from "../../context/VoiceContext.jsx";
 import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
 import { VOICE_EFFECTS } from "../../voice/voiceService.js";
+
+const BAD_STATES = ["failed", "disconnected"];
 
 const VOICE_COLORS = ["#00FF7B", "#FF00EE", "#00F2FF", "#EAFF00"];
 
@@ -20,6 +23,7 @@ const VoiceChat = (props) => {
     currentEffect,
     changeEffect,
     isVoiceAnonymous,
+    peerConnectionStates,
   } = useContext(VoiceContext);
   const { getGroupInfo } = useGetGroupInfo();
 
@@ -101,20 +105,30 @@ const VoiceChat = (props) => {
             {usersInVoice.map((e, index) => {
               const color = VOICE_COLORS[index % 4];
               const isSpeaking = speakingSocketIds.has(e.socketId);
+              const hasConnectionIssue = BAD_STATES.includes(peerConnectionStates[e.socketId]);
               return (
                 <div key={e.user._id} className="flex flex-col justify-center items-center font-bold text-sm">
-                  <img
-                    src={`/profiles/${e.user.profilePic}.png`}
-                    alt={e.user.username}
-                    className="w-10 h-10 rounded-full object-cover"
-                    style={{
-                      border: `3px solid ${color}`,
-                      boxShadow: isSpeaking ? `0 0 8px ${color}, 0 0 16px ${color}` : "none",
-                      transition: "box-shadow 0.1s ease",
-                      opacity: isSpeaking ? 1 : 0.75,
-                    }}
-                  />
-                  <span style={{ color: isSpeaking ? color : "white", transition: "color 0.1s ease" }}>
+                  <div className="relative">
+                    <img
+                      src={`/profiles/${e.user.profilePic}.png`}
+                      alt={e.user.username}
+                      className="w-10 h-10 rounded-full object-cover"
+                      style={{
+                        border: `3px solid ${hasConnectionIssue ? "#ef4444" : color}`,
+                        boxShadow: hasConnectionIssue
+                          ? "0 0 8px #ef4444, 0 0 16px #ef444488"
+                          : isSpeaking ? `0 0 8px ${color}, 0 0 16px ${color}` : "none",
+                        transition: "box-shadow 0.1s ease",
+                        opacity: hasConnectionIssue ? 0.6 : isSpeaking ? 1 : 0.75,
+                      }}
+                    />
+                    {hasConnectionIssue && (
+                      <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-0.5">
+                        <WifiOff className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <span style={{ color: hasConnectionIssue ? "#ef4444" : isSpeaking ? color : "white", transition: "color 0.1s ease" }}>
                     {isGroupAnonymous ? e.user.humanNum : e.user.username}
                   </span>
                 </div>

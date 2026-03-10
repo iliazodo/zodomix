@@ -13,6 +13,7 @@ import {
   getSpeakingThreshold,
   applyEffect,
   getCurrentDefaultEffect,
+  setConnectionStateCallback,
 } from "../voice/voiceService.js";
 import useAddMember from "../hooks/voice/useAddMember.js";
 import useRemoveMember from "../hooks/voice/useRemoveMember.js";
@@ -30,9 +31,16 @@ export const VoiceContextProvider = ({ children }) => {
   const [speakingSocketIds, setSpeakingSocketIds] = useState(new Set());
   const [currentEffect, setCurrentEffect] = useState("none");
   const [isVoiceAnonymous, setIsVoiceAnonymous] = useState(false);
+  const [peerConnectionStates, setPeerConnectionStates] = useState({});
 
   const { addVoiceMember } = useAddMember();
   const { removeVoiceMember } = useRemoveMember();
+
+  useEffect(() => {
+    setConnectionStateCallback((socketId, state) => {
+      setPeerConnectionStates((prev) => ({ ...prev, [socketId]: state }));
+    });
+  }, []);
 
   const joinVoice = async (groupId, isAnonymous = false) => {
     if (!authUser) return toast.error("You must be logged in to join voice chat.");
@@ -77,6 +85,7 @@ export const VoiceContextProvider = ({ children }) => {
     setUsersInVoice([]);
     setCurrentEffect("none");
     setIsVoiceAnonymous(false);
+    setPeerConnectionStates({});
   };
 
   // Leave voice on page close/refresh only
@@ -187,7 +196,7 @@ export const VoiceContextProvider = ({ children }) => {
 
   return (
     <VoiceContext.Provider
-      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, speakingSocketIds, joinVoice, leaveVoice, currentEffect, changeEffect, isVoiceAnonymous }}
+      value={{ joined, currentVoiceGroupId, currentVoiceGroupName, usersInVoice, speakingSocketIds, joinVoice, leaveVoice, currentEffect, changeEffect, isVoiceAnonymous, peerConnectionStates }}
     >
       {children}
     </VoiceContext.Provider>
