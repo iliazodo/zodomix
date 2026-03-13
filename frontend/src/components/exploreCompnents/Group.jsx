@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAddFavGroup from "../../hooks/group/useAddFavGroup.js";
 import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
+import toast from "react-hot-toast";
 import "../../pages/custom.css"
 
 const Group = (props) => {
@@ -16,6 +17,11 @@ const Group = (props) => {
   const { getFavGroups } = useGetFavGroups();
   const { authUser } = useAuthContext();
 
+  const initialLiked = authUser ? (props.likes || []).some((id) => id?.toString() === authUser.id?.toString()) : false;
+  const [isLiked, setIsLiked] = useState(initialLiked);
+  const [likesCount, setLikesCount] = useState((props.likes || []).length);
+  const [likeHovered, setLikeHovered] = useState(false);
+
   const handleJoin = () => {
     localStorage.setItem("zdm-group", JSON.stringify(props.name));
     navigate(`/chatZone/${props.name}`);
@@ -26,10 +32,15 @@ const Group = (props) => {
   };
 
   const handleFav = async () => {
-    if (authUser) {
-      isFavGroup ? setIsFavGroup(false) : setIsFavGroup(true);
+    if (!authUser) {
+      toast.error("LOGIN OR SIGNUP FOR THIS OPTION");
+      return;
     }
-    await addFavGroup(props.id);
+    const newFav = !isFavGroup;
+    setIsFavGroup(newFav);
+    setIsLiked(newFav);
+    setLikesCount(newFav ? likesCount + 1 : likesCount - 1);
+    await addFavGroup(props._id);
   };
 
   useEffect(() => {
@@ -39,6 +50,7 @@ const Group = (props) => {
         data.map((group) => {
           if (group.groupName === props.name) {
             setIsFavGroup(true);
+            setIsLiked(true);
           }
         });
       } catch (error) {
@@ -53,6 +65,18 @@ const Group = (props) => {
       setFavLoading(false);
     }
   }, []);
+
+  const handleLike = async () => {
+    if (!authUser) {
+      toast.error("LOGIN TO LIKE GROUPS");
+      return;
+    }
+    const newLiked = !isLiked;
+    setIsLiked(newLiked);
+    setIsFavGroup(newLiked);
+    setLikesCount(newLiked ? likesCount + 1 : likesCount - 1);
+    await addFavGroup(props._id);
+  };
 
   const [joinHovered, setJoinHovered] = useState(false);
   const [favHovered, setFavHovered] = useState(false);
@@ -136,12 +160,28 @@ const Group = (props) => {
             >
               {props.name}
             </h3>
-            <span
-              className="font-mono text-xs"
-              style={{ color: "#00F2FF", opacity: 0.85 }}
-            >
-              {props.messageCount} messages
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs" style={{ color: "#00F2FF", opacity: 0.85 }}>
+                {props.messageCount} messages
+              </span>
+              <span className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.2)" }}>·</span>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); handleLike(); }}
+                onMouseEnter={() => setLikeHovered(true)}
+                onMouseLeave={() => setLikeHovered(false)}
+                className="font-mono text-xs flex items-center gap-1 cursor-pointer transition-all duration-200"
+                style={{
+                  color: isLiked ? "#FF00EE" : likeHovered ? "#FF00EE" : "rgba(255,255,255,0.4)",
+                  textShadow: isLiked ? "0 0 8px #FF00EE88" : "none",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                }}
+              >
+                {isLiked ? "♥︎" : "♡"} {likesCount}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -189,6 +229,7 @@ const Group = (props) => {
           </button>
 
           <button
+            type="button"
             onClick={handleFav}
             onMouseEnter={() => setFavHovered(true)}
             onMouseLeave={() => setFavHovered(false)}

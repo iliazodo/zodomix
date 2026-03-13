@@ -1,6 +1,6 @@
 import express from "express";
 
-import { addFavGroup, createGroup, deleteGroup, getFavGroup, getGroup, getGroupInfo, getMyOwnGroups, sendPass, updateGroup } from "../controllers/groupController.js";
+import { addFavGroup, createGroup, deleteGroup, getFavGroup, getGroup, getGroupInfo, getMyOwnGroups, sendPass, toggleLike, updateGroup } from "../controllers/groupController.js";
 import protectRoute from "../middleware/protectRoute.js";
 
 const router = express.Router();
@@ -22,5 +22,6 @@ router.post("/addFavorite" , protectRoute, addFavGroup );
 router.get("/getFavorite" , protectRoute , getFavGroup);
 
 router.post("/sendPass" , protectRoute , sendPass);
+router.post("/like", protectRoute, toggleLike);
 
 export default router;

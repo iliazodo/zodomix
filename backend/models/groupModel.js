@@ -41,6 +41,10 @@ const groupSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  likes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+  },
   voiceMembers: [
     {
       socketId: {

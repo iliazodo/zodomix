@@ -215,14 +215,16 @@ export const addFavGroup = async (req, res) => {
     );
 
     if (!alreadyExists) {
-      user.favGroups.push({ groupName: group.name, groupPic: group.picture });
-      await user.save();
+      await User.findByIdAndUpdate(userId, {
+        $push: { favGroups: { groupName: group.name, groupPic: group.picture } },
+      });
+      await Group.findByIdAndUpdate(groupId, { $addToSet: { likes: userId } });
       res.status(200).json({ message: "GROUP ADDED SUCCESSFULLY" });
     } else {
-      user.favGroups = user.favGroups.filter(
-        (fav) => fav.groupName !== group.name
-      );
-      await user.save();
+      await User.findByIdAndUpdate(userId, {
+        $pull: { favGroups: { groupName: group.name } },
+      });
+      await Group.findByIdAndUpdate(groupId, { $pull: { likes: userId } });
       res.status(204).json({ error: "GROUP REMOVED SUCCESSFULLY" });
     }
   } catch (error) {
@@ -258,6 +260,34 @@ export const getFavGroup = async (req, res) => {
     res.status(200).json(user.favGroups);
   } catch (error) {
     console.log("ERROR IN GROUPCOTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const toggleLike = async (req, res) => {
+  try {
+    const { groupId } = req.body;
+    const userId = req.user._id;
+
+    if (!groupId) {
+      return res.status(400).json({ error: "GROUP ID REQUIRED" });
+    }
+
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ error: "GROUP NOT FOUND" });
+
+    const likes = (group.likes || []).map((id) => id.toString());
+    const alreadyLiked = likes.includes(userId.toString());
+
+    if (alreadyLiked) {
+      await Group.findByIdAndUpdate(groupId, { $pull: { likes: userId } });
+      return res.status(200).json({ liked: false, likesCount: likes.length - 1 });
+    } else {
+      await Group.findByIdAndUpdate(groupId, { $addToSet: { likes: userId } });
+      return res.status(200).json({ liked: true, likesCount: likes.length + 1 });
+    }
+  } catch (error) {
+    console.log("ERROR IN GROUPCONTROLLER (toggleLike):", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
