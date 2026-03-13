@@ -8,7 +8,7 @@ import "../../pages/custom.css"
 const Group = (props) => {
   const [isFavGroup, setIsFavGroup] = useState(false);
   const [favLoading, setFavLoading] = useState(true);
-  const [currentGroup , setCurrentGroup] = useState(JSON.parse(localStorage.getItem("zdm-group")));
+  const [currentGroup, setCurrentGroup] = useState(JSON.parse(localStorage.getItem("zdm-group")));
 
   const navigate = useNavigate();
 
@@ -20,7 +20,6 @@ const Group = (props) => {
     localStorage.setItem("zdm-group", JSON.stringify(props.name));
     navigate(`/chatZone/${props.name}`);
 
-    // Add group to history
     let existing = JSON.parse(localStorage.getItem("zdm-chat-history")) || [];
     existing.push({ name: props.name, pic: props.picture });
     localStorage.setItem("zdm-chat-history", JSON.stringify(existing));
@@ -37,14 +36,12 @@ const Group = (props) => {
     const gettingFav = async () => {
       try {
         const data = await getFavGroups();
-
         data.map((group) => {
           if (group.groupName === props.name) {
             setIsFavGroup(true);
           }
         });
       } catch (error) {
-
       } finally {
         setFavLoading(false);
       }
@@ -57,36 +54,163 @@ const Group = (props) => {
     }
   }, []);
 
+  const [joinHovered, setJoinHovered] = useState(false);
+  const [favHovered, setFavHovered] = useState(false);
+
+  const isMain = props.groupType === "main";
+  const isCurrentGroup = currentGroup === props.name;
+
   return (
-    <div className="showUpAnimate glow-hover-group p-3 md:p-4 lg:p-5 flex flex-col h-full bg-black border-4 border-t-cyan-300 border-r-green-300 border-l-fuchsia-300 border-b-yellow-300 rounded-3xl w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] m-auto">
-      {props.groupType === "main" ? (<div className="w-full bg-yellow-500 mb-2"><p className="text-center m-auto text-black font-bold text-xs md:text-sm">Main Group</p></div>) : (<div className="w-full bg-green-500 mb-2"><p className="text-center m-auto text-black font-bold text-xs md:text-sm">User Created Group</p></div>)}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-3 md:gap-4 lg:gap-7">
-        <img
-          src={`/groups/${props.picture}.png`}
-          alt="profle"
-          className="rounded-full border-2 border-white w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
-        />
-        <div className="flex flex-col items-center md:items-start">
-          <h3 className="text-lg md:text-xl lg:text-3xl text-center md:text-left font-bold">
-            {props.name}
-          </h3>
-          <span className="text-xs md:text-sm lg:text-base font-bold">{props.messageCount} Messages</span>
-        </div>
+    <div
+      className="showUpAnimate relative flex flex-col bg-black rounded-2xl overflow-hidden m-auto w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)]"
+      style={{
+        border: "1px solid rgba(0, 242, 255, 0.3)",
+        boxShadow: "0 4px 32px rgba(0,0,0,0.6), 0 0 12px rgba(0,242,255,0.07)",
+      }}
+    >
+      {/* Top gradient accent bar */}
+      <div
+        style={{
+          height: "3px",
+          background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)",
+        }}
+      />
+
+      {/* Badge pill — top right */}
+      <div className="absolute top-4 right-4">
+        {isMain ? (
+          <span
+            className="text-xs font-mono px-2 py-0.5 rounded-full"
+            style={{
+              color: "#EAFF00",
+              border: "1px solid #EAFF00",
+              boxShadow: "0 0 8px #EAFF0066",
+            }}
+          >
+            MAIN
+          </span>
+        ) : (
+          <span
+            className="text-xs font-mono px-2 py-0.5 rounded-full"
+            style={{
+              color: "#00FF7B",
+              border: "1px solid #00FF7B",
+              boxShadow: "0 0 8px #00FF7B66",
+            }}
+          >
+            USER
+          </span>
+        )}
       </div>
-      <p className="p-3 md:p-4 text-xs font-bold text-gray-400 md:text-sm lg:text-base flex-grow">{props.description}</p>
-      <div className="w-full flex flex-row gap-2 md:gap-3 lg:gap-4">
-        <button
-          onClick={handleJoin}
-          className="py-2 md:py-2 bg-black lg:py-3 border-2 rounded-full text-xs md:text-sm lg:text-xl font-semibold transition duration-300 ease-out hover:bg-white hover:text-black active:bg-black active:text-white w-4/5 xl:m-auto cursor-pointer"
+
+      {/* Card body */}
+      <div className="p-4 md:p-5 flex flex-col gap-4 flex-grow">
+
+        {/* Avatar + name + count */}
+        <div className="flex items-center gap-4">
+          {/* Gradient ring around avatar */}
+          <div
+            style={{
+              padding: "2px",
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #00FF7B, #FF00EE)",
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src={`/groups/${props.picture}.png`}
+              alt={props.name}
+              className="rounded-full block"
+              style={{
+                width: "64px",
+                height: "64px",
+                background: "#000",
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1 min-w-0">
+            <h3
+              className="pixel-font font-bold truncate"
+              style={{ fontSize: "1.05rem", lineHeight: "1.3" }}
+            >
+              {props.name}
+            </h3>
+            <span
+              className="font-mono text-xs"
+              style={{ color: "#00F2FF", opacity: 0.85 }}
+            >
+              {props.messageCount} messages
+            </span>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p
+          className="font-mono text-xs md:text-sm leading-relaxed flex-grow"
+          style={{ color: "rgba(255,255,255,0.45)" }}
         >
-          {currentGroup === props.name ? "IN" : "JOIN"}
-        </button>
-        <button
-          onClick={handleFav}
-          className={`border-2 bg-black rounded-full text-2xl md:text-2xl lg:text-4xl transition duration-300 ease-out md:hover:bg-white md:hover:text-black active:bg-black active:text-white w-1/5 xl:m-auto cursor-pointer flex items-center justify-center`}
-        >
-          { favLoading ? <div className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 border-2 border-white border-t-transparent rounded-full animate-spin" /> : (isFavGroup ? "♥︎" : "♡") }
-        </button>
+          {props.description}
+        </p>
+
+        {/* Divider */}
+        <div style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />
+
+        {/* Buttons */}
+        <div className="flex gap-2">
+          <button
+            onClick={handleJoin}
+            onMouseEnter={() => setJoinHovered(true)}
+            onMouseLeave={() => setJoinHovered(false)}
+            className="flex-1 py-2 md:py-3 rounded-full font-mono font-bold text-sm md:text-base transition-all duration-200 cursor-pointer"
+            style={
+              isCurrentGroup
+                ? {
+                    background: "#00FF7B",
+                    color: "#000",
+                    boxShadow: "0 0 18px #00FF7B88",
+                    border: "1px solid #00FF7B",
+                  }
+                : joinHovered
+                ? {
+                    background: "#00FF7B",
+                    color: "#000",
+                    border: "1px solid #00FF7B",
+                    boxShadow: "0 0 18px #00FF7B88",
+                  }
+                : {
+                    background: "transparent",
+                    border: "1px solid #00FF7B",
+                    color: "#00FF7B",
+                  }
+            }
+          >
+            {isCurrentGroup ? "✓ IN" : "JOIN"}
+          </button>
+
+          <button
+            onClick={handleFav}
+            onMouseEnter={() => setFavHovered(true)}
+            onMouseLeave={() => setFavHovered(false)}
+            className="rounded-full text-xl transition-all duration-200 cursor-pointer flex items-center justify-center"
+            style={{
+              width: "48px",
+              flexShrink: 0,
+              border: `1px solid ${isFavGroup || favHovered ? "#FF00EE" : "rgba(255,255,255,0.15)"}`,
+              color: isFavGroup || favHovered ? "#FF00EE" : "rgba(255,255,255,0.25)",
+              boxShadow: isFavGroup ? "0 0 14px #FF00EE66" : favHovered ? "0 0 10px #FF00EE44" : "none",
+              background: favHovered && !isFavGroup ? "rgba(255,0,238,0.08)" : "transparent",
+            }}
+          >
+            {favLoading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : isFavGroup ? (
+              "♥︎"
+            ) : (
+              "♡"
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

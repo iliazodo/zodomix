@@ -364,11 +364,62 @@ const ChatZone = () => {
                 <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
               </div>
             )}
-            {chatLoading
-              ? Array(5)
-                  .fill(0)
-                  .map((_, i) => <MessageSkeleton key={i} />)
-              : conversation.map((msg) => {
+            {chatLoading ? (
+              Array(5)
+                .fill(0)
+                .map((_, i) => <MessageSkeleton key={i} />)
+            ) : conversation.length === 0 ? (
+              <div
+                className="flex flex-col items-center justify-center text-center select-none"
+                style={{ minHeight: "60vh" }}
+              >
+                <div
+                  style={{
+                    fontSize: "72px",
+                    filter: "drop-shadow(0 0 24px #00FF7B)",
+                    marginBottom: "24px",
+                  }}
+                >
+                  💬
+                </div>
+                <h2
+                  className="pixel-font"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    fontSize: "1.8rem",
+                    letterSpacing: "0.15em",
+                    marginBottom: "12px",
+                  }}
+                >
+                  NO MESSAGES YET
+                </h2>
+                <p
+                  className="font-mono text-lg"
+                  style={{ color: "#00F2FF", opacity: 0.6, marginBottom: "28px" }}
+                >
+                  Be the first to say something!
+                </p>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  {["#00FF7B", "#FF00EE", "#00F2FF", "#EAFF00"].map((c, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: c,
+                        boxShadow: `0 0 10px ${c}`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              conversation.map((msg) => {
                   let displayName = "";
                   if (!groupInfo.isAnonymous) {
                     displayName = msg.senderId
@@ -395,7 +446,8 @@ const ChatZone = () => {
                       handleDeleteMsg={handleDeleteMsg}
                     />
                   );
-                })}
+                })
+            )}
             <div ref={lastMessageRef} />
             <div className="mb-40"></div>
           </div>
