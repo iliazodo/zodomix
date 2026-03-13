@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    bio: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );
