@@ -3,7 +3,6 @@ import Nav from "../../components/Nav.jsx";
 import useAddGroup from "../../hooks/group/useAddGroup.js";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import "../custom.css";
 
 const AddGroup = () => {
   const [inputs, setInputs] = useState({
@@ -14,18 +13,17 @@ const AddGroup = () => {
     description: "",
   });
 
+  const [submitHovered, setSubmitHovered] = useState(false);
   const navigate = useNavigate();
-
   const { loading, addGroup } = useAddGroup();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check for dangerous URL characters
     const dangerousChars = /[?&=#]/;
     if (dangerousChars.test(inputs.name)) {
       toast.error("Group name cannot contain: ? & = #");
-      return
+      return;
     }
 
     const res = await addGroup(inputs);
@@ -42,114 +40,181 @@ const AddGroup = () => {
     }
   }, [inputs.name]);
 
+  const inputStyle = {
+    background: "transparent",
+    border: "1px solid rgba(0,242,255,0.3)",
+    color: "#fff",
+    outline: "none",
+    fontFamily: "monospace",
+  };
+
+  const labelStyle = {
+    fontSize: "0.8rem",
+    color: "#EAFF00",
+    letterSpacing: "0.12em",
+    fontFamily: "monospace",
+    fontWeight: "bold",
+  };
+
+  const TogglePills = ({ options, value, name, color, onChange }) => (
+    <div className="flex gap-3">
+      {options.map(({ label, val }) => {
+        const active = value === val;
+        return (
+          <label
+            key={label}
+            className="flex-1 text-center cursor-pointer rounded-full py-2.5 font-mono text-sm font-bold transition-all duration-200"
+            style={{
+              border: `1px solid ${active ? color : "rgba(255,255,255,0.12)"}`,
+              color: active ? color : "rgba(255,255,255,0.35)",
+              boxShadow: active ? `0 0 10px ${color}44` : "none",
+              background: active ? `${color}0f` : "transparent",
+            }}
+          >
+            <input type="radio" name={name} className="hidden" onChange={() => onChange(val)} />
+            {label}
+          </label>
+        );
+      })}
+    </div>
+  );
+
   return (
     <>
       <Nav />
-      <div className="max-w-4xl m-auto overflow-auto flex flex-col items-center sm:pt-32 py-28">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-center justify-center gap-10 h-5/6 w-[calc(100%-40px)] p-3 border-2 border-white rounded-3xl"
+      <div className="bg-black min-h-screen flex items-center justify-center px-4 pt-24 pb-16">
+        <div
+          className="w-full max-w-lg lg:max-w-3xl rounded-2xl overflow-hidden"
+          style={{
+            border: "1px solid rgba(0,242,255,0.3)",
+            boxShadow: "0 4px 48px rgba(0,0,0,0.7), 0 0 16px rgba(0,242,255,0.07)",
+          }}
         >
-          <h1 className="pixel-font md:text-xl text-center border-b-2 w-3/4 m-auto pb-2">
-            Create a Group
-          </h1>
-          <div className="w-5/6 flex flex-col space-y-3 mx-auto">
-            <label className="text-2xl showUpAnimate">Group Name</label>
-            <input
-              type="text"
-              maxLength={30}
-              value={inputs.name}
-              onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
-              className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
-            />
-          </div>
-          <div className="mx-auto flex flex-row justify-center md:gap-20 gap-2">
-            <label className="md:text-2xl text-lg justify-center">
-              <input
-                type="radio"
-                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
-                name="isPublic"
-                defaultChecked
-                onChange={(e) => setInputs({ ...inputs, isPublic: true })}
-              />
-              Public
-            </label>
-            <label className="md:text-2xl text-lg">
-              <input
-                type="radio"
-                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
-                name="isPublic"
-                onChange={(e) => setInputs({ ...inputs, isPublic: false })}
-              />
-              Private
-            </label>
-          </div>
+          {/* Gradient top bar */}
+          <div style={{ height: "3px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)" }} />
 
-          {!inputs.isPublic && (
-            <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-              <label className="text-2xl showUpAnimate">Password</label>
-              <input
-                type="password"
-                maxLength={25}
-                value={inputs.password}
-                onChange={(e) =>
-                  setInputs({ ...inputs, password: e.target.value })
-                }
-                className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
-              />
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6 p-7 md:p-9">
+
+            {/* Title */}
+            <h1
+              className="pixel-font font-bold text-center pb-4"
+              style={{
+                fontSize: "clamp(1.2rem, 3vw, 1.6rem)",
+                background: "linear-gradient(90deg, #00FF7B, #00F2FF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                borderBottom: "1px solid rgba(0,242,255,0.15)",
+              }}
+            >
+              Create a Group
+            </h1>
+
+            {/* Two-column on desktop, single column on mobile */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              {/* ── LEFT column: Name + Chat Mode ── */}
+              <div className="flex flex-col gap-6">
+
+                {/* Group Name */}
+                <div className="flex flex-col gap-2">
+                  <span style={labelStyle}>GROUP NAME</span>
+                  <input
+                    type="text"
+                    maxLength={30}
+                    value={inputs.name}
+                    onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+                    className="rounded-full py-3 px-6 font-mono text-base"
+                    style={inputStyle}
+                    placeholder="my-awesome-group"
+                  />
+                </div>
+
+                {/* Chat Mode */}
+                <div className="flex flex-col gap-2">
+                  <span style={labelStyle}>CHAT MODE</span>
+                  <TogglePills
+                    options={[{ label: "ANONYMOUS", val: true }, { label: "USERNAMES", val: false }]}
+                    value={inputs.isAnonymous}
+                    name="isAnonymous"
+                    color="#FF00EE"
+                    onChange={(val) => setInputs({ ...inputs, isAnonymous: val })}
+                  />
+                </div>
+
+              </div>
+
+              {/* ── RIGHT column: Visibility + Password ── */}
+              <div className="flex flex-col gap-6">
+
+                {/* Visibility */}
+                <div className="flex flex-col gap-2">
+                  <span style={labelStyle}>VISIBILITY</span>
+                  <TogglePills
+                    options={[{ label: "PUBLIC", val: true }, { label: "PRIVATE", val: false }]}
+                    value={inputs.isPublic}
+                    name="isPublic"
+                    color="#00FF7B"
+                    onChange={(val) => setInputs({ ...inputs, isPublic: val })}
+                  />
+                </div>
+
+                {/* Password (private only) */}
+                {!inputs.isPublic && (
+                  <div className="flex flex-col gap-2">
+                    <span style={labelStyle}>PASSWORD</span>
+                    <input
+                      type="password"
+                      maxLength={25}
+                      value={inputs.password}
+                      onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+                      className="rounded-full py-3 px-6 font-mono text-base"
+                      style={inputStyle}
+                      placeholder="••••••••"
+                    />
+                  </div>
+                )}
+
+              </div>
+
+              {/* Description — full width */}
+              <div className="flex flex-col gap-2 lg:col-span-2">
+                <span style={labelStyle}>DESCRIPTION</span>
+                <textarea
+                  maxLength={200}
+                  rows={3}
+                  value={inputs.description}
+                  onChange={(e) => setInputs({ ...inputs, description: e.target.value })}
+                  className="rounded-2xl py-3 px-6 font-mono text-base resize-none"
+                  style={inputStyle}
+                  placeholder="What is this group about?"
+                />
+              </div>
+
             </div>
-          )}
 
-          <div className="mx-auto flex flex-row justify-center md:gap-5 gap-2">
-            <label className="md:text-2xl text-lg">
-              <input
-                type="radio"
-                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
-                name="isAnonymous"
-                defaultChecked
-                onChange={(e) => setInputs({ ...inputs, isAnonymous: true })}
-              />
-              Anonymous
-            </label>
-            <label className="md:text-2xl text-lg">
-              <input
-                type="radio"
-                className="mr-2 checkbox h-6 w-6 md:h-9 md:w-9"
-                name="isAnonymous"
-                onChange={(e) => setInputs({ ...inputs, isAnonymous: false })}
-              />
-              See Usernames
-            </label>
-          </div>
-
-          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl showUpAnimate">Description</label>
-            <textarea
-              type="text"
-              maxLength={200}
-              className="bg-transparent rounded-3xl py-3 px-8 text-2xl font-mono border-2 outline-none"
-              value={inputs.description}
-              onChange={(e) =>
-                setInputs({ ...inputs, description: e.target.value })
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              onMouseEnter={() => setSubmitHovered(true)}
+              onMouseLeave={() => setSubmitHovered(false)}
+              className="w-full rounded-full font-mono font-bold py-3.5 text-base transition-all duration-200 cursor-pointer"
+              style={
+                loading
+                  ? { background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.3)" }
+                  : submitHovered
+                  ? { background: "#00FF7B", color: "#000", border: "1px solid #00FF7B", boxShadow: "0 0 20px #00FF7B88" }
+                  : { background: "transparent", border: "1px solid #00FF7B", color: "#00FF7B" }
               }
-            />
-          </div>
+            >
+              {loading
+                ? <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+                : "CREATE"}
+            </button>
 
-          <button
-            type="submit"
-            className={`mb-8 bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto ${
-              !loading &&
-              "hover:bg-white hover:text-black active:bg-black active:text-white"
-            }  xl:w-1/4 cursor-pointer`}
-            disabled={loading}
-          >
-            {loading ? (
-              <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
-            ) : (
-              "CREATE"
-            )}
-          </button>
-        </form>
+          </form>
+        </div>
       </div>
     </>
   );

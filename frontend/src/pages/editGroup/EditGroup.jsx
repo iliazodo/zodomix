@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
 import useEditGroup from "../../hooks/group/useEditGroup.js";
 
-const AddGroup = () => {
+const EditGroup = () => {
   const { groupId } = useParams();
 
   const [inputs, setInputs] = useState({
@@ -15,31 +15,28 @@ const AddGroup = () => {
     description: "",
   });
 
+  const [submitHovered, setSubmitHovered] = useState(false);
   const { loading, editGroup } = useEditGroup();
   const { getGroupInfo } = useGetGroupInfo();
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const gettingGroupInfo = async () => {
-      const data = await getGroupInfo({groupId});
-      console.log(data);
+      const data = await getGroupInfo({ groupId });
       setInputs({
         groupId: data?._id,
         name: data?.name,
         description: data?.description,
         isPublic: data?.isPublic,
+        password: "",
       });
     };
-
     gettingGroupInfo();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const res = await editGroup(inputs);
-
     if (res) {
       localStorage.setItem("zdm-group", JSON.stringify(inputs.name));
       navigate(`/chatZone/${inputs.name}`);
@@ -55,74 +52,119 @@ const AddGroup = () => {
     }
   }, [inputs.name]);
 
+  const inputStyle = {
+    background: "transparent",
+    border: "1px solid rgba(0,242,255,0.3)",
+    color: "#fff",
+    outline: "none",
+    fontFamily: "monospace",
+  };
+
+  const labelStyle = {
+    fontSize: "0.8rem",
+    color: "#EAFF00",
+    letterSpacing: "0.12em",
+    fontFamily: "monospace",
+    fontWeight: "bold",
+  };
+
   return (
     <>
       <Nav />
-      <div className="max-w-4xl m-auto overflow-auto flex flex-col items-center sm:pt-32 py-28">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-center justify-center gap-10 h-5/6 w-[calc(100%-40px)] p-3 border-2 border-white rounded-3xl"
+      <div className="bg-black min-h-screen flex items-center justify-center px-4 pt-24 pb-16">
+        <div
+          className="w-full max-w-lg rounded-2xl overflow-hidden"
+          style={{
+            border: "1px solid rgba(0,242,255,0.3)",
+            boxShadow: "0 4px 48px rgba(0,0,0,0.7), 0 0 16px rgba(0,242,255,0.07)",
+          }}
         >
-          <h1 className="pixel-font md:text-xl text-center border-b-2 w-3/4 m-auto pb-3">
-            Edit {inputs.name}
-          </h1>
-          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl showUpAnimate">Group Name</label>
-            <input
-              type="text"
-              maxLength={30}
-              value={inputs.name}
-              onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
-              className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
-            />
-          </div>
+          {/* Gradient top bar */}
+          <div style={{ height: "3px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)" }} />
 
-          {!inputs.isPublic && (
-            <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-              <label className="text-2xl showUpAnimate">Password</label>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6 p-7 md:p-9">
+
+            {/* Title */}
+            <h1
+              className="pixel-font font-bold text-center pb-4 truncate"
+              style={{
+                fontSize: "clamp(1.1rem, 3vw, 1.5rem)",
+                background: "linear-gradient(90deg, #FF00EE, #00F2FF)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                borderBottom: "1px solid rgba(0,242,255,0.15)",
+              }}
+            >
+              Edit — {inputs.name}
+            </h1>
+
+            {/* Group Name */}
+            <div className="flex flex-col gap-2">
+              <span style={labelStyle}>GROUP NAME</span>
               <input
-                type="password"
-                maxLength={25}
-                value={inputs.password}
-                onChange={(e) =>
-                  setInputs({ ...inputs, password: e.target.value })
-                }
-                className="bg-transparent rounded-full py-3 px-8 text-2xl font-mono border-2 outline-none"
+                type="text"
+                maxLength={30}
+                value={inputs.name}
+                onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+                className="rounded-full py-3 px-6 font-mono text-base"
+                style={inputStyle}
               />
             </div>
-          )}
 
-          <div className="w-5/6 flex flex-col  space-y-3 mx-auto">
-            <label className="text-2xl showUpAnimate">Description</label>
-            <textarea
-              type="text"
-              maxLength={200}
-              className="bg-transparent rounded-3xl py-3 px-8 text-2xl font-mono border-2 outline-none"
-              value={inputs.description}
-              onChange={(e) =>
-                setInputs({ ...inputs, description: e.target.value })
-              }
-            />
-          </div>
-
-          <button
-            type="submit"
-            className={`mb-8 bg-transparent border-2 rounded-full p-5 text-2xl w-1/2 transition duration-300 ease-out m-auto ${
-              !loading &&
-              "hover:bg-white hover:text-black active:bg-black active:text-white"
-            }  xl:w-1/4 cursor-pointer`}
-            disabled={loading}
-          >
-            {loading ? (
-              <div className=" w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin m-auto" />
-            ) : (
-              "ENTER"
+            {/* Password (private only) */}
+            {!inputs.isPublic && (
+              <div className="flex flex-col gap-2">
+                <span style={labelStyle}>NEW PASSWORD</span>
+                <input
+                  type="password"
+                  maxLength={25}
+                  value={inputs.password}
+                  onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+                  className="rounded-full py-3 px-6 font-mono text-base"
+                  style={inputStyle}
+                  placeholder="Leave blank to keep current"
+                />
+              </div>
             )}
-          </button>
-        </form>
+
+            {/* Description */}
+            <div className="flex flex-col gap-2">
+              <span style={labelStyle}>DESCRIPTION</span>
+              <textarea
+                maxLength={200}
+                rows={3}
+                value={inputs.description}
+                onChange={(e) => setInputs({ ...inputs, description: e.target.value })}
+                className="rounded-2xl py-3 px-6 font-mono text-base resize-none"
+                style={inputStyle}
+              />
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              onMouseEnter={() => setSubmitHovered(true)}
+              onMouseLeave={() => setSubmitHovered(false)}
+              className="w-full rounded-full font-mono font-bold py-3.5 text-base transition-all duration-200 cursor-pointer mt-2"
+              style={
+                loading
+                  ? { background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.3)" }
+                  : submitHovered
+                  ? { background: "#00FF7B", color: "#000", border: "1px solid #00FF7B", boxShadow: "0 0 20px #00FF7B88" }
+                  : { background: "transparent", border: "1px solid #00FF7B", color: "#00FF7B" }
+              }
+            >
+              {loading
+                ? <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+                : "SAVE"}
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );
 };
 
-export default AddGroup;
+export default EditGroup;

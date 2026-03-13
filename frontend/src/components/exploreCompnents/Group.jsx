@@ -86,7 +86,7 @@ const Group = (props) => {
 
   return (
     <div
-      className="showUpAnimate relative flex flex-col bg-black rounded-2xl overflow-hidden m-auto w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)]"
+      className="showUpAnimate relative flex flex-col bg-black rounded-2xl overflow-hidden m-auto w-[calc(100%-24px)] md:w-[calc(100%-32px)] lg:w-[calc(100%-40px)] h-full"
       style={{
         border: "1px solid rgba(0, 242, 255, 0.3)",
         boxShadow: "0 4px 32px rgba(0,0,0,0.6), 0 0 12px rgba(0,242,255,0.07)",
@@ -187,8 +187,8 @@ const Group = (props) => {
 
         {/* Description */}
         <p
-          className="font-mono text-xs md:text-sm leading-relaxed flex-grow"
-          style={{ color: "rgba(255,255,255,0.45)" }}
+          className="font-mono text-xs md:text-sm leading-relaxed line-clamp-3"
+          style={{ color: "rgba(255,255,255,0.45)", minHeight: "3.6em" }}
         >
           {props.description}
         </p>
