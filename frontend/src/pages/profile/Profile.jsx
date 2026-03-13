@@ -19,16 +19,13 @@ const Profile = () => {
 
   const [myGroups, setMyGroups] = useState([]);
 
-  // Bio state
   const [bioEditing, setBioEditing] = useState(false);
   const [bioValue, setBioValue] = useState(authUser.bio || "");
 
-  // Picture picker state
   const [pickerOpen, setPickerOpen] = useState(false);
   const [availablePics, setAvailablePics] = useState([]);
   const [selectedPic, setSelectedPic] = useState(authUser.profilePic);
 
-  // Hover states
   const [logoutHovered, setLogoutHovered] = useState(false);
   const [hoveredEdit, setHoveredEdit] = useState(null);
   const [hoveredDelete, setHoveredDelete] = useState(null);
@@ -72,270 +69,352 @@ const Profile = () => {
     gettingMyGroups();
   }, []);
 
+  /* ── Reusable pieces ── */
+
+  const Avatar = ({ size }) => (
+    <div className="relative group cursor-pointer" onClick={handleOpenPicker}>
+      <div style={{ padding: "3px", borderRadius: "50%", background: "linear-gradient(135deg, #00FF7B, #FF00EE)" }}>
+        <img
+          className="rounded-full block"
+          src={`./profiles/${authUser.profilePic}.png`}
+          alt="profile picture"
+          style={{ width: size, height: size, background: "#000" }}
+        />
+      </div>
+      <div
+        className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        style={{ background: "rgba(0,0,0,0.65)" }}
+      >
+        <span className="font-mono text-xs" style={{ color: "#00F2FF" }}>CHANGE</span>
+      </div>
+    </div>
+  );
+
+  const BioSection = ({ textSize }) => (
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center">
+        <span className="font-mono font-bold" style={{ fontSize: textSize ?? "0.8rem", color: "#EAFF00", letterSpacing: "0.1em" }}>BIO</span>
+        {!bioEditing && (
+          <button
+            onClick={() => setBioEditing(true)}
+            className="font-mono cursor-pointer transition-all duration-200"
+            style={{ fontSize: "0.75rem", color: "#00F2FF", border: "1px solid #00F2FF", borderRadius: "999px", padding: "2px 12px" }}
+          >
+            EDIT
+          </button>
+        )}
+      </div>
+      {bioEditing ? (
+        <div className="flex flex-col gap-2">
+          <textarea
+            value={bioValue}
+            onChange={(e) => setBioValue(e.target.value)}
+            maxLength={150}
+            rows={3}
+            className="w-full bg-transparent font-mono resize-none outline-none rounded-xl p-3 text-left"
+            style={{ fontSize: "0.9rem", border: "1px solid rgba(0,242,255,0.4)", color: "rgba(255,255,255,0.85)" }}
+            placeholder="Write something about yourself..."
+          />
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => { setBioEditing(false); setBioValue(authUser.bio || ""); }}
+              className="font-mono cursor-pointer rounded-full px-4 py-1.5 transition-all duration-200"
+              style={{ fontSize: "0.8rem", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.4)" }}
+            >
+              CANCEL
+            </button>
+            <button
+              onClick={handleBioSave}
+              disabled={updateLoading}
+              className="font-mono font-bold cursor-pointer rounded-full px-4 py-1.5 transition-all duration-200"
+              style={{ fontSize: "0.8rem", background: "#00FF7B", color: "#000", border: "1px solid #00FF7B" }}
+            >
+              {updateLoading ? "..." : "SAVE"}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p
+          className="font-mono rounded-xl p-3 min-h-[52px] text-left"
+          style={{
+            fontSize: "0.9rem",
+            border: "1px solid rgba(255,255,255,0.06)",
+            color: authUser.bio ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.2)",
+            fontStyle: authUser.bio ? "normal" : "italic",
+          }}
+        >
+          {authUser.bio || "No bio yet..."}
+        </p>
+      )}
+    </div>
+  );
+
+  const GroupCard = ({ group, compact }) => (
+    <div
+      key={group._id}
+      className="relative flex flex-row items-center gap-4 rounded-2xl overflow-hidden"
+      style={{
+        border: "1px solid rgba(0,242,255,0.25)",
+        boxShadow: "0 2px 16px rgba(0,0,0,0.5)",
+      }}
+    >
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "2px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)" }} />
+      <div className="flex flex-row items-center gap-4 p-4 pt-5 w-full">
+        <div style={{ padding: "2px", borderRadius: "50%", background: "linear-gradient(135deg, #00FF7B, #FF00EE)", flexShrink: 0 }}>
+          <img
+            src={`/groups/group-1.png`}
+            className="rounded-full block"
+            alt={group.name}
+            style={{ width: compact ? "44px" : "52px", height: compact ? "44px" : "52px", background: "#000" }}
+          />
+        </div>
+        <p className="pixel-font font-bold flex-1 truncate" style={{ fontSize: compact ? "0.9rem" : "1rem" }}>
+          {group.name}
+        </p>
+        <div className="flex gap-2 flex-shrink-0">
+          <Link to={`/edit/${group._id}`}>
+            <button
+              onClick={handleEdit}
+              onMouseEnter={() => setHoveredEdit(group._id)}
+              onMouseLeave={() => setHoveredEdit(null)}
+              className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+              style={{
+                fontSize: compact ? "0.75rem" : "0.85rem",
+                padding: compact ? "5px 12px" : "6px 16px",
+                ...(hoveredEdit === group._id
+                  ? { background: "#00FF7B", color: "#000", border: "1px solid #00FF7B", boxShadow: "0 0 12px #00FF7B88" }
+                  : { background: "transparent", color: "#00FF7B", border: "1px solid #00FF7B" }),
+              }}
+            >
+              Edit
+            </button>
+          </Link>
+          <button
+            onClick={() => handleDelete(group._id)}
+            onMouseEnter={() => setHoveredDelete(group._id)}
+            onMouseLeave={() => setHoveredDelete(null)}
+            className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+            style={{
+              fontSize: compact ? "0.75rem" : "0.85rem",
+              padding: compact ? "5px 12px" : "6px 16px",
+              ...(hoveredDelete === group._id
+                ? { background: "#FF00EE", color: "#000", border: "1px solid #FF00EE", boxShadow: "0 0 12px #FF00EE88" }
+                : { background: "transparent", color: "#FF00EE", border: "1px solid #FF00EE" }),
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const LogoutBtn = ({ fullWidth }) => (
+    <button
+      onClick={handleLogout}
+      onMouseEnter={() => setLogoutHovered(true)}
+      onMouseLeave={() => setLogoutHovered(false)}
+      disabled={loading}
+      className={`rounded-full font-mono font-bold transition-all duration-200 cursor-pointer ${fullWidth ? "w-full" : "w-full max-w-xs"}`}
+      style={{
+        fontSize: "1rem",
+        padding: "13px 0",
+        ...(loading
+          ? { background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.3)" }
+          : logoutHovered
+          ? { background: "#EAFF00", color: "#000", border: "1px solid #EAFF00", boxShadow: "0 0 18px #EAFF0088" }
+          : { background: "transparent", border: "1px solid #EAFF00", color: "#EAFF00" }),
+      }}
+    >
+      {loading
+        ? <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+        : "LOG OUT"}
+    </button>
+  );
+
   return (
     <>
       <Nav />
-      <div className="bg-black min-h-screen pt-32 pb-24 flex flex-col gap-10 items-center w-full px-4">
+      <div className="bg-black min-h-screen pt-28 pb-16 flex flex-col items-center w-full px-4 md:px-8">
 
-        {/* ── Profile card ── */}
+        {/* ════════════════════════════════════
+            DESKTOP LAYOUT  (lg+)
+        ════════════════════════════════════ */}
         <div
-          className="relative w-full max-w-md lg:max-w-3xl rounded-2xl overflow-hidden"
+          className="hidden lg:mt-10 lg:flex flex-col w-full max-w-6xl rounded-2xl overflow-hidden"
           style={{
             border: "1px solid rgba(0,242,255,0.3)",
-            boxShadow: "0 4px 32px rgba(0,0,0,0.6), 0 0 12px rgba(0,242,255,0.07)",
+            boxShadow: "0 4px 48px rgba(0,0,0,0.7), 0 0 16px rgba(0,242,255,0.07)",
           }}
         >
-          {/* Top gradient bar */}
+          {/* Gradient top bar */}
           <div style={{ height: "3px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)" }} />
 
-          {/* Card body — vertical on mobile, horizontal on desktop */}
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 p-6 lg:p-10 items-center lg:items-start">
+          {/* Two-column body */}
+          <div className="flex flex-row" style={{ minHeight: "520px" }}>
 
-            {/* ── Avatar ── */}
-            <div className="flex-shrink-0 flex flex-col items-center gap-3">
-              <div className="relative group cursor-pointer" onClick={handleOpenPicker}>
-                <div
-                  style={{
-                    padding: "3px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #00FF7B, #FF00EE)",
-                  }}
-                >
-                  <img
-                    className="rounded-full block w-28 h-28 lg:w-40 lg:h-40"
-                    src={`./profiles/${authUser.profilePic}.png`}
-                    alt="profile picture"
-                    style={{ background: "#000" }}
-                  />
+            {/* ── LEFT: Info ── */}
+            <div
+              className="flex flex-col gap-5 p-8"
+              style={{
+                width: "340px",
+                flexShrink: 0,
+                borderRight: "1px solid rgba(0,242,255,0.12)",
+              }}
+            >
+              {/* Info box */}
+              <div
+                className="flex flex-col items-center gap-5 rounded-2xl p-6"
+                style={{
+                  border: "1px solid rgba(0,255,123,0.2)",
+                  boxShadow: "0 0 12px rgba(0,255,123,0.04)",
+                }}
+              >
+                <Avatar size="144px" />
+
+                <div className="text-center w-full">
+                  <h2
+                    className="pixel-font font-bold"
+                    style={{ fontSize: "1.75rem", color: "#fff", lineHeight: 1.2 }}
+                  >
+                    {authUser.username}
+                  </h2>
+                  <p className="font-mono mt-1" style={{ fontSize: "0.9rem", color: "#00F2FF", opacity: 0.75 }}>
+                    {authUser.email}
+                  </p>
                 </div>
-                {/* Hover overlay */}
-                <div
-                  className="absolute inset-0 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  style={{ background: "rgba(0,0,0,0.65)" }}
-                >
-                  <span className="font-mono text-xs" style={{ color: "#00F2FF" }}>CHANGE</span>
-                </div>
-              </div>
-            </div>
 
-            {/* ── Info + Bio ── */}
-            <div className="flex flex-col gap-5 flex-1 w-full text-center lg:text-left">
+                <div style={{ height: "1px", background: "rgba(255,255,255,0.07)", width: "100%" }} />
 
-              {/* Username */}
-              <div>
-                <h2
-                  className="pixel-font font-bold"
-                  style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", color: "#fff", lineHeight: 1.2 }}
-                >
-                  {authUser.username}
-                </h2>
-                <p
-                  className="font-mono mt-1"
-                  style={{ fontSize: "clamp(0.8rem, 1.5vw, 1rem)", color: "#00F2FF", opacity: 0.8 }}
-                >
-                  {authUser.email}
+                <p className="font-mono" style={{ fontSize: "1.15rem" }}>
+                  <span style={{ color: "#FF00EE", fontWeight: "bold" }}>{authUser.messagesNum}</span>
+                  <span style={{ color: "rgba(255,255,255,0.4)", marginLeft: "10px" }}>MESSAGES</span>
                 </p>
               </div>
 
-              {/* Divider */}
-              <div style={{ height: "1px", background: "rgba(255,255,255,0.07)" }} />
+              {/* Bio box */}
+              <div
+                className="rounded-2xl p-5"
+                style={{
+                  border: "1px solid rgba(0,255,123,0.2)",
+                  boxShadow: "0 0 12px rgba(0,255,123,0.04)",
+                }}
+              >
+                <BioSection />
+              </div>
 
-              {/* Message count */}
-              <p className="font-mono" style={{ fontSize: "clamp(1rem, 2vw, 1.3rem)" }}>
-                <span style={{ color: "#FF00EE", fontWeight: "bold" }}>{authUser.messagesNum}</span>
-                <span style={{ color: "rgba(255,255,255,0.45)", marginLeft: "10px" }}>MESSAGES</span>
-              </p>
+              {/* Logout pushed to bottom */}
+              <div className="mt-auto pt-2">
+                <LogoutBtn fullWidth />
+              </div>
+            </div>
 
-              {/* Divider */}
-              <div style={{ height: "1px", background: "rgba(255,255,255,0.07)" }} />
+            {/* ── RIGHT: Groups ── */}
+            <div className="flex flex-col p-8 flex-1 gap-5">
+              <div
+                className="flex flex-col gap-4 rounded-2xl p-6 h-full"
+                style={{
+                  border: "1px solid rgba(255,0,238,0.2)",
+                  boxShadow: "0 0 12px rgba(255,0,238,0.04)",
+                }}
+              >
+                <h3
+                  className="pixel-font pb-3"
+                  style={{ fontSize: "1.35rem", color: "#FF00EE", borderBottom: "1px solid rgba(255,0,238,0.25)" }}
+                >
+                  Your Groups
+                </h3>
 
-              {/* Bio */}
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between items-center">
-                  <span
-                    className="font-mono font-bold"
-                    style={{ fontSize: "clamp(0.7rem, 1.2vw, 0.85rem)", color: "#EAFF00", letterSpacing: "0.1em" }}
-                  >
-                    BIO
-                  </span>
-                  {!bioEditing && (
-                    <button
-                      onClick={() => setBioEditing(true)}
-                      className="font-mono cursor-pointer transition-all duration-200"
-                      style={{
-                        fontSize: "clamp(0.65rem, 1vw, 0.8rem)",
-                        color: "#00F2FF",
-                        border: "1px solid #00F2FF",
-                        borderRadius: "999px",
-                        padding: "2px 12px",
-                      }}
-                    >
-                      EDIT
-                    </button>
-                  )}
-                </div>
+                {myGroups.length === 0 && !groupLoading && (
+                  <Link to="/addGroup">
+                    <p className="font-mono" style={{ fontSize: "1rem", color: "#00FF7B" }}>
+                      CREATE YOUR FIRST GROUP →
+                    </p>
+                  </Link>
+                )}
 
-                {bioEditing ? (
-                  <div className="flex flex-col gap-2">
-                    <textarea
-                      value={bioValue}
-                      onChange={(e) => setBioValue(e.target.value)}
-                      maxLength={150}
-                      rows={3}
-                      className="w-full bg-transparent font-mono resize-none outline-none rounded-xl p-3 text-left"
-                      style={{
-                        fontSize: "clamp(0.8rem, 1.3vw, 0.95rem)",
-                        border: "1px solid rgba(0,242,255,0.4)",
-                        color: "rgba(255,255,255,0.85)",
-                      }}
-                      placeholder="Write something about yourself..."
-                    />
-                    <div className="flex gap-2 justify-end">
-                      <button
-                        onClick={() => { setBioEditing(false); setBioValue(authUser.bio || ""); }}
-                        className="font-mono cursor-pointer rounded-full px-5 py-1.5 transition-all duration-200"
-                        style={{ fontSize: "0.8rem", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.4)" }}
-                      >
-                        CANCEL
-                      </button>
-                      <button
-                        onClick={handleBioSave}
-                        disabled={updateLoading}
-                        className="font-mono font-bold cursor-pointer rounded-full px-5 py-1.5 transition-all duration-200"
-                        style={{ fontSize: "0.8rem", background: "#00FF7B", color: "#000", border: "1px solid #00FF7B" }}
-                      >
-                        {updateLoading ? "..." : "SAVE"}
-                      </button>
-                    </div>
-                  </div>
+                {groupLoading ? (
+                  <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mt-8" />
                 ) : (
-                  <p
-                    className="font-mono rounded-xl p-3 min-h-[52px] text-left"
-                    style={{
-                      fontSize: "clamp(0.8rem, 1.3vw, 0.95rem)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                      color: authUser.bio ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.2)",
-                      fontStyle: authUser.bio ? "normal" : "italic",
-                    }}
-                  >
-                    {authUser.bio || "No bio yet..."}
-                  </p>
+                  <div className="flex flex-col gap-3">
+                    {myGroups?.map((group) => (
+                      <GroupCard key={group._id} group={group} compact={false} />
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Your Groups ── */}
-        <div className="w-full max-w-md lg:max-w-3xl flex flex-col gap-4">
-          <h3
-            className="pixel-font text-center lg:text-left pb-3"
+        {/* ════════════════════════════════════
+            MOBILE LAYOUT  (< lg)
+        ════════════════════════════════════ */}
+        <div className="lg:hidden w-full max-w-md flex flex-col gap-6">
+
+          {/* Profile card */}
+          <div
+            className="relative w-full rounded-2xl overflow-hidden"
             style={{
-              fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
-              color: "#FF00EE",
-              borderBottom: "1px solid rgba(255,0,238,0.3)",
+              border: "1px solid rgba(0,242,255,0.3)",
+              boxShadow: "0 4px 32px rgba(0,0,0,0.6), 0 0 12px rgba(0,242,255,0.07)",
             }}
           >
-            Your Groups
-          </h3>
+            <div style={{ height: "3px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)" }} />
+            <div className="flex flex-col gap-5 p-6 items-center">
+              <Avatar size="112px" />
 
-          {myGroups.length === 0 && !groupLoading && (
-            <Link to="/addGroup">
-              <p className="text-center lg:text-left font-mono" style={{ fontSize: "clamp(0.9rem, 1.5vw, 1.1rem)", color: "#00FF7B" }}>
-                CREATE YOUR FIRST GROUP →
-              </p>
-            </Link>
-          )}
-
-          {groupLoading ? (
-            <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
-          ) : (
-            myGroups?.map((group) => (
-              <div
-                key={group._id}
-                className="relative flex flex-row items-center gap-4 rounded-2xl overflow-hidden"
-                style={{
-                  border: "1px solid rgba(0,242,255,0.3)",
-                  boxShadow: "0 4px 32px rgba(0,0,0,0.6), 0 0 12px rgba(0,242,255,0.07)",
-                }}
-              >
-                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "2px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)" }} />
-                <div className="flex flex-row items-center gap-4 p-4 pt-5 w-full">
-                  <div style={{ padding: "2px", borderRadius: "50%", background: "linear-gradient(135deg, #00FF7B, #FF00EE)", flexShrink: 0 }}>
-                    <img
-                      src={`/groups/group-${1}.png`}
-                      className="rounded-full block"
-                      alt={group.name}
-                      style={{ width: "56px", height: "56px", background: "#000" }}
-                    />
-                  </div>
-                  <p
-                    className="pixel-font font-bold flex-1 truncate"
-                    style={{ fontSize: "clamp(0.9rem, 1.5vw, 1.15rem)" }}
-                  >
-                    {group.name}
+              <div className="flex flex-col gap-4 w-full text-center">
+                <div>
+                  <h2 className="pixel-font font-bold" style={{ fontSize: "1.4rem", color: "#fff", lineHeight: 1.2 }}>
+                    {authUser.username}
+                  </h2>
+                  <p className="font-mono mt-1" style={{ fontSize: "0.85rem", color: "#00F2FF", opacity: 0.8 }}>
+                    {authUser.email}
                   </p>
-                  <div className="flex gap-2 flex-shrink-0">
-                    <Link to={`/edit/${group._id}`}>
-                      <button
-                        onClick={handleEdit}
-                        onMouseEnter={() => setHoveredEdit(group._id)}
-                        onMouseLeave={() => setHoveredEdit(null)}
-                        className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
-                        style={{
-                          fontSize: "clamp(0.75rem, 1.2vw, 0.95rem)",
-                          padding: "6px 18px",
-                          ...(hoveredEdit === group._id
-                            ? { background: "#00FF7B", color: "#000", border: "1px solid #00FF7B", boxShadow: "0 0 12px #00FF7B88" }
-                            : { background: "transparent", color: "#00FF7B", border: "1px solid #00FF7B" }),
-                        }}
-                      >
-                        Edit
-                      </button>
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(group._id)}
-                      onMouseEnter={() => setHoveredDelete(group._id)}
-                      onMouseLeave={() => setHoveredDelete(null)}
-                      className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
-                      style={{
-                        fontSize: "clamp(0.75rem, 1.2vw, 0.95rem)",
-                        padding: "6px 18px",
-                        ...(hoveredDelete === group._id
-                          ? { background: "#FF00EE", color: "#000", border: "1px solid #FF00EE", boxShadow: "0 0 12px #FF00EE88" }
-                          : { background: "transparent", color: "#FF00EE", border: "1px solid #FF00EE" }),
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
                 </div>
+                <div style={{ height: "1px", background: "rgba(255,255,255,0.07)" }} />
+                <p className="font-mono" style={{ fontSize: "1rem" }}>
+                  <span style={{ color: "#FF00EE", fontWeight: "bold" }}>{authUser.messagesNum}</span>
+                  <span style={{ color: "rgba(255,255,255,0.45)", marginLeft: "10px" }}>MESSAGES</span>
+                </p>
+                <div style={{ height: "1px", background: "rgba(255,255,255,0.07)" }} />
+                <BioSection />
               </div>
-            ))
-          )}
-        </div>
+            </div>
+          </div>
 
-        {/* ── Logout ── */}
-        <button
-          onClick={handleLogout}
-          onMouseEnter={() => setLogoutHovered(true)}
-          onMouseLeave={() => setLogoutHovered(false)}
-          disabled={loading}
-          className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer w-full max-w-xs lg:max-w-sm"
-          style={{
-            fontSize: "clamp(1rem, 1.5vw, 1.25rem)",
-            padding: "14px 0",
-            ...(loading
-              ? { background: "transparent", border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.3)" }
-              : logoutHovered
-              ? { background: "#EAFF00", color: "#000", border: "1px solid #EAFF00", boxShadow: "0 0 18px #EAFF0088" }
-              : { background: "transparent", border: "1px solid #EAFF00", color: "#EAFF00" }),
-          }}
-        >
-          {loading ? (
-            <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
-          ) : "LOG OUT"}
-        </button>
+          {/* Groups */}
+          <div className="flex flex-col gap-3">
+            <h3
+              className="pixel-font text-center pb-3"
+              style={{ fontSize: "1.15rem", color: "#FF00EE", borderBottom: "1px solid rgba(255,0,238,0.3)" }}
+            >
+              Your Groups
+            </h3>
+
+            {myGroups.length === 0 && !groupLoading && (
+              <Link to="/addGroup">
+                <p className="text-center font-mono" style={{ fontSize: "0.9rem", color: "#00FF7B" }}>
+                  CREATE YOUR FIRST GROUP →
+                </p>
+              </Link>
+            )}
+
+            {groupLoading ? (
+              <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+            ) : (
+              myGroups?.map((group) => (
+                <GroupCard key={group._id} group={group} compact={true} />
+              ))
+            )}
+          </div>
+
+          {/* Logout */}
+          <div className="flex justify-center">
+            <LogoutBtn />
+          </div>
+        </div>
       </div>
 
       {/* ── Picture Picker Modal ── */}
