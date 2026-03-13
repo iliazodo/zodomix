@@ -8,6 +8,8 @@ import AddGroup from "./pages/addGroup/AddGroup.jsx";
 import EditGroup from "./pages/editGroup/EditGroup.jsx";
 import VerifyZone from "./pages/verifyingZone/VerifyZone.jsx";
 import Robot from "./pages/robot/Robot.jsx";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./pages/resetPassword/ResetPassword.jsx";
 import Nav from "./components/Nav.jsx";
 import { Navigate , Route, Routes , useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -19,8 +21,8 @@ function App() {
   const {authUser} = useAuthContext();
   const location = useLocation();
 
-  const noNavRoutes = ["/login", "/signup"];
-  const shouldShowNav = !noNavRoutes.includes(location.pathname);
+  const noNavRoutes = ["/login", "/signup", "/forgot-password", "/reset-password"];
+  const shouldShowNav = !noNavRoutes.some(r => location.pathname.startsWith(r));
 
   return (
     <div className=" font-thin">
@@ -37,6 +39,8 @@ function App() {
         <Route path="/signUp" element={authUser ? <Navigate to="/" /> : <SignUp />} />
         <Route path="/login" element={authUser ? <Navigate to="/" /> : <Login />} />
         <Route path="/verify/:token" element={<VerifyZone/>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
       <Toaster
         position="top-center"

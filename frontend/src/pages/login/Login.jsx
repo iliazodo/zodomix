@@ -84,6 +84,13 @@ const Login = () => {
             "ENTER"
           )}
         </button>
+        <Link
+          to="/forgot-password"
+          className="font-mono text-base mt-2 transition duration-200 hover:opacity-100 opacity-50"
+          style={{ color: "#00F2FF" }}
+        >
+          Forgot password?
+        </Link>
       </form>
       <div className="flex flex-row gap-5">
         <Link

@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 import generateToken from "../myCookie/generateToken.js";
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import {sendTelegramMessage, sendVerificationEmail} from "../utils/sendEmail.js";
+import {sendTelegramMessage, sendVerificationEmail, sendPasswordResetEmail} from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 export const signup = async (req, res) => {
   try {
@@ -106,6 +107,65 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    // Always respond the same way to prevent email enumeration
+    if (!user || !user.isVerified) {
+      return res.status(200).json({ message: "IF THAT EMAIL EXISTS, A RESET LINK HAS BEEN SENT" });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetToken = token;
+    user.resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    await sendPasswordResetEmail(email, `https://zodomix.com/reset-password/${token}`);
+
+    res.status(200).json({ message: "IF THAT EMAIL EXISTS, A RESET LINK HAS BEEN SENT" });
+  } catch (error) {
+    console.log("ERROR IN AUTHCONTROLLER ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: "PASSWORDS DON'T MATCH" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: "PASSWORD MUST BE AT LEAST 6 CHARACTERS" });
+    }
+
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "INVALID OR EXPIRED RESET LINK" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    user.resetToken = null;
+    user.resetTokenExpiry = null;
+    await user.save();
+
+    res.status(200).json({ message: "PASSWORD RESET SUCCESSFULLY" });
+  } catch (error) {
+    console.log("ERROR IN AUTHCONTROLLER ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });
   }
 };
