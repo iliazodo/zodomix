@@ -2,8 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { WifiOff } from "lucide-react";
 import { SocketContext } from "../../context/SocketContext.jsx";
 import { VoiceContext } from "../../context/VoiceContext.jsx";
+import { useAuthContext } from "../../context/AuthContext.jsx";
 import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
-import { VOICE_EFFECTS } from "../../voice/voiceService.js";
+import useGetLists from "../../hooks/user/useGetLists.js";
+import { VOICE_EFFECTS, setPeerVolume } from "../../voice/voiceService.js";
+import UserActionPopup from "../UserActionPopup.jsx";
 
 const BAD_STATES = ["failed", "disconnected"];
 const VOICE_COLORS = ["#00FF7B", "#FF00EE", "#00F2FF", "#EAFF00"];
@@ -11,6 +14,7 @@ const REAL_VOICE = { id: "none", label: "🎤 My Voice" };
 
 const VoiceChat = (props) => {
   const { socket } = useContext(SocketContext);
+  const { authUser } = useAuthContext();
   const {
     joined,
     currentVoiceGroupId,
@@ -22,10 +26,17 @@ const VoiceChat = (props) => {
     peerConnectionStates,
   } = useContext(VoiceContext);
   const { getGroupInfo } = useGetGroupInfo();
+  const { getLists } = useGetLists();
 
   const [usersInVoice, setUsersInVoice] = useState([]);
   const [isGroupAnonymous, setIsGroupAnonymous] = useState(true);
   const [showEffectPanel, setShowEffectPanel] = useState(false);
+
+  // Popup state
+  const [popupTarget, setPopupTarget] = useState(null); // { user, socketId }
+  const [muteIds, setMuteIds] = useState(new Set());
+  const [peerVolumes, setPeerVolumes] = useState({}); // socketId -> 0-1
+  const [voiceMutedIds, setVoiceMutedIds] = useState(new Set()); // locally silenced
 
   const isInThisGroup = joined && currentVoiceGroupId === props.groupId;
   const effectOptions = isGroupAnonymous ? VOICE_EFFECTS : [REAL_VOICE, ...VOICE_EFFECTS];
@@ -36,6 +47,14 @@ const VoiceChat = (props) => {
     setUsersInVoice(data?.voiceMembers || []);
     setIsGroupAnonymous(data?.isAnonymous);
   };
+
+  // Load mute list once
+  useEffect(() => {
+    if (!authUser) return;
+    getLists().then((data) => {
+      setMuteIds(new Set((data?.muteList || []).map((u) => u._id)));
+    });
+  }, [authUser]);
 
   useEffect(() => { gettingGroupInfo(); }, [props.groupId]);
 
@@ -59,6 +78,39 @@ const VoiceChat = (props) => {
     socket.on(ev, handler);
     return () => socket.off(ev, handler);
   }, [socket, props.groupId]);
+
+  const handleVolumeChange = (socketId, vol) => {
+    setPeerVolumes((prev) => ({ ...prev, [socketId]: vol }));
+    setPeerVolume(socketId, vol);
+  };
+
+  const handleVoiceMuteToggle = (socketId) => {
+    setVoiceMutedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(socketId)) {
+        next.delete(socketId);
+        // Restore previous volume or default 1
+        setPeerVolume(socketId, peerVolumes[socketId] ?? 1);
+      } else {
+        next.add(socketId);
+        setPeerVolume(socketId, 0);
+      }
+      return next;
+    });
+  };
+
+  const handleMuteToggle = (userId, newMuted) => {
+    setMuteIds((prev) => {
+      const next = new Set(prev);
+      if (newMuted) next.add(userId);
+      else next.delete(userId);
+      return next;
+    });
+  };
+
+  const handleBlock = (userId) => {
+    setUsersInVoice((prev) => prev.filter((e) => e.user._id !== userId));
+  };
 
   return (
     <div
@@ -89,6 +141,8 @@ const VoiceChat = (props) => {
             const color = VOICE_COLORS[index % 4];
             const isSpeaking = speakingSocketIds.has(e.socketId);
             const hasIssue = BAD_STATES.includes(peerConnectionStates[e.socketId]);
+            const isSelf = authUser && e.user._id === authUser._id;
+            const isVoiceMuted = voiceMutedIds.has(e.socketId);
             return (
               <div
                 key={e.user._id}
@@ -99,19 +153,29 @@ const VoiceChat = (props) => {
                   <img
                     src={`/profiles/${e.user.profilePic}.png`}
                     alt={e.user.username}
-                    className="rounded-full object-cover w-9 h-9 lg:w-12 lg:h-12"
+                    className={`rounded-full object-cover w-9 h-9 lg:w-12 lg:h-12 ${!isSelf ? "cursor-pointer" : ""}`}
                     style={{
                       border: `3px solid ${hasIssue ? "#ef4444" : color}`,
                       boxShadow: hasIssue
                         ? "0 0 8px #ef4444"
                         : isSpeaking ? `0 0 8px ${color}, 0 0 18px ${color}88` : "none",
                       transition: "box-shadow 0.1s ease",
-                      opacity: hasIssue ? 0.55 : isSpeaking ? 1 : 0.8,
+                      opacity: hasIssue ? 0.55 : isVoiceMuted ? 0.4 : isSpeaking ? 1 : 0.8,
+                    }}
+                    onClick={() => {
+                      if (!isSelf && authUser) {
+                        setPopupTarget({ user: e.user, socketId: e.socketId });
+                      }
                     }}
                   />
                   {hasIssue && (
                     <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-0.5">
                       <WifiOff className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                  {isVoiceMuted && !hasIssue && (
+                    <div className="absolute -bottom-1 -right-1 rounded-full text-xs" style={{ lineHeight: 1 }}>
+                      🔇
                     </div>
                   )}
                 </div>
@@ -215,6 +279,23 @@ const VoiceChat = (props) => {
 
       {/* Desktop right border */}
       <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+
+      {/* User action popup */}
+      {popupTarget && (
+        <UserActionPopup
+          user={popupTarget.user}
+          isAnonymous={isGroupAnonymous}
+          isMuted={muteIds.has(popupTarget.user._id)}
+          onClose={() => setPopupTarget(null)}
+          onMuteToggle={handleMuteToggle}
+          onBlock={handleBlock}
+          socketId={popupTarget.socketId}
+          volume={peerVolumes[popupTarget.socketId] ?? 1}
+          onVolumeChange={handleVolumeChange}
+          isVoiceMuted={voiceMutedIds.has(popupTarget.socketId)}
+          onVoiceMuteToggle={handleVoiceMuteToggle}
+        />
+      )}
     </div>
   );
 };

@@ -55,6 +55,18 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    muteList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    blockList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );

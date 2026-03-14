@@ -11,9 +11,11 @@ import useGetMessages from "../../hooks/message/useGetMessages.js";
 import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
 import useSendPass from "../../hooks/group/useSendPass.js";
 import useDeleteMessage from "../../hooks/message/useDeleteMessage.js";
+import useGetLists from "../../hooks/user/useGetLists.js";
 
 import Message from "../../components/chatComponents/Message.jsx";
 import AlertMessage from "../../components/chatComponents/AlertMessage.jsx";
+import UserActionPopup from "../../components/UserActionPopup.jsx";
 import { useContext } from "react";
 import { SocketContext } from "../../context/SocketContext.jsx";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
@@ -57,6 +59,11 @@ const ChatZone = () => {
   const { getGroupInfo } = useGetGroupInfo();
   const { passLoading, sendPass } = useSendPass();
   const { deleteMessage } = useDeleteMessage();
+  const { getLists } = useGetLists();
+
+  const [muteIds, setMuteIds] = useState(new Set());
+  const [blockIds, setBlockIds] = useState(new Set());
+  const [chatPopupTarget, setChatPopupTarget] = useState(null); // senderId object
 
   const currGroup = JSON.parse(localStorage.getItem("zdm-group")) || "ALL";
 
@@ -151,6 +158,12 @@ const ChatZone = () => {
     };
     gettingMessages();
     gettingGroupInfo();
+    if (authUser) {
+      getLists().then((data) => {
+        setMuteIds(new Set((data?.muteList || []).map((u) => u._id)));
+        setBlockIds(new Set((data?.blockList || []).map((u) => u._id)));
+      });
+    }
   }, [navigate]);
 
   useEffect(() => {
@@ -180,6 +193,20 @@ const ChatZone = () => {
   const handleReplyMsg = (messageId, messageText) => setReplyTarget({ _id: messageId, message: messageText });
   const handleCopyMsg = (messageText) => navigator.clipboard.writeText(messageText);
 
+  const handleChatMuteToggle = (userId, newMuted) => {
+    setMuteIds((prev) => {
+      const next = new Set(prev);
+      if (newMuted) next.add(userId);
+      else next.delete(userId);
+      return next;
+    });
+  };
+
+  const handleChatBlock = (userId) => {
+    setBlockIds((prev) => new Set([...prev, userId]));
+    setChatPopupTarget(null);
+  };
+
   const handleDeleteMsg = async (messageId) => {
     if (authUser) {
       if (window.confirm("ARE YOU SURE TO DELETE THE MESSAGE?")) {
@@ -196,6 +223,18 @@ const ChatZone = () => {
     <>
       <Nav />
       <AlertMessage message={currGroup} />
+
+      {/* User action popup from clicking avatar in chat */}
+      {chatPopupTarget && (
+        <UserActionPopup
+          user={chatPopupTarget}
+          isAnonymous={groupInfo.isAnonymous}
+          isMuted={muteIds.has(chatPopupTarget._id)}
+          onClose={() => setChatPopupTarget(null)}
+          onMuteToggle={handleChatMuteToggle}
+          onBlock={handleChatBlock}
+        />
+      )}
 
       {/* Full-screen layout below navbar */}
       <div className={`fixed inset-0 flex flex-col lg:flex-row overflow-hidden bg-black ${miniBarVisible ? "pt-32 md:pt-28" : "pt-20 md:pt-28"}`}>
@@ -250,12 +289,16 @@ const ChatZone = () => {
                   </div>
                 ) : (
                   conversation.map((msg) => {
+                    const senderUserId = msg.senderId?._id;
+                    if (senderUserId && blockIds.has(senderUserId)) return null;
+
                     let displayName = "";
                     if (!groupInfo.isAnonymous) {
                       displayName = msg.senderId ? msg.senderId.username : "GUEST-" + msg.tempUser.slice(0, 10);
                     } else {
                       displayName = msg.senderId ? "HUMAN-" + msg.senderId.humanNum : "GUEST-" + msg.tempUser.slice(0, 10);
                     }
+                    const isMuted = senderUserId ? muteIds.has(senderUserId) : false;
                     return (
                       <Message
                         key={msg._id}
@@ -265,6 +308,9 @@ const ChatZone = () => {
                         time={dayjs(msg.createdAt).fromNow()}
                         messageId={msg._id}
                         reply={msg.replyTo}
+                        isMuted={isMuted}
+                        senderId={msg.senderId && authUser && msg.senderId._id !== authUser._id ? msg.senderId : null}
+                        onUserClick={(senderObj) => setChatPopupTarget(senderObj)}
                         handleReplyMsg={handleReplyMsg}
                         handleCopyMsg={handleCopyMsg}
                         handleDeleteMsg={handleDeleteMsg}

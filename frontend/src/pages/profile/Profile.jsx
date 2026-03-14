@@ -7,6 +7,8 @@ import useGetMyGroups from "../../hooks/group/useGetMyGroups.js";
 import useDeleteGroup from "../../hooks/group/useDeleteGroup.js";
 import useGetProfilePictures from "../../hooks/user/useGetProfilePictures.js";
 import useUpdateProfile from "../../hooks/user/useUpdateProfile.js";
+import useGetLists from "../../hooks/user/useGetLists.js";
+import useUnblockUser from "../../hooks/user/useUnbanUser.js";
 import { Link } from "react-router-dom";
 
 /* ── Reusable pieces (defined outside Profile to prevent remount on re-render) ── */
@@ -196,8 +198,12 @@ const Profile = () => {
   const { deleteLoading, deleteGroup } = useDeleteGroup();
   const { picturesLoading, getProfilePictures } = useGetProfilePictures();
   const { updateLoading, updateProfile } = useUpdateProfile();
+  const { getLists } = useGetLists();
+  const { unbanUser: unblockUser } = useUnblockUser();
 
   const [myGroups, setMyGroups] = useState([]);
+  const [blockList, setBlockList] = useState([]);
+  const [blockListOpen, setBlockListOpen] = useState(false);
 
   const [bioEditing, setBioEditing] = useState(false);
   const [bioValue, setBioValue] = useState(authUser.bio || "");
@@ -244,8 +250,16 @@ const Profile = () => {
     setPickerOpen(false);
   };
 
+  const handleUnblock = async (targetId) => {
+    const ok = await unblockUser(targetId);
+    if (ok) setBlockList((prev) => prev.filter((u) => u._id !== targetId));
+  };
+
   useEffect(() => {
     gettingMyGroups();
+    getLists().then((data) => {
+      setBlockList(data?.blockList || []);
+    });
   }, []);
 
   return (
@@ -317,15 +331,30 @@ const Profile = () => {
                 }}
               >
                 <BioSection
-                bioEditing={bioEditing}
-                bioValue={bioValue}
-                setBioValue={setBioValue}
-                setBioEditing={setBioEditing}
-                authUserBio={authUser.bio}
-                updateLoading={updateLoading}
-                onSave={handleBioSave}
-              />
+                  bioEditing={bioEditing}
+                  bioValue={bioValue}
+                  setBioValue={setBioValue}
+                  setBioEditing={setBioEditing}
+                  authUserBio={authUser.bio}
+                  updateLoading={updateLoading}
+                  onSave={handleBioSave}
+                />
               </div>
+
+              {/* Blocked Users button */}
+              <button
+                onClick={() => setBlockListOpen(true)}
+                className="w-full rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+                style={{
+                  fontSize: "0.9rem",
+                  padding: "10px 0",
+                  background: "transparent",
+                  border: "1px solid rgba(239,68,68,0.5)",
+                  color: "rgba(239,68,68,0.8)",
+                }}
+              >
+                🚫 Blocked Users {blockList.length > 0 && `(${blockList.length})`}
+              </button>
 
               {/* Logout pushed to bottom */}
               <div className="mt-auto pt-2">
@@ -442,12 +471,103 @@ const Profile = () => {
             )}
           </div>
 
+          {/* Blocked Users button */}
+          <button
+            onClick={() => setBlockListOpen(true)}
+            className="w-full rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+            style={{
+              fontSize: "0.9rem",
+              padding: "13px 0",
+              background: "transparent",
+              border: "1px solid rgba(239,68,68,0.5)",
+              color: "rgba(239,68,68,0.8)",
+            }}
+          >
+            🚫 Blocked Users {blockList.length > 0 && `(${blockList.length})`}
+          </button>
+
           {/* Logout */}
           <div className="flex justify-center">
             <LogoutBtn loading={loading} logoutHovered={logoutHovered} setLogoutHovered={setLogoutHovered} onLogout={handleLogout} />
           </div>
         </div>
       </div>
+
+      {/* ── Blocked Users Modal ── */}
+      {blockListOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.85)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setBlockListOpen(false); }}
+        >
+          <div
+            className="relative flex flex-col w-full max-w-sm rounded-2xl overflow-hidden"
+            style={{
+              background: "#000",
+              border: "1px solid rgba(239,68,68,0.35)",
+              boxShadow: "0 0 40px rgba(239,68,68,0.1)",
+              maxHeight: "80vh",
+            }}
+          >
+            <div style={{ height: "3px", background: "linear-gradient(90deg, #FF00EE, #ef4444, #EAFF00)" }} />
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center gap-3">
+                <span className="pixel-font" style={{ fontSize: "1rem", color: "#ef4444" }}>🚫 BLOCKED USERS</span>
+                {blockList.length > 0 && (
+                  <span className="font-mono text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(239,68,68,0.15)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.3)" }}>
+                    {blockList.length}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => setBlockListOpen(false)}
+                className="font-mono text-sm cursor-pointer"
+                style={{ color: "rgba(255,255,255,0.3)" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* List */}
+            <div className="flex flex-col gap-3 p-5 overflow-y-auto">
+              {blockList.length === 0 ? (
+                <p className="font-mono text-sm text-center py-6" style={{ color: "rgba(255,255,255,0.25)" }}>
+                  No blocked users.
+                </p>
+              ) : (
+                blockList.map((user) => (
+                  <div
+                    key={user._id}
+                    className="flex items-center gap-4 rounded-2xl p-4 relative overflow-hidden"
+                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
+                  >
+                    <div style={{ padding: "2px", borderRadius: "50%", background: "linear-gradient(135deg, #FF00EE, #ef4444)", flexShrink: 0 }}>
+                      <img
+                        src={`/profiles/${user.profilePic}.png`}
+                        className="rounded-full block"
+                        alt="avatar"
+                        style={{ width: "48px", height: "48px", background: "#000" }}
+                      />
+                    </div>
+                    <span className="pixel-font font-bold flex-1" style={{ fontSize: "0.9rem", color: "#00F2FF" }}>
+                      HUMAN-{user.humanNum}
+                    </span>
+                    <button
+                      onClick={() => handleUnblock(user._id)}
+                      className="font-mono font-bold rounded-full flex-shrink-0 transition-all duration-200 cursor-pointer"
+                      style={{ fontSize: "0.75rem", padding: "5px 14px", background: "transparent", color: "#00FF7B", border: "1px solid #00FF7B" }}
+                    >
+                      UNBLOCK
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Picture Picker Modal ── */}
       {pickerOpen && (

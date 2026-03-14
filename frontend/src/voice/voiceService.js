@@ -239,6 +239,12 @@ export const createPeer = (socket, targetId) => {
   return pc;
 };
 
+export const setPeerVolume = (socketId, volume) => {
+  if (audioElements[socketId]) {
+    audioElements[socketId].volume = Math.max(0, Math.min(1, volume));
+  }
+};
+
 export const getPeer = (id) => peers[id];
 export const getPeerStates = () => ({ ...peerStates });
 export const setConnectionStateCallback = (cb) => { onConnectionStateChange = cb; };

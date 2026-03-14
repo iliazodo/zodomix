@@ -76,6 +76,69 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+export const muteUser = async (req, res) => {
+  try {
+    const { targetId } = req.body;
+    if (!targetId) return res.status(400).json({ error: "TARGET ID REQUIRED" });
+    if (targetId === req.user._id.toString()) return res.status(400).json({ error: "CANNOT MUTE YOURSELF" });
+    await User.findByIdAndUpdate(req.user._id, { $addToSet: { muteList: targetId } });
+    res.status(200).json({ message: "MUTED" });
+  } catch (error) {
+    console.log("ERROR IN USERCONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const unmuteUser = async (req, res) => {
+  try {
+    const { targetId } = req.body;
+    if (!targetId) return res.status(400).json({ error: "TARGET ID REQUIRED" });
+    await User.findByIdAndUpdate(req.user._id, { $pull: { muteList: targetId } });
+    res.status(200).json({ message: "UNMUTED" });
+  } catch (error) {
+    console.log("ERROR IN USERCONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const blockUser = async (req, res) => {
+  try {
+    const { targetId } = req.body;
+    if (!targetId) return res.status(400).json({ error: "TARGET ID REQUIRED" });
+    if (targetId === req.user._id.toString()) return res.status(400).json({ error: "CANNOT BLOCK YOURSELF" });
+    await User.findByIdAndUpdate(req.user._id, { $addToSet: { blockList: targetId } });
+    res.status(200).json({ message: "BLOCKED" });
+  } catch (error) {
+    console.log("ERROR IN USERCONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const unblockUser = async (req, res) => {
+  try {
+    const { targetId } = req.body;
+    if (!targetId) return res.status(400).json({ error: "TARGET ID REQUIRED" });
+    await User.findByIdAndUpdate(req.user._id, { $pull: { blockList: targetId } });
+    res.status(200).json({ message: "UNBLOCKED" });
+  } catch (error) {
+    console.log("ERROR IN USERCONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const getLists = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate("muteList", "_id username profilePic humanNum")
+      .populate("blockList", "_id username profilePic humanNum")
+      .select("muteList blockList");
+    res.status(200).json(user);
+  } catch (error) {
+    console.log("ERROR IN USERCONTROLLER: ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
 export const getLeaderboard = async (req, res) => {
   try {
     const users = await User.find({ isVerified: true })

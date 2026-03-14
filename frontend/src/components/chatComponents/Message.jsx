@@ -75,6 +75,7 @@ const Message = (props) => {
   };
 
   const progress = Math.min(dragX / THRESHOLD, 1);
+  const isMuted = props.isMuted;
 
   return (
     <div className="relative">
@@ -130,20 +131,60 @@ const Message = (props) => {
           </div>
         )}
         <div className={`${props.reply && "ml-8"} flex flex-row z-10 md:mb-2`}>
+          {/* Avatar — clickable if senderId is available */}
           <img
             src={props.img}
-            className="z-10 rounded-full w-12 h-12 md:w-16 md:h-16 mt-6"
+            className={`z-10 rounded-full w-12 h-12 md:w-16 md:h-16 mt-6 ${props.senderId && props.onUserClick ? "cursor-pointer" : ""}`}
             alt="avatar"
+            onClick={() => {
+              if (props.senderId && props.onUserClick) {
+                props.onUserClick(props.senderId);
+              }
+            }}
+            style={
+              isMuted
+                ? { filter: "grayscale(0.5) sepia(1) hue-rotate(-30deg) saturate(2)", opacity: 0.6 }
+                : {}
+            }
           />
           <div className="flex flex-col">
-            <div className=" flex items-center">
-              <p className="-ml-9 md:-ml-12 mt-2 text-xs md:text-sm pixel-font">
+            <div className=" flex items-center gap-2">
+              <p
+                className="-ml-9 md:-ml-12 mt-2 text-xs md:text-sm pixel-font"
+                style={isMuted ? { color: "#ef4444" } : {}}
+              >
                 {props.username}{" "}
               </p>
+              {isMuted && (
+                <span
+                  className="mt-2 font-mono text-xs px-1.5 py-0.5 rounded"
+                  style={{ background: "rgba(239,68,68,0.15)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.3)", fontSize: "0.6rem", letterSpacing: "0.08em" }}
+                >
+                  MUTED
+                </span>
+              )}
               <span className="text-xs ml-2 mt-2">{props.time}</span>
             </div>
-            <div className="bubble grow ">
-              <div className="left pr-3 break-words relative text-sm font-semibold xl:text-lg md:text-base max-w-56 min-w-8 md:max-w-lg lg:max-w-3xl">
+            <div
+              className="bubble grow"
+              style={
+                isMuted
+                  ? {
+                      background: "rgba(239,68,68,0.06)",
+                      border: "1px solid rgba(239,68,68,0.25)",
+                      borderRadius: "12px",
+                    }
+                  : {}
+              }
+            >
+              <div
+                className="left pr-3 break-words relative text-sm font-semibold xl:text-lg md:text-base max-w-56 min-w-8 md:max-w-lg lg:max-w-3xl"
+                style={
+                  isMuted
+                    ? { color: "rgba(239,68,68,0.85)", filter: "blur(5px)", userSelect: "none", pointerEvents: "none" }
+                    : {}
+                }
+              >
                 {renderMessageWithLinks(props.message)}
               </div>
 
