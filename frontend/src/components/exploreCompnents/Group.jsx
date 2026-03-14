@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import { getCategoryColor } from "../CategoryTagInput.jsx";
 import { useNavigate } from "react-router-dom";
 import useAddFavGroup from "../../hooks/group/useAddFavGroup.js";
-import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import "../../pages/custom.css"
 
 const Group = (props) => {
-  const [isFavGroup, setIsFavGroup] = useState(false);
-  const [favLoading, setFavLoading] = useState(true);
+  const [isFavGroup, setIsFavGroup] = useState(props.isFav || false);
   const [currentGroup, setCurrentGroup] = useState(JSON.parse(localStorage.getItem("zdm-group")));
 
   const navigate = useNavigate();
 
   const { addFavGroup } = useAddFavGroup();
-  const { getFavGroups } = useGetFavGroups();
   const { authUser } = useAuthContext();
+
+  // Sync when parent resolves the isFav prop (favorites API returns after mount)
+  useEffect(() => {
+    setIsFavGroup(props.isFav || false);
+    setIsLiked(props.isFav || false);
+  }, [props.isFav]);
 
   const initialLiked = authUser ? (props.likes || []).some((id) => id?.toString() === authUser.id?.toString()) : false;
   const [isLiked, setIsLiked] = useState(initialLiked);
@@ -44,28 +47,6 @@ const Group = (props) => {
     await addFavGroup(props._id);
   };
 
-  useEffect(() => {
-    const gettingFav = async () => {
-      try {
-        const data = await getFavGroups();
-        data.map((group) => {
-          if (group.groupName === props.name) {
-            setIsFavGroup(true);
-            setIsLiked(true);
-          }
-        });
-      } catch (error) {
-      } finally {
-        setFavLoading(false);
-      }
-    };
-
-    if (authUser) {
-      gettingFav();
-    } else {
-      setFavLoading(false);
-    }
-  }, []);
 
   const handleLike = async () => {
     if (!authUser) {
@@ -285,13 +266,7 @@ const Group = (props) => {
               background: favHovered && !isFavGroup ? "rgba(255,0,238,0.08)" : "transparent",
             }}
           >
-            {favLoading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : isFavGroup ? (
-              "♥︎"
-            ) : (
-              "♡"
-            )}
+            {isFavGroup ? "♥︎" : "♡"}
           </button>
         </div>
       </div>

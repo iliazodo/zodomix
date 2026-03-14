@@ -224,6 +224,7 @@ const CategoryTagInput = ({ selected = [], onChange }) => {
           <input
             ref={inputRef}
             type="text"
+            maxLength={30}
             value={creating ? "Adding..." : inputVal}
             disabled={creating}
             onChange={(e) => {

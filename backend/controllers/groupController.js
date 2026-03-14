@@ -77,9 +77,16 @@ export const createGroup = async (req, res) => {
 
 export const getGroup = async (req, res) => {
   try {
-    const groups = await Group.find();
+    const page = parseInt(req.query.page) || 1;
+    const limit = 30;
+    const skip = (page - 1) * limit;
 
-    res.status(200).json(groups);
+    const [groups, total] = await Promise.all([
+      Group.find().skip(skip).limit(limit),
+      Group.countDocuments(),
+    ]);
+
+    res.status(200).json({ groups, hasMore: skip + groups.length < total });
   } catch (error) {
     console.log("ERROR IN GROUPCOTROLLER: ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });

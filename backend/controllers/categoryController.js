@@ -13,8 +13,8 @@ export const createCategory = async (req, res) => {
 
     name = name.trim();
 
-    if (name.length > 40) {
-      return res.status(400).json({ error: "CATEGORY NAME TOO LONG (MAX 40)" });
+    if (name.length > 30) {
+      return res.status(400).json({ error: "CATEGORY NAME TOO LONG (MAX 30)" });
     }
 
     if (filter.isProfane(name)) {
