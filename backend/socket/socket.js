@@ -32,8 +32,8 @@ io.on("connection", (socket) => {
     const room = io.sockets.adapter.rooms.get(groupId);
     const size = room ? room.size : 0;
 
-    // Limit voice room to 4 users
-    if (size >= 4) {
+    // Limit voice room to 6 users
+    if (size >= 6) {
       socket.emit("voiceRoomFull");
       return;
     }

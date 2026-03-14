@@ -71,8 +71,12 @@ const VoiceChat = (props) => {
         <div className="flex items-center gap-2 mb-4 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
           <span className="text-base">🎙</span>
           <span className="pixel-font text-sm" style={{ color: "#00F2FF", letterSpacing: "0.1em" }}>VOICE CHAT</span>
+          <span className="font-mono text-xs ml-auto" style={{ color: "rgba(255,255,255,0.4)" }}>{usersInVoice.length}/6</span>
         </div>
       </div>
+
+      {/* Mobile-only: voice count badge */}
+      <span className="lg:hidden font-mono text-xs flex-shrink-0" style={{ color: "rgba(255,255,255,0.4)" }}>{usersInVoice.length}/6</span>
 
       {/* Users list */}
       <div className="flex flex-row items-center gap-3 flex-1 overflow-x-auto scrollbar-hide lg:flex-col lg:overflow-x-visible lg:flex-none lg:gap-0 lg:items-stretch">
