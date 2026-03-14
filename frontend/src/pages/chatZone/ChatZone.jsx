@@ -204,7 +204,7 @@ const ChatZone = () => {
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto overflow-x-hidden p-3 text-xl"
+            className="flex-1 overflow-y-auto overflow-x-hidden p-3"
           >
             {isAllowed === "yes" ? (
               <>
@@ -297,7 +297,7 @@ const ChatZone = () => {
 
           {/* Message input — inline at bottom of chat column */}
           {isAllowed === "yes" && (
-            <div className="flex-shrink-0 px-3 py-3 bg-black" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="flex-shrink-0 px-3 py-3 pb-16 md:pb-3 bg-black" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
               {replyTarget && (
                 <div
                   className="flex justify-between items-center rounded-2xl px-4 py-2 mb-2 font-mono text-sm md:text-base"

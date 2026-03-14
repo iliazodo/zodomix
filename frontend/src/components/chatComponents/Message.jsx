@@ -111,45 +111,45 @@ const Message = (props) => {
         {/* Replying Display */}
         {props.reply && (
           <div className="relative">
-            <div className="flex w-full h-10 items-center">
+            <div className="flex w-full h-8 items-center">
               <img
-                className="w-10 h-10"
+                className="w-8 h-8"
                 src={`/profiles/${
                   props.reply?.senderId
                     ? props.reply?.senderId?.profilePic
                     : "defaultPic"
                 }.png`}
               />
-              <p className="break-all text-xs md:text-lg md:max-w-full">
+              <p className="break-all text-xs md:text-sm md:max-w-full">
                 {props.reply?.message?.length > 50
                   ? sanitizeMessage(props.reply?.message).slice(0, 40) + "..."
                   : sanitizeMessage(props.reply?.message)}
               </p>
             </div>
-            <div className="absolute z-0 ml-5 h-16 w-20 border-l-2 border-b-2 border-white"></div>
+            <div className="absolute z-0 ml-4 h-12 w-16 border-l-2 border-b-2 border-white"></div>
           </div>
         )}
-        <div className={`${props.reply && "ml-10"} flex flex-row z-10 md:mb-3`}>
+        <div className={`${props.reply && "ml-8"} flex flex-row z-10 md:mb-2`}>
           <img
             src={props.img}
-            className="z-10 rounded-full w-16 h-16 md:w-20 md:h-20 mt-8"
+            className="z-10 rounded-full w-12 h-12 md:w-16 md:h-16 mt-6"
             alt="avatar"
           />
           <div className="flex flex-col">
             <div className=" flex items-center">
-              <p className="-ml-12 md:-ml-16 mt-2 text-xs md:text-base pixel-font">
+              <p className="-ml-9 md:-ml-12 mt-2 text-xs md:text-sm pixel-font">
                 {props.username}{" "}
               </p>
-              <span className="md:text-sm text-xs ml-3 mt-2">{props.time}</span>
+              <span className="text-xs ml-2 mt-2">{props.time}</span>
             </div>
             <div className="bubble grow ">
-              <div className="left pr-3 break-words relative text-base font-semibold xl:text-2xl md:text-xl max-w-64 min-w-10 md:max-w-xl lg:max-w-4xl">
+              <div className="left pr-3 break-words relative text-sm font-semibold xl:text-lg md:text-base max-w-56 min-w-8 md:max-w-lg lg:max-w-3xl">
                 {renderMessageWithLinks(props.message)}
               </div>
 
               <button
                 role="button"
-                className="dropdown dropdown-end absolute h-10 w-10 -right-5 -top-2"
+                className="dropdown dropdown-end absolute h-8 w-8 -right-4 -top-1"
               >
                 <img src="/menuIcon.png" alt="options" />
                 <ul className="text-white menu dropdown-content bg-base-100 rounded-box shadow-sm">
