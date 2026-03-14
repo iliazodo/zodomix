@@ -19,7 +19,7 @@ const Nav = () => {
     <>
       {/* Top navbar wrapper — fixed, stacks nav row + MiniVoiceBar vertically */}
       <div className="fixed top-0 left-0 right-0 z-50 flex flex-col bg-black">
-        <nav className="shadow-[0_20px_15px_-3px_rgba(0,0,0,0.5)] border-b border-gray-800 flex flex-row items-center justify-between w-full">
+        <nav className="shadow-[0_10px_15px_-3px_rgba(0,0,0,0.5)] border-b border-gray-800 flex flex-row items-center justify-between w-full">
           {/*logo*/}
           <Link to="/" className="md:w-1/4">
             <img

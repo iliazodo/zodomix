@@ -14,10 +14,11 @@ const Explore = () => {
   const { loading, getGroups } = useGetGroups();
   const { getFavGroups } = useGetFavGroups();
 
-  const [groups, setGroups]           = useState([]);
+  const [groups, setGroups]               = useState([]);
   const [favGroupNames, setFavGroupNames] = useState(new Set());
-  const [hasMore, setHasMore]         = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore]             = useState(true);
+  const [loadingMore, setLoadingMore]     = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showSearch, setShowSearch]   = useState(true);
@@ -46,7 +47,10 @@ const Explore = () => {
       setGroups((prev) => append ? [...prev, ...data.groups] : data.groups || []);
       setHasMore(data.hasMore);
       pageRef.current = page;
-      if (!append) isReadyRef.current = true; // initial load done — unlock scroll
+      if (!append) {
+        isReadyRef.current = true;  // unlock infinite scroll
+        setInitialLoading(false);   // show grid instead of skeleton
+      }
     }
 
     if (append) setLoadingMore(false);
@@ -248,7 +252,7 @@ const Explore = () => {
 
         {/* ── Groups grid ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 pb-32 pt-8 md:pt-10 lg:pb-20 lg:pt-10 gap-8 md:gap-12 lg:gap-16">
-          {loading && groups.length === 0 ? (
+          {initialLoading ? (
             Array(6).fill(0).map((_, i) => <GroupLoader key={i} />)
           ) : filteredGroups.length > 0 ? (
             filteredGroups.map((group) => (
@@ -258,7 +262,7 @@ const Explore = () => {
                 isFav={favGroupNames.has(group.name)}
               />
             ))
-          ) : (
+          ) : (searchInput || selectedCategory !== "All") ? (
             <div className="col-span-full flex flex-col items-center justify-center py-24 gap-3">
               <span className="pixel-font text-2xl" style={{ color: "rgba(255,255,255,0.1)" }}>
                 NO GROUPS FOUND
@@ -269,7 +273,7 @@ const Explore = () => {
                   : "Try a different search"}
               </span>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* ── Infinite scroll sentinel + load-more spinner ── */}
