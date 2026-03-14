@@ -117,12 +117,13 @@ const Explore = () => {
       const matchesSearch =
         !searchInput ||
         group.name.toLowerCase().includes(searchInput.toLowerCase());
+      if (selectedCategory === "Liked") return matchesSearch && favGroupNames.has(group.name);
       const matchesCategory =
         selectedCategory === "All" ||
         (group.categories || []).includes(selectedCategory);
       return matchesSearch && matchesCategory;
     });
-  }, [groups, searchInput, selectedCategory]);
+  }, [groups, searchInput, selectedCategory, favGroupNames]);
 
   // ── Skeleton loader ───────────────────────────────────────────────────────
   const GroupLoader = () => (
@@ -170,6 +171,23 @@ const Explore = () => {
       >
         ALL
       </button>
+
+      {authUser && (
+        <button
+          type="button"
+          onClick={() => setSelectedCategory(selectedCategory === "Liked" ? "All" : "Liked")}
+          className="flex-shrink-0 font-mono font-bold rounded-full px-3 py-1 transition-all duration-150 cursor-pointer"
+          style={{
+            fontSize: "0.72rem",
+            border: selectedCategory === "Liked" ? "1px solid #FF00EE" : "1px solid rgba(255,255,255,0.15)",
+            color: selectedCategory === "Liked" ? "#FF00EE" : "rgba(255,255,255,0.4)",
+            background: selectedCategory === "Liked" ? "rgba(255,0,238,0.1)" : "transparent",
+            boxShadow: selectedCategory === "Liked" ? "0 0 10px rgba(255,0,238,0.3)" : "none",
+          }}
+        >
+          ♥︎ LIKED
+        </button>
+      )}
 
       {availableCategories.map((cat) => {
         const color = getCategoryColor(cat);
@@ -268,7 +286,9 @@ const Explore = () => {
                 NO GROUPS FOUND
               </span>
               <span className="font-mono text-sm" style={{ color: "rgba(255,255,255,0.2)" }}>
-                {selectedCategory !== "All"
+                {selectedCategory === "Liked"
+                  ? "You haven't liked any groups yet"
+                  : selectedCategory !== "All"
                   ? `No groups tagged with "${selectedCategory}"`
                   : "Try a different search"}
               </span>

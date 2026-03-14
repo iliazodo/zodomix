@@ -43,6 +43,7 @@ const ChatZone = () => {
     members: "",
   });
   const [chatLoading, setChatLoading] = useState(false);
+  const [groupNotFound, setGroupNotFound] = useState(false);
   const [isAllowed, setIsAllowed] = useState("checking");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -84,6 +85,10 @@ const ChatZone = () => {
 
   const gettingGroupInfo = async () => {
     const data = await getGroupInfo({ groupName });
+    if (!data || !data._id) {
+      setGroupNotFound(true);
+      return;
+    }
     setGroupInfo({
       id: data?._id,
       creatorId: data?.creatorId,
@@ -236,8 +241,47 @@ const ChatZone = () => {
         />
       )}
 
+      {/* Group not found */}
+      {groupNotFound && (
+        <div className={`fixed inset-0 flex items-center justify-center bg-black ${miniBarVisible ? "pt-32 md:pt-28" : "pt-20 md:pt-28"}`}>
+          <div className="flex flex-col items-center justify-center text-center px-6 gap-6">
+            <div style={{ fontSize: "72px", filter: "drop-shadow(0 0 32px #FF00EE)", marginBottom: "8px" }}>💀</div>
+            <h2
+              className="pixel-font"
+              style={{
+                background: "linear-gradient(90deg, #FF00EE, #00F2FF, #EAFF00)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                fontSize: "clamp(1.4rem, 5vw, 2rem)",
+                letterSpacing: "0.15em",
+              }}
+            >
+              GROUP NOT FOUND
+            </h2>
+            <p className="font-mono" style={{ color: "rgba(255,255,255,0.35)", fontSize: "0.95rem", maxWidth: "320px", lineHeight: 1.7 }}>
+              This group no longer exists or was deleted by its creator.
+            </p>
+            <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>
+              {["#FF00EE", "#00F2FF", "#EAFF00", "#00FF7B"].map((c, i) => (
+                <div key={i} style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: c, boxShadow: `0 0 10px ${c}` }} />
+              ))}
+            </div>
+            <button
+              onClick={() => navigate("/explore")}
+              className="font-mono font-bold rounded-full px-8 py-3 transition-all duration-200 cursor-pointer mt-2"
+              style={{ border: "1px solid #00FF7B", color: "#00FF7B", background: "transparent" }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "#00FF7B"; e.currentTarget.style.color = "#000"; e.currentTarget.style.boxShadow = "0 0 18px #00FF7B88"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#00FF7B"; e.currentTarget.style.boxShadow = "none"; }}
+            >
+              EXPLORE GROUPS →
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Full-screen layout below navbar */}
-      <div className={`fixed inset-0 flex flex-col lg:flex-row overflow-hidden bg-black ${miniBarVisible ? "pt-32 md:pt-28" : "pt-20 md:pt-28"}`}>
+      {!groupNotFound && <div className={`fixed inset-0 flex flex-col lg:flex-row overflow-hidden bg-black ${miniBarVisible ? "pt-32 md:pt-28" : "pt-20 md:pt-28"}`}>
 
         {/* Voice Chat — horizontal bar on mobile, vertical sidebar on desktop */}
         <VoiceChat groupId={groupInfo.id} />
@@ -383,7 +427,7 @@ const ChatZone = () => {
             </div>
           )}
         </div>
-      </div>
+      </div>}
     </>
   );
 };

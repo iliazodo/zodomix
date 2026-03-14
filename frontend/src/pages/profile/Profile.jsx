@@ -9,7 +9,7 @@ import useGetProfilePictures from "../../hooks/user/useGetProfilePictures.js";
 import useUpdateProfile from "../../hooks/user/useUpdateProfile.js";
 import useGetLists from "../../hooks/user/useGetLists.js";
 import useUnblockUser from "../../hooks/user/useUnbanUser.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 /* ── Reusable pieces (defined outside Profile to prevent remount on re-render) ── */
 
@@ -204,6 +204,20 @@ const Profile = () => {
   const [myGroups, setMyGroups] = useState([]);
   const [blockList, setBlockList] = useState([]);
   const [blockListOpen, setBlockListOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const groupHistory = (() => {
+    const raw = JSON.parse(localStorage.getItem("zdm-chat-history")) || [];
+    // Deduplicate by name, keep latest, then reverse so newest is first
+    const seen = new Set();
+    return raw.slice().reverse().filter((g) => {
+      if (seen.has(g.name)) return false;
+      seen.add(g.name);
+      return true;
+    });
+  })();
 
   const [bioEditing, setBioEditing] = useState(false);
   const [bioValue, setBioValue] = useState(authUser.bio || "");
@@ -341,6 +355,21 @@ const Profile = () => {
                 />
               </div>
 
+              {/* Group History button */}
+              <button
+                onClick={() => setHistoryOpen(true)}
+                className="w-full rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+                style={{
+                  fontSize: "0.9rem",
+                  padding: "10px 0",
+                  background: "transparent",
+                  border: "1px solid rgba(0,242,255,0.4)",
+                  color: "rgba(0,242,255,0.8)",
+                }}
+              >
+                🕓 Group History {groupHistory.length > 0 && `(${groupHistory.length})`}
+              </button>
+
               {/* Blocked Users button */}
               <button
                 onClick={() => setBlockListOpen(true)}
@@ -353,7 +382,7 @@ const Profile = () => {
                   color: "rgba(239,68,68,0.8)",
                 }}
               >
-                🚫 Blocked Users {blockList.length > 0 && `(${blockList.length})`}
+                Blocked Users {blockList.length > 0 && `(${blockList.length})`}
               </button>
 
               {/* Logout pushed to bottom */}
@@ -471,6 +500,21 @@ const Profile = () => {
             )}
           </div>
 
+          {/* Group History button */}
+          <button
+            onClick={() => setHistoryOpen(true)}
+            className="w-full rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+            style={{
+              fontSize: "0.9rem",
+              padding: "13px 0",
+              background: "transparent",
+              border: "1px solid rgba(0,242,255,0.4)",
+              color: "rgba(0,242,255,0.8)",
+            }}
+          >
+            🕓 Group History {groupHistory.length > 0 && `(${groupHistory.length})`}
+          </button>
+
           {/* Blocked Users button */}
           <button
             onClick={() => setBlockListOpen(true)}
@@ -483,7 +527,7 @@ const Profile = () => {
               color: "rgba(239,68,68,0.8)",
             }}
           >
-            🚫 Blocked Users {blockList.length > 0 && `(${blockList.length})`}
+            Blocked Users {blockList.length > 0 && `(${blockList.length})`}
           </button>
 
           {/* Logout */}
@@ -492,6 +536,83 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* ── Group History Modal ── */}
+      {historyOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.85)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setHistoryOpen(false); }}
+        >
+          <div
+            className="relative flex flex-col w-full max-w-sm rounded-2xl overflow-hidden"
+            style={{
+              background: "#000",
+              border: "1px solid rgba(0,242,255,0.3)",
+              boxShadow: "0 0 40px rgba(0,242,255,0.1)",
+              maxHeight: "80vh",
+            }}
+          >
+            <div style={{ height: "3px", background: "linear-gradient(90deg, #00F2FF, #00FF7B, #EAFF00)" }} />
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center gap-3">
+                <span className="pixel-font" style={{ fontSize: "1rem", color: "#00F2FF" }}>🕓 GROUP HISTORY</span>
+                {groupHistory.length > 0 && (
+                  <span className="font-mono text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(0,242,255,0.1)", color: "#00F2FF", border: "1px solid rgba(0,242,255,0.3)" }}>
+                    {groupHistory.length}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => setHistoryOpen(false)}
+                className="font-mono text-sm cursor-pointer"
+                style={{ color: "rgba(255,255,255,0.3)" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* List */}
+            <div className="flex flex-col gap-2 p-4 overflow-y-auto">
+              {groupHistory.length === 0 ? (
+                <p className="font-mono text-sm text-center py-6" style={{ color: "rgba(255,255,255,0.25)" }}>
+                  No group history yet.
+                </p>
+              ) : (
+                groupHistory.map((group) => (
+                  <button
+                    key={group.name}
+                    onClick={() => {
+                      localStorage.setItem("zdm-group", JSON.stringify(group.name));
+                      setHistoryOpen(false);
+                      navigate(`/chatZone/${group.name}`);
+                    }}
+                    className="flex items-center gap-4 rounded-2xl p-3 w-full text-left transition-all duration-150 cursor-pointer"
+                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(0,242,255,0.35)"; e.currentTarget.style.background = "rgba(0,242,255,0.05)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; }}
+                  >
+                    <div style={{ padding: "2px", borderRadius: "50%", background: "linear-gradient(135deg, #00FF7B, #00F2FF)", flexShrink: 0 }}>
+                      <img
+                        src={`/groups/${group.pic}.png`}
+                        className="rounded-full block"
+                        alt={group.name}
+                        style={{ width: "40px", height: "40px", background: "#000" }}
+                      />
+                    </div>
+                    <span className="pixel-font font-bold truncate" style={{ fontSize: "0.9rem", color: "#fff" }}>
+                      {group.name}
+                    </span>
+                    <span className="ml-auto font-mono text-xs flex-shrink-0" style={{ color: "rgba(0,242,255,0.5)" }}>→</span>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Blocked Users Modal ── */}
       {blockListOpen && (
