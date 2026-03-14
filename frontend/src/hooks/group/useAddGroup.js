@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 const useAddGroup = () => {
   const [loading, setLoading] = useState(false);
 
-  const addGroup = async ({ name, description, isPublic, isAnonymous, password }) => {
+  const addGroup = async ({ name, description, isPublic, isAnonymous, password, categories }) => {
     setLoading(true);
 
     try {
@@ -22,7 +22,7 @@ const useAddGroup = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ name, description, isPublic, isAnonymous, password }),
+        body: JSON.stringify({ name, description, isPublic, isAnonymous, password, categories }),
       });
 
       const data = await res.json();

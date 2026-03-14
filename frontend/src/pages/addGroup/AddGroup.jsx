@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Nav from "../../components/Nav.jsx";
 import useAddGroup from "../../hooks/group/useAddGroup.js";
+import CategoryTagInput from "../../components/CategoryTagInput.jsx";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -11,6 +12,7 @@ const AddGroup = () => {
     password: "",
     isAnonymous: true,
     description: "",
+    categories: [],
   });
 
   const [submitHovered, setSubmitHovered] = useState(false);
@@ -188,6 +190,14 @@ const AddGroup = () => {
                   className="rounded-2xl py-3 px-6 font-mono text-base resize-none"
                   style={inputStyle}
                   placeholder="What is this group about?"
+                />
+              </div>
+
+              {/* Categories — full width */}
+              <div className="lg:col-span-2">
+                <CategoryTagInput
+                  selected={inputs.categories}
+                  onChange={(cats) => setInputs((prev) => ({ ...prev, categories: cats }))}
                 />
               </div>
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getCategoryColor } from "../CategoryTagInput.jsx";
 import { useNavigate } from "react-router-dom";
 import useAddFavGroup from "../../hooks/group/useAddFavGroup.js";
 import useGetFavGroups from "../../hooks/group/useGetFavGroups.js";
@@ -83,6 +84,10 @@ const Group = (props) => {
 
   const isMain = props.groupType === "main";
   const isCurrentGroup = currentGroup === props.name;
+
+  const cats = Array.isArray(props.categories) ? props.categories : [];
+  const visibleCats = cats.slice(0, 3);
+  const hiddenCount = cats.length - visibleCats.length;
 
   return (
     <div
@@ -192,6 +197,43 @@ const Group = (props) => {
         >
           {props.description}
         </p>
+
+        {/* Category pills */}
+        {visibleCats.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {visibleCats.map((name) => {
+              const color = getCategoryColor(name);
+              return (
+                <span
+                  key={name}
+                  className="font-mono px-2 py-0.5 rounded-full"
+                  style={{
+                    fontSize: "0.65rem",
+                    border: `1px solid ${color}`,
+                    color,
+                    background: `${color}0f`,
+                    boxShadow: `0 0 5px ${color}33`,
+                  }}
+                >
+                  {name}
+                </span>
+              );
+            })}
+            {hiddenCount > 0 && (
+              <span
+                className="font-mono px-2 py-0.5 rounded-full"
+                style={{
+                  fontSize: "0.65rem",
+                  border: "1px solid rgba(255,255,255,0.2)",
+                  color: "rgba(255,255,255,0.4)",
+                  background: "transparent",
+                }}
+              >
+                +{hiddenCount} more
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Divider */}
         <div style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />

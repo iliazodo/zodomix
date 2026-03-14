@@ -3,6 +3,7 @@ import Nav from "../../components/Nav.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
 import useEditGroup from "../../hooks/group/useEditGroup.js";
+import CategoryTagInput from "../../components/CategoryTagInput.jsx";
 
 const EditGroup = () => {
   const { groupId } = useParams();
@@ -13,6 +14,7 @@ const EditGroup = () => {
     isPublic: true,
     password: "",
     description: "",
+    categories: [],
   });
 
   const [submitHovered, setSubmitHovered] = useState(false);
@@ -29,6 +31,7 @@ const EditGroup = () => {
         description: data?.description,
         isPublic: data?.isPublic,
         password: "",
+        categories: Array.isArray(data?.categories) ? data.categories : [],
       });
     };
     gettingGroupInfo();
@@ -140,6 +143,12 @@ const EditGroup = () => {
                 style={inputStyle}
               />
             </div>
+
+            {/* Categories */}
+            <CategoryTagInput
+              selected={inputs.categories}
+              onChange={(cats) => setInputs((prev) => ({ ...prev, categories: cats }))}
+            />
 
             {/* Submit */}
             <button

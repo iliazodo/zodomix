@@ -10,6 +10,7 @@ const useEditGroup = () => {
     description,
     password,
     isPublic,
+    categories,
   }) => {
     setLoading(true);
 
@@ -23,7 +24,7 @@ const useEditGroup = () => {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ groupId, name, description, password }),
+        body: JSON.stringify({ groupId, name, description, password, categories }),
       });
 
       if (res.ok) {

@@ -57,6 +57,10 @@ const groupSchema = new mongoose.Schema({
       },
     },
   ],
+  categories: {
+    type: [String],
+    default: [],
+  },
 });
 
 const Group = mongoose.model("Group", groupSchema);

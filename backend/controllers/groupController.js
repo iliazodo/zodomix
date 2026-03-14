@@ -6,7 +6,7 @@ import Message from "../models/messageModel.js";
 
 export const createGroup = async (req, res) => {
   try {
-    const { name, description, isPublic, isAnonymous, password } = req.body;
+    const { name, description, isPublic, isAnonymous, password, categories } = req.body;
     const userId = req.user._id;
 
     const user = await User.findById(userId);
@@ -53,6 +53,7 @@ export const createGroup = async (req, res) => {
       isAnonymous,
       members: [userId],
       password: hashedPass || "",
+      categories: Array.isArray(categories) ? categories.slice(0, 5) : [],
     });
 
     user.ownGroups.push(newGroup._id);
@@ -125,7 +126,7 @@ export const getMyOwnGroups = async (req, res) => {
 
 export const updateGroup = async (req, res) => {
   try {
-    const { groupId, name, description, password } = req.body;
+    const { groupId, name, description, password, categories } = req.body;
     const userId = req.user._id;
 
     const user = await User.findById(userId);
@@ -144,6 +145,7 @@ export const updateGroup = async (req, res) => {
           name,
           description,
           password: hashedPass,
+          categories: Array.isArray(categories) ? categories.slice(0, 5) : [],
         },
         { new: true }
       );
@@ -153,6 +155,7 @@ export const updateGroup = async (req, res) => {
         {
           name,
           description,
+          categories: Array.isArray(categories) ? categories.slice(0, 5) : [],
         },
         { new: true }
       );
