@@ -19,19 +19,19 @@ const Nav = () => {
     <>
       {/* Top navbar wrapper — fixed, stacks nav row + MiniVoiceBar vertically */}
       <div className="fixed top-0 left-0 right-0 z-50 flex flex-col bg-black">
-        <nav className="flex flex-row items-center justify-between w-full">
+        <nav className="shadow-[0_20px_15px_-3px_rgba(0,0,0,0.5)] border-b border-gray-800 flex flex-row items-center justify-between w-full">
           {/*logo*/}
           <Link to="/" className="md:w-1/4">
             <img
               src="/zodomixLogo.png"
               alt="Zodomix Logo"
-              className="w-72 h-20 object-contain ml-1 md:ml-5"
+              className="w-72 h-20 md:w-96 md:h-28 object-contain ml-1 md:ml-5"
             />
           </Link>
           {/*header navbar*/}
-          <div className="hidden md:block md:w-60 xl:w-80 fixed top-14 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <ul className=" flex flex-row justify-between w-60 xl:w-72 border-white border-2 rounded-full px-2 m-auto">
-              <li className="md:w-16 xl:w-20 md:p-3">
+          <div className="hidden md:block md:w-52 xl:w-64 fixed top-14 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <ul className="flex flex-row justify-between md:w-48 xl:w-56 border-white border-2 rounded-full px-2 m-auto">
+              <li className="md:w-14 xl:w-16 md:p-2.5">
                 <Link to="/">
                   <img
                     src="/home.png"
@@ -40,7 +40,7 @@ const Nav = () => {
                   />
                 </Link>
               </li>
-              <li className="md:w-16 xl:w-20 md:p-3">
+              <li className="md:w-14 xl:w-16 md:p-2.5">
                 <Link to="/explore">
                   <img
                     src="/explore.png"
@@ -49,7 +49,7 @@ const Nav = () => {
                   />
                 </Link>
               </li>
-              <li className="md:w-16 xl:w-20 md:p-3">
+              <li className="md:w-14 xl:w-16 md:p-2.5">
                 <Link to="/robot">
                   <img
                     src="/robot.png"
@@ -68,7 +68,7 @@ const Nav = () => {
                   authUser ? authUser.profilePic : "defaultPic"
                 }.png`}
                 alt="profile"
-                className="border-2 rounded-full w-14 h-14"
+                className="border-2 rounded-full w-14 h-14 md:w-16 md:h-16"
               />
             </Link>
           </div>
