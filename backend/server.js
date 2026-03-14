@@ -12,6 +12,7 @@ import verifyRoutes from "./routes/verifyRouter.js";
 import aiRoutes from "./routes/aiRouter.js";
 import updateRoutes from "./routes/updateRouter.js";
 import voiceRoutes from "./routes/voiceRouter.js";
+import categoryRoutes from "./routes/categoryRouter.js";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import { app, server } from "./socket/socket.js";
@@ -56,6 +57,12 @@ app.use("/api/verify", verifyRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/update" , updateRoutes);
 app.use("/api/voice", voiceRoutes);
+app.use("/api/category", categoryRoutes);
+
+// Catch-all for any unregistered /api/* route — always return JSON, never HTML
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "API ROUTE NOT FOUND" });
+});
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 

@@ -78,12 +78,14 @@ const CategoryTagInput = ({ selected = [], onChange }) => {
         credentials: "include",
         body: JSON.stringify({ name }),
       });
-      const data = await res.json();
 
       if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
         toast.error(data.error || "FAILED TO ADD CATEGORY");
         return;
       }
+
+      const data = await res.json();
 
       // Add to local list if not already present
       setAllCategories((prev) => {

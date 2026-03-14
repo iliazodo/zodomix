@@ -7,8 +7,8 @@ const useGetCategories = () => {
     setLoading(true);
     try {
       const res = await fetch("/api/category/get", { credentials: "include" });
-      const data = await res.json();
       if (!res.ok) return [];
+      const data = await res.json();
       return data;
     } catch (error) {
       console.error(error.message);
