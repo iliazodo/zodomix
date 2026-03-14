@@ -217,7 +217,7 @@ const Group = (props) => {
         )}
 
         {/* Divider */}
-        <div style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />
+        <div className="mt-auto" style={{ height: "1px", background: "rgba(255,255,255,0.06)" }} />
 
         {/* Buttons */}
         <div className="flex gap-2">
