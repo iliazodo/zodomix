@@ -32,9 +32,11 @@ export const addUser = async (req, res) => {
   }
 };
 
-export const isUserValid = (req, res) => {
+export const isUserValid = async (req, res) => {
   try {
-    res.status(200).json({ valid: true });
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) return res.status(404).json({ error: "USER NOT FOUND" });
+    res.status(200).json(user);
   } catch (error) {
     console.log("ERROR IN USERCONTROLLER: ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });

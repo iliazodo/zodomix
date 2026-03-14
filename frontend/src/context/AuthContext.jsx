@@ -14,7 +14,9 @@ export const AuthContextProvider = ({ children }) => {
     const [authUser , setAuthUser] = useState(JSON.parse(localStorage.getItem("zdm-user")) || null);
 
     useEffect(() =>{
-      isUserValid();
+      isUserValid().then((user) => {
+        if (user) setAuthUser(user);
+      });
     } , []);
 
   return <AuthContext.Provider value={{authUser ,setAuthUser}}>{children}</AuthContext.Provider>;
