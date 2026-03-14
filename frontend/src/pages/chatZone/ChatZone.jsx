@@ -16,7 +16,8 @@ import Message from "../../components/chatComponents/Message.jsx";
 import AlertMessage from "../../components/chatComponents/AlertMessage.jsx";
 import { useContext } from "react";
 import { SocketContext } from "../../context/SocketContext.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { VoiceContext } from "../../context/VoiceContext.jsx";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import toast from "react-hot-toast";
 import MessageSkeleton from "../../components/chatComponents/MessageSkeleton.jsx";
@@ -24,8 +25,13 @@ import VoiceChat from "../../components/chatComponents/VoiceChat.jsx";
 
 const ChatZone = () => {
   const { socket } = useContext(SocketContext);
+  const { joined, currentVoiceGroupName } = useContext(VoiceContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const { groupName } = useParams();
+
+  // MiniVoiceBar is visible on mobile when user is in voice in a different group
+  const miniBarVisible = joined && location.pathname !== `/chatZone/${currentVoiceGroupName}`;
 
   const [groupInfo, setGroupInfo] = useState({
     id: "",
@@ -192,7 +198,7 @@ const ChatZone = () => {
       <AlertMessage message={currGroup} />
 
       {/* Full-screen layout below navbar */}
-      <div className="fixed inset-0 pt-20 md:pt-28 flex flex-col lg:flex-row overflow-hidden bg-black">
+      <div className={`fixed inset-0 flex flex-col lg:flex-row overflow-hidden bg-black ${miniBarVisible ? "pt-32 md:pt-28" : "pt-20 md:pt-28"}`}>
 
         {/* Voice Chat — horizontal bar on mobile, vertical sidebar on desktop */}
         <VoiceChat groupId={groupInfo.id} />
