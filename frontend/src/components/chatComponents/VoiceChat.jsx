@@ -6,10 +6,7 @@ import useGetGroupInfo from "../../hooks/group/useGetGroupInfo.js";
 import { VOICE_EFFECTS } from "../../voice/voiceService.js";
 
 const BAD_STATES = ["failed", "disconnected"];
-
 const VOICE_COLORS = ["#00FF7B", "#FF00EE", "#00F2FF", "#EAFF00"];
-
-// For non-anonymous groups prepend the "real voice" option
 const REAL_VOICE = { id: "none", label: "🎤 My Voice" };
 
 const VoiceChat = (props) => {
@@ -22,7 +19,6 @@ const VoiceChat = (props) => {
     leaveVoice,
     currentEffect,
     changeEffect,
-    isVoiceAnonymous,
     peerConnectionStates,
   } = useContext(VoiceContext);
   const { getGroupInfo } = useGetGroupInfo();
@@ -32,6 +28,7 @@ const VoiceChat = (props) => {
   const [showEffectPanel, setShowEffectPanel] = useState(false);
 
   const isInThisGroup = joined && currentVoiceGroupId === props.groupId;
+  const effectOptions = isGroupAnonymous ? VOICE_EFFECTS : [REAL_VOICE, ...VOICE_EFFECTS];
 
   const gettingGroupInfo = async () => {
     if (!props.groupId) return;
@@ -40,53 +37,121 @@ const VoiceChat = (props) => {
     setIsGroupAnonymous(data?.isAnonymous);
   };
 
-  useEffect(() => {
-    gettingGroupInfo();
-  }, [props.groupId]);
+  useEffect(() => { gettingGroupInfo(); }, [props.groupId]);
 
   useEffect(() => {
-    if (!socket || !props.groupId) return;
-    if (isInThisGroup) return;
+    if (!socket || !props.groupId || isInThisGroup) return;
     socket.emit("joinVoiceGroup", props.groupId);
   }, [socket, props.groupId, isInThisGroup]);
 
   useEffect(() => {
     if (!socket || !props.groupId) return;
-    const eventName = `newVoiceMember-${props.groupId}`;
-    const handleNewMember = (data) => setUsersInVoice((prev) => [...prev, data]);
-    socket.on(eventName, handleNewMember);
-    return () => socket.off(eventName, handleNewMember);
+    const ev = `newVoiceMember-${props.groupId}`;
+    const handler = (data) => setUsersInVoice((prev) => [...prev, data]);
+    socket.on(ev, handler);
+    return () => socket.off(ev, handler);
   }, [socket, props.groupId]);
 
   useEffect(() => {
     if (!socket || !props.groupId) return;
-    const eventName = `voiceMemberRemoved-${props.groupId}`;
-    const handleRemove = (data) =>
-      setUsersInVoice((prev) => prev.filter((e) => e.user._id !== data.user._id));
-    socket.on(eventName, handleRemove);
-    return () => socket.off(eventName, handleRemove);
+    const ev = `voiceMemberRemoved-${props.groupId}`;
+    const handler = (data) => setUsersInVoice((prev) => prev.filter((e) => e.user._id !== data.user._id));
+    socket.on(ev, handler);
+    return () => socket.off(ev, handler);
   }, [socket, props.groupId]);
 
-  // Effects list: anonymous → 5 effects only, non-anonymous → real voice + 5 effects
-  const effectOptions = isGroupAnonymous ? VOICE_EFFECTS : [REAL_VOICE, ...VOICE_EFFECTS];
-
   return (
-    <div className="fixed md:top-28 top-20 left-0 w-full md:w-1/2 md:left-1/4 mx-auto z-20">
+    <div
+      className="relative bg-black flex-shrink-0 flex flex-row items-center justify-between px-3 py-2 w-full lg:flex-col lg:items-stretch lg:justify-start lg:w-72 lg:h-full lg:px-4 lg:py-4 lg:overflow-y-auto scrollbar-hide"
+      style={{ borderBottom: "1px solid rgba(255,255,255,0.08)", borderRight: "none" }}
+    >
+      {/* Desktop-only: gradient top accent + header */}
+      <div className="hidden lg:block">
+        <div style={{ height: "2px", background: "linear-gradient(90deg, #00FF7B, #00F2FF, #FF00EE, #EAFF00)", marginBottom: "16px", borderRadius: "2px" }} />
+        <div className="flex items-center gap-2 mb-4 pb-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          <span className="text-base">🎙</span>
+          <span className="pixel-font text-sm" style={{ color: "#00F2FF", letterSpacing: "0.1em" }}>VOICE CHAT</span>
+        </div>
+      </div>
 
-      {/* Voice changer panel — floats above the bar when open */}
+      {/* Users list */}
+      <div className="flex flex-row items-center gap-3 flex-1 overflow-x-auto scrollbar-hide lg:flex-col lg:overflow-x-visible lg:flex-none lg:gap-0 lg:items-stretch">
+        {!usersInVoice.length ? (
+          <p className="font-mono text-xs lg:text-sm" style={{ color: "rgba(255,255,255,0.3)" }}>
+            No one in voice
+          </p>
+        ) : (
+          usersInVoice.map((e, index) => {
+            const color = VOICE_COLORS[index % 4];
+            const isSpeaking = speakingSocketIds.has(e.socketId);
+            const hasIssue = BAD_STATES.includes(peerConnectionStates[e.socketId]);
+            return (
+              <div
+                key={e.user._id}
+                className="flex flex-col items-center gap-1 flex-shrink-0 lg:flex-row lg:gap-3 lg:w-full lg:py-3"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+              >
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={`/profiles/${e.user.profilePic}.png`}
+                    alt={e.user.username}
+                    className="rounded-full object-cover w-9 h-9 lg:w-12 lg:h-12"
+                    style={{
+                      border: `3px solid ${hasIssue ? "#ef4444" : color}`,
+                      boxShadow: hasIssue
+                        ? "0 0 8px #ef4444"
+                        : isSpeaking ? `0 0 8px ${color}, 0 0 18px ${color}88` : "none",
+                      transition: "box-shadow 0.1s ease",
+                      opacity: hasIssue ? 0.55 : isSpeaking ? 1 : 0.8,
+                    }}
+                  />
+                  {hasIssue && (
+                    <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-0.5">
+                      <WifiOff className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </div>
+                <span
+                  className="font-mono font-bold text-xs lg:text-sm truncate max-w-full"
+                  style={{
+                    color: hasIssue ? "#ef4444" : isSpeaking ? color : "rgba(255,255,255,0.75)",
+                    transition: "color 0.1s ease",
+                    textShadow: isSpeaking && !hasIssue ? `0 0 8px ${color}88` : "none",
+                  }}
+                >
+                  {isGroupAnonymous ? `HUMAN-${e.user.humanNum}` : e.user.username}
+                </span>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Effect panel — dropdown on mobile, inline on desktop */}
       {isInThisGroup && showEffectPanel && (
-        <div className="mb-2 bg-black border border-white/20 rounded-2xl px-3 py-2 flex flex-wrap gap-2 justify-center">
+        <div
+          className="absolute top-full left-0 w-full z-50 flex flex-wrap gap-2 p-3 lg:relative lg:top-auto lg:flex-col lg:w-full lg:p-0 lg:mt-4 lg:pt-4 lg:gap-2"
+          style={{
+            background: "#000",
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            borderTop: "none",
+          }}
+        >
+          <div className="hidden lg:block w-full mb-1">
+            <span className="font-mono text-xs" style={{ color: "rgba(255,255,255,0.35)", letterSpacing: "0.08em" }}>VOICE EFFECT</span>
+          </div>
           {effectOptions.map((effect) => {
             const isActive = currentEffect === effect.id;
             return (
               <button
                 key={effect.id}
                 onClick={() => { changeEffect(effect.id); setShowEffectPanel(false); }}
-                className="text-xs md:text-sm font-bold px-3 py-1 rounded-full border transition"
+                className="font-mono font-bold px-3 py-1.5 rounded-full border transition-all duration-150 text-xs lg:text-sm lg:text-left"
                 style={{
-                  borderColor: isActive ? "#FF00EE" : "rgba(255,255,255,0.2)",
-                  background: isActive ? "rgba(255,0,238,0.15)" : "transparent",
-                  color: isActive ? "#FF00EE" : "white",
+                  borderColor: isActive ? "#FF00EE" : "rgba(255,255,255,0.18)",
+                  background: isActive ? "rgba(255,0,238,0.14)" : "transparent",
+                  color: isActive ? "#FF00EE" : "rgba(255,255,255,0.75)",
+                  boxShadow: isActive ? "0 0 8px #FF00EE55" : "none",
                 }}
               >
                 {effect.label}
@@ -96,87 +161,56 @@ const VoiceChat = (props) => {
         </div>
       )}
 
-      {/* Main voice bar */}
-      <div className="overflow-y-auto bg-black text-white px-4 py-2 flex justify-between items-center rounded-full border-2 border-white">
-        {!usersInVoice.length ? (
-          <p className="font-bold text-sm">No one is in voice chat</p>
-        ) : (
-          <div className="flex flex-row items-center justify-center w-3/4 gap-4">
-            {usersInVoice.map((e, index) => {
-              const color = VOICE_COLORS[index % 4];
-              const isSpeaking = speakingSocketIds.has(e.socketId);
-              const hasConnectionIssue = BAD_STATES.includes(peerConnectionStates[e.socketId]);
-              return (
-                <div key={e.user._id} className="flex flex-col justify-center items-center font-bold text-sm">
-                  <div className="relative">
-                    <img
-                      src={`/profiles/${e.user.profilePic}.png`}
-                      alt={e.user.username}
-                      className="w-10 h-10 rounded-full object-cover"
-                      style={{
-                        border: `3px solid ${hasConnectionIssue ? "#ef4444" : color}`,
-                        boxShadow: hasConnectionIssue
-                          ? "0 0 8px #ef4444, 0 0 16px #ef444488"
-                          : isSpeaking ? `0 0 8px ${color}, 0 0 16px ${color}` : "none",
-                        transition: "box-shadow 0.1s ease",
-                        opacity: hasConnectionIssue ? 0.6 : isSpeaking ? 1 : 0.75,
-                      }}
-                    />
-                    {hasConnectionIssue && (
-                      <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-0.5">
-                        <WifiOff className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                  </div>
-                  <span style={{ color: hasConnectionIssue ? "#ef4444" : isSpeaking ? color : "white", transition: "color 0.1s ease" }}>
-                    {isGroupAnonymous ? e.user.humanNum : e.user.username}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+      {/* Action buttons */}
+      <div className="flex flex-row items-center gap-2 flex-shrink-0 lg:flex-col lg:mt-auto lg:pt-4 lg:gap-2 lg:w-full"
+        style={{ borderTop: "none" }}
+      >
+        {/* Spacer on desktop between users and buttons */}
+        <div className="hidden lg:block lg:flex-1" />
+
+        {isInThisGroup && (
+          <button
+            onClick={() => setShowEffectPanel((v) => !v)}
+            className="font-mono text-sm px-3 py-1.5 rounded-full border transition-all duration-150 flex-shrink-0 lg:w-full lg:text-center"
+            style={{
+              borderColor: showEffectPanel ? "#FF00EE" : "rgba(255,255,255,0.2)",
+              background: showEffectPanel ? "rgba(255,0,238,0.12)" : "transparent",
+              color: showEffectPanel ? "#FF00EE" : "rgba(255,255,255,0.6)",
+            }}
+          >
+            🎭 <span className="hidden lg:inline">Voice Effect</span>
+          </button>
         )}
 
-        <div className="flex items-center gap-2">
-          {/* Voice changer button — only shown when in this group */}
-          {isInThisGroup && (
-            <button
-              onClick={() => setShowEffectPanel((v) => !v)}
-              title="Voice Changer"
-              className="text-lg px-2 py-1 rounded-full border transition"
-              style={{
-                borderColor: showEffectPanel ? "#FF00EE" : "rgba(255,255,255,0.3)",
-                background: showEffectPanel ? "rgba(255,0,238,0.15)" : "transparent",
-              }}
-            >
-              🎭
-            </button>
-          )}
-
-          {isInThisGroup ? (
-            <button
-              onClick={leaveVoice}
-              className="bg-red-500 hover:bg-red-600 px-4 py-1 rounded text-sm"
-            >
-              Leave
-            </button>
-          ) : joined ? (
-            <button
-              disabled
-              className="bg-gray-600 px-4 py-1 rounded text-sm cursor-not-allowed opacity-60"
-            >
-              In Voice Elsewhere
-            </button>
-          ) : (
-            <button
-              onClick={() => joinVoice(props.groupId, isGroupAnonymous)}
-              className="bg-green-500 hover:bg-green-600 px-4 py-1 rounded text-sm"
-            >
-              Join Voice
-            </button>
-          )}
-        </div>
+        {isInThisGroup ? (
+          <button
+            onClick={leaveVoice}
+            className="font-mono font-bold text-sm px-4 py-1.5 rounded-full cursor-pointer transition-all duration-150 flex-shrink-0 lg:w-full"
+            style={{ background: "#ef4444", color: "#fff", border: "1px solid #ef4444" }}
+          >
+            Leave
+          </button>
+        ) : joined ? (
+          <button
+            disabled
+            className="font-mono text-xs px-3 py-1.5 rounded-full cursor-not-allowed flex-shrink-0 lg:w-full lg:text-sm"
+            style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.35)" }}
+          >
+            In Voice Elsewhere
+          </button>
+        ) : (
+          <button
+            onClick={() => joinVoice(props.groupId, isGroupAnonymous)}
+            className="font-mono font-bold text-sm px-4 py-1.5 rounded-full cursor-pointer transition-all duration-150 flex-shrink-0 lg:w-full"
+            style={{ background: "#00FF7B", color: "#000", border: "1px solid #00FF7B", boxShadow: "0 0 10px #00FF7B44" }}
+          >
+            Join Voice
+          </button>
+        )}
       </div>
+
+      {/* Desktop right border */}
+      <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-px" style={{ background: "rgba(255,255,255,0.08)" }} />
     </div>
   );
 };
