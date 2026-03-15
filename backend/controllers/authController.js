@@ -1,4 +1,6 @@
 import User from "../models/userModel.js";
+import Group from "../models/groupModel.js";
+import Message from "../models/messageModel.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../myCookie/generateToken.js";
 import nodemailer from "nodemailer";
@@ -164,6 +166,32 @@ export const resetPassword = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "PASSWORD RESET SUCCESSFULLY" });
+  } catch (error) {
+    console.log("ERROR IN AUTHCONTROLLER ", error.message);
+    res.status(500).json({ error: "INTERNAL SERVER ERROR" });
+  }
+};
+
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // Delete user's messages
+    await Message.deleteMany({ senderId: userId });
+
+    // Delete groups the user created
+    await Group.deleteMany({ creatorId: userId });
+
+    // Remove user from all group member lists
+    await Group.updateMany({ members: userId }, { $pull: { members: userId } });
+
+    // Delete the user
+    await User.findByIdAndDelete(userId);
+
+    // Clear JWT cookie
+    res.cookie("jwt", "", { maxAge: 0 });
+
+    res.status(200).json({ message: "ACCOUNT DELETED SUCCESSFULLY" });
   } catch (error) {
     console.log("ERROR IN AUTHCONTROLLER ", error.message);
     res.status(500).json({ error: "INTERNAL SERVER ERROR" });

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Nav from "../../components/Nav.jsx";
 import { useAuthContext } from "../../context/AuthContext.jsx";
 import useLogout from "../../hooks/auth/useLogout.js";
+import useDeleteAccount from "../../hooks/auth/useDeleteAccount.js";
 import useGetMyGroups from "../../hooks/group/useGetMyGroups.js";
 import useDeleteGroup from "../../hooks/group/useDeleteGroup.js";
 import useGetProfilePictures from "../../hooks/user/useGetProfilePictures.js";
@@ -194,6 +195,7 @@ const LogoutBtn = ({ fullWidth, loading, logoutHovered, setLogoutHovered, onLogo
 const Profile = () => {
   const { authUser } = useAuthContext();
   const { loading, logout } = useLogout();
+  const { deleteLoading: accountDeleteLoading, deleteAccount } = useDeleteAccount();
   const { groupLoading, getMyGroups } = useGetMyGroups();
   const { deleteLoading, deleteGroup } = useDeleteGroup();
   const { picturesLoading, getProfilePictures } = useGetProfilePictures();
@@ -226,11 +228,22 @@ const Profile = () => {
   const [availablePics, setAvailablePics] = useState([]);
   const [selectedPic, setSelectedPic] = useState(authUser.profilePic);
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [logoutHovered, setLogoutHovered] = useState(false);
   const [hoveredEdit, setHoveredEdit] = useState(null);
   const [hoveredDelete, setHoveredDelete] = useState(null);
 
   const handleLogout = async () => await logout();
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== "DELETE") return;
+    const ok = await deleteAccount();
+    if (ok) {
+      localStorage.removeItem("zdm-user");
+      window.location.href = "/";
+    }
+  };
 
   const handleDelete = async (groupId) => {
     if (window.confirm("ARE YOU SURE TO DELETE THE GROUP?")) {
@@ -355,46 +368,17 @@ const Profile = () => {
                 />
               </div>
 
-              {/* Group History button */}
-              <button
-                onClick={() => setHistoryOpen(true)}
-                className="w-full rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
-                style={{
-                  fontSize: "0.9rem",
-                  padding: "10px 0",
-                  background: "transparent",
-                  border: "1px solid rgba(0,242,255,0.4)",
-                  color: "rgba(0,242,255,0.8)",
-                }}
-              >
-                🕓 Group History {groupHistory.length > 0 && `(${groupHistory.length})`}
-              </button>
-
-              {/* Blocked Users button */}
-              <button
-                onClick={() => setBlockListOpen(true)}
-                className="w-full rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
-                style={{
-                  fontSize: "0.9rem",
-                  padding: "10px 0",
-                  background: "transparent",
-                  border: "1px solid rgba(239,68,68,0.5)",
-                  color: "rgba(239,68,68,0.8)",
-                }}
-              >
-                Blocked Users {blockList.length > 0 && `(${blockList.length})`}
-              </button>
-
               {/* Logout pushed to bottom */}
-              <div className="mt-auto pt-2">
+              <div className="mt-auto pt-2 flex flex-col gap-2">
                 <LogoutBtn fullWidth loading={loading} logoutHovered={logoutHovered} setLogoutHovered={setLogoutHovered} onLogout={handleLogout} />
               </div>
             </div>
 
-            {/* ── RIGHT: Groups ── */}
+            {/* ── RIGHT: Groups + Account ── */}
             <div className="flex flex-col p-8 flex-1 gap-5">
+              {/* Groups box */}
               <div
-                className="flex flex-col gap-4 rounded-2xl p-6 h-full"
+                className="flex flex-col gap-4 rounded-2xl p-6 flex-1"
                 style={{
                   border: "1px solid rgba(255,0,238,0.2)",
                   boxShadow: "0 0 12px rgba(255,0,238,0.04)",
@@ -424,6 +408,45 @@ const Profile = () => {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Account box */}
+              <div
+                className="flex flex-col gap-3 rounded-2xl p-6"
+                style={{
+                  border: "1px solid rgba(0,242,255,0.15)",
+                  boxShadow: "0 0 12px rgba(0,242,255,0.04)",
+                }}
+              >
+                <h3
+                  className="pixel-font pb-3"
+                  style={{ fontSize: "1rem", color: "#00F2FF", borderBottom: "1px solid rgba(0,242,255,0.15)" }}
+                >
+                  Account
+                </h3>
+                <div className="flex flex-row gap-3 items-center">
+                  <button
+                    onClick={() => setHistoryOpen(true)}
+                    className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+                    style={{ fontSize: "0.85rem", padding: "8px 18px", background: "transparent", border: "1px solid rgba(0,242,255,0.4)", color: "rgba(0,242,255,0.8)" }}
+                  >
+                    🕓 Group History {groupHistory.length > 0 && `(${groupHistory.length})`}
+                  </button>
+                  <button
+                    onClick={() => setBlockListOpen(true)}
+                    className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+                    style={{ fontSize: "0.85rem", padding: "8px 18px", background: "transparent", border: "1px solid rgba(239,68,68,0.5)", color: "rgba(239,68,68,0.8)" }}
+                  >
+                    Blocked Users {blockList.length > 0 && `(${blockList.length})`}
+                  </button>
+                  <button
+                    onClick={() => setDeleteModalOpen(true)}
+                    className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer"
+                    style={{ fontSize: "0.65rem", padding: "6px 20px", background: "transparent", border: "1px solid rgba(239,68,68,0.4)", color: "rgba(239,68,68,0.5)" }}
+                  >
+                    DELETE ACCOUNT
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -534,6 +557,15 @@ const Profile = () => {
           <div className="flex justify-center">
             <LogoutBtn loading={loading} logoutHovered={logoutHovered} setLogoutHovered={setLogoutHovered} onLogout={handleLogout} />
           </div>
+
+          {/* Delete Account */}
+          <button
+            onClick={() => setDeleteModalOpen(true)}
+            className="rounded-full font-mono font-bold transition-all duration-200 cursor-pointer mx-auto block"
+            style={{ fontSize: "0.65rem", padding: "6px 20px", background: "transparent", border: "1px solid rgba(239,68,68,0.4)", color: "rgba(239,68,68,0.5)" }}
+          >
+            DELETE ACCOUNT
+          </button>
         </div>
       </div>
 
@@ -685,6 +717,62 @@ const Profile = () => {
                   </div>
                 ))
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Delete Account Modal ── */}
+      {deleteModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.9)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) { setDeleteModalOpen(false); setDeleteConfirmText(""); } }}
+        >
+          <div
+            className="relative flex flex-col w-full max-w-sm rounded-2xl overflow-hidden"
+            style={{ background: "#000", border: "1px solid rgba(239,68,68,0.5)", boxShadow: "0 0 40px rgba(239,68,68,0.15)" }}
+          >
+            <div style={{ height: "3px", background: "linear-gradient(90deg, #ef4444, #FF00EE)" }} />
+            <div className="flex flex-col gap-4 p-6">
+              <h3 className="pixel-font text-center" style={{ fontSize: "1.1rem", color: "#ef4444" }}>
+                DELETE ACCOUNT
+              </h3>
+              <p className="font-mono text-sm text-center" style={{ color: "rgba(255,255,255,0.6)" }}>
+                This will permanently delete your account, all your groups, and all your messages. This cannot be undone.
+              </p>
+              <p className="font-mono text-sm text-center" style={{ color: "rgba(255,255,255,0.4)" }}>
+                Type <span style={{ color: "#ef4444", fontWeight: "bold" }}>DELETE</span> to confirm
+              </p>
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="DELETE"
+                className="w-full bg-transparent font-mono outline-none rounded-xl p-3 text-center"
+                style={{ fontSize: "1rem", border: "1px solid rgba(239,68,68,0.4)", color: "#ef4444", letterSpacing: "0.15em" }}
+              />
+              <div className="flex gap-3">
+                <button
+                  onClick={() => { setDeleteModalOpen(false); setDeleteConfirmText(""); }}
+                  className="flex-1 py-2.5 rounded-full font-mono text-sm cursor-pointer"
+                  style={{ border: "1px solid rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.4)" }}
+                >
+                  CANCEL
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleteConfirmText !== "DELETE" || accountDeleteLoading}
+                  className="flex-1 py-2.5 rounded-full font-mono font-bold text-sm cursor-pointer transition-all duration-200"
+                  style={{
+                    background: deleteConfirmText === "DELETE" ? "#ef4444" : "transparent",
+                    color: deleteConfirmText === "DELETE" ? "#fff" : "rgba(239,68,68,0.3)",
+                    border: "1px solid rgba(239,68,68,0.5)",
+                  }}
+                >
+                  {accountDeleteLoading ? "..." : "CONFIRM"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
