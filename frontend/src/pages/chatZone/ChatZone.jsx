@@ -410,7 +410,7 @@ const ChatZone = () => {
               )}
               <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
                 <input
-                  className="flex-1 bg-black rounded-full py-3 px-5 text-xl font-mono border-2 border-b-fuchsia-600 border-l-fuchsia-400 border-r-fuchsia-400 outline-none h-14 md:h-16"
+                  className="flex-1 w-16 bg-black rounded-full py-3 px-5 text-xl font-mono border-2 border-b-fuchsia-600 border-l-fuchsia-400 border-r-fuchsia-400 outline-none h-14 md:h-16"
                   type="text"
                   value={myMessage.message}
                   onChange={(e) => setMyMessage({ message: e.target.value, id: tempInfo.id, pic: tempInfo.pic })}
