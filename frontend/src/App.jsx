@@ -10,6 +10,7 @@ import VerifyZone from "./pages/verifyingZone/VerifyZone.jsx";
 import Robot from "./pages/robot/Robot.jsx";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword.jsx";
 import ResetPassword from "./pages/resetPassword/ResetPassword.jsx";
+import Privacy from "./pages/privacy/Privacy.jsx";
 import Nav from "./components/Nav.jsx";
 import { Navigate , Route, Routes , useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/verify/:token" element={<VerifyZone/>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/privacy" element={<Privacy />} />
       </Routes>
       <Toaster
         position="top-center"

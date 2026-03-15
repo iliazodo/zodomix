@@ -29,7 +29,7 @@ const Home = () => {
         <section className="flex-1 px-4 sm:px-6 md:px-8 lg:px-12 py-2 md:py-3 lg:py-4">
           <div className="max-w-7xl mx-auto">
             <div className="text-center md:flex md:flex-row md:items-center md:justify-between mb-2">
-              <p className="text-2xl text-white sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent mb-2 md:mb-4">
+              <p className="text-2xl text-white sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
                 {authUser ? (
                   <span className="showUpAnimate">
                     Hello
@@ -186,7 +186,7 @@ const Home = () => {
               <div
                 className="showUpAnimate glow-hover-yellow border rounded-lg p-3 sm:p-4 md:p-5 lg:p-6 transition"
                 style={{
-                  background: "rgba(255, 0, 238, 0.1)",
+                  background: "rgba(234, 255, 0, 0.1)",
                   borderColor: "#EAFF00",
                   borderWidth: "2px",
                 }}
@@ -343,7 +343,14 @@ const Home = () => {
                   sendtozodo@gmail.com
                 </span>
               </p>
-              <p className="text-xs opacity-75">Copyright © 2025 zodomix</p>
+              <p className="text-xs opacity-75">Copyright © 2026 zodomix</p>
+              <Link
+                to="/privacy"
+                className="text-xs hover:opacity-80 transition"
+                style={{ color: "#FF00EE" }}
+              >
+                Privacy Policy
+              </Link>
             </div>
           </div>
         </section>
